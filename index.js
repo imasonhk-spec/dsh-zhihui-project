@@ -31,6 +31,7 @@ const SSO_URL = '/zhihui-sso/session?app=project'
 const HEALTH_URL = 'http://127.0.0.1:3200/zhihui/project/health'
 
 /** webServer 必须声明注入（Cordis 门禁），workbenchCapabilities 走 ctx.get 可选依赖。 */
+import { installLicense } from './license-http.mjs'; /* PATCH:V5-o2pack-import */
 export const inject = ['webServer']
 
 function sendJson(res, status, body) {
@@ -62,6 +63,11 @@ async function probe(url, timeoutMs = 2500) {
 export function apply(ctx, _config) {
   const disposers = []
 
+  /* PATCH:V5-o2pack-apply */
+  // 授权门禁：本插件自带授权运行时，不依赖工作台；apply 阶段绝不 throw
+  const __lic = installLicense(ctx, { pluginId: 'zhihui-project', prefix: '/api/zhihui-project' });
+  try { disposers.push(() => { try { __lic.gate.flush(); } catch {} }); } catch {}
+
   /* ---- 1. 子前缀路由：包身份 + sidecar 探活 ---- */
   try {
     const ws = ctx.webServer || (ctx.get && ctx.get('webServer'))
@@ -71,6 +77,7 @@ export function apply(ctx, _config) {
           kind: 'prefix',
           path: '/api/zhihui-project',
           handler(req, res) {
+            if (__lic.intercept(req, res)) return; /* PATCH:V5-o2pack-guard */
             const url = new URL(req.url || '/', 'http://127.0.0.1')
             const rest = url.pathname.replace(/^\/api\/zhihui-project/, '').replace(/\/$/, '')
             if (rest === '' || rest === '/health') {
