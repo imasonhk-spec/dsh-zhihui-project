@@ -1,6 +1,6 @@
 {
   "name": "@local/zhihui-project",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "type": "module",
   "description": "智汇·项目 — DSH 工作台能力包（项目交付中心）",
