@@ -1,6 +1,6 @@
 {
   "name": "@local/zhihui-project",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "智汇·项目 — DSH 工作台能力包（项目交付中心）",
@@ -12,7 +12,13 @@
   "files": [
     "index.js",
     "client.js",
-    "cordis.patch.yml"
+    "cordis.patch.yml",
+    "license-gate.mjs",
+    "license-http.mjs",
+    "package.json",
+    "install-manifest.json",
+    "README.md",
+    "license-panel.js"
   ],
   "dsh": {
     "bundle": {
