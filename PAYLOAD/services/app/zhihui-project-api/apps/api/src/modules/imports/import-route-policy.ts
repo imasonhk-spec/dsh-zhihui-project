@@ -1,0 +1,1 @@
+export function legacyImportExecutionPolicy(projectId:string,kind:string){return kind==='tasks'?{status:409 as const,body:{error:'task_import_requires_preview_confirm',previewEndpoint:`/api/projects/${projectId}/imports/implementation-plan/preview`}}:{status:201 as const}}

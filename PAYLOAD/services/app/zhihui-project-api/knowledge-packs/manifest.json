@@ -1,0 +1,50 @@
+{
+  "packId": "zhihui-cn-government-project-management",
+  "packVersion": "1.0.0",
+  "title": "智汇中国政企项目管理原创模板包",
+  "locale": "zh-CN",
+  "jurisdiction": "CN",
+  "knowledgeLayer": "template",
+  "status": "candidate",
+  "publishable": false,
+  "indexable": false,
+  "generationProfile": {
+    "targetModel": "Occamy 1.0 34.7B Q5_K_M（智汇32K）",
+    "maxSchemaTokens": 2600,
+    "maxExampleTokens": 3200,
+    "instructions": [
+      "仅输出Schema允许的字段，未知值使用null并登记missingInformation",
+      "observed/plan/forecast/assumption/opinion必须显式标记",
+      "数字、日期、状态和项目归属必须引用证据",
+      "模板示例不得作为项目事实",
+      "冲突来源并列呈现，不静默合并",
+      "组合汇报按项目分区，项目交付与商机分区"
+    ]
+  },
+  "artifacts": {
+    "schema": "schemas/document-instance.schema.json",
+    "fieldDictionary": "field-dictionary.md",
+    "templates": "templates/catalog.json",
+    "examples": "examples/examples.json",
+    "licenseRegister": "../docs/evidence/kb-modernization/templates/license-register.json"
+  },
+  "templates": [
+    {"templateId":"project_progress","version":"1.0.0","documentType":"project_progress_report","title":"项目进度与状态报告"},
+    {"templateId":"issue_difficulty","version":"1.0.0","documentType":"issue_difficulty_register","title":"难点与问题清单"},
+    {"templateId":"risk_register","version":"1.0.0","documentType":"risk_register","title":"风险与依赖台账"},
+    {"templateId":"forecast_outlook","version":"1.0.0","documentType":"forecast_outlook","title":"未来预期与预测"},
+    {"templateId":"coordination_escalation","version":"1.0.0","documentType":"coordination_escalation","title":"协调升级单"},
+    {"templateId":"weekly_report","version":"1.0.0","documentType":"weekly_report","title":"项目周报"},
+    {"templateId":"monthly_report","version":"1.0.0","documentType":"monthly_report","title":"项目月报"},
+    {"templateId":"acceptance_closure","version":"1.0.0","documentType":"acceptance_closure_report","title":"验收与结项报告"},
+    {"templateId":"opportunity_review","version":"1.0.0","documentType":"opportunity_review","title":"商机资格与签约预测"},
+    {"templateId":"portfolio_briefing","version":"1.0.0","documentType":"portfolio_briefing","title":"跨项目领导汇报"}
+  ],
+  "governance": {
+    "origin": "original-cn-government-enterprise",
+    "externalArtifactPolicy": "license-verification-required-per-artifact",
+    "unverifiedDisposition": "blocked",
+    "productionImport": "forbidden",
+    "wechatKnowledgeBaseChange": "forbidden"
+  }
+}

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目立项报批 - 项目交付中心</title>
+<style>
+/* ============ Vben Admin 风格设计系统 ============ */
+:root{
+  --primary:#095AFF;--primary-600:#2E73FF;--primary-50:#EDF3FF;
+  --success:#00B42A;--success-50:#E8FFEA;
+  --warning:#FF7D00;--warning-50:#FFF7E8;
+  --danger:#F53F3F;--danger-50:#FFECE8;
+  --purple:#722ED1;--purple-50:#F4EBFF;
+  --cyan:#0FB6C4;--cyan-50:#E6FAFB;
+  --text-1:#1D2129;--text-2:#4E5969;--text-3:#86909C;--text-4:#C0C6CF;
+  --border:#E5E6EB;--fill-1:#F7F8FA;--fill-2:#F2F3F5;
+  --bg:#F5F6FA;--radius:10px;
+  --shadow:0 1px 2px rgba(29,33,41,.04),0 2px 8px rgba(29,33,41,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{height:100%}
+body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text-1);background:var(--bg);-webkit-font-smoothing:antialiased}
+ul,ol{list-style:none}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#D4D7DE;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#B8BCC4}
+::-webkit-scrollbar-track{background:transparent}
+svg{display:block}
+
+/* ============ 布局 ============ */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:236px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .25s cubic-bezier(.4,0,.2,1);z-index:100}
+.sidebar.collapsed{width:64px}
+.sidebar-logo{height:56px;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden;white-space:nowrap}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#095AFF,#4D8AFF);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.logo-mark svg{width:18px;height:18px}
+.logo-text{font-size:15px;font-weight:600;color:var(--text-1)}
+.menu{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px}
+.menu-group-title{font-size:11px;color:#A9AEB8;padding:12px 10px 6px;letter-spacing:1px;white-space:nowrap}
+.menu-item{display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;margin:2px 0;border-radius:8px;color:var(--text-2);font-size:14px;white-space:nowrap;transition:all .15s}
+.menu-item svg{width:18px;height:18px;flex-shrink:0}
+.menu-item:hover{background:var(--fill-2);color:var(--text-1)}
+.menu-item.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.menu-badge{margin-left:auto;font-size:10px;height:16px;padding:0 5px;border-radius:4px;background:linear-gradient(135deg,#722ED1,#B37FEB);color:#fff;display:flex;align-items:center;font-weight:600}
+.sidebar.collapsed .logo-text,.sidebar.collapsed .menu-group-title,.sidebar.collapsed .menu-item span,.sidebar.collapsed .menu-badge,.sidebar.collapsed .sidebar-foot{display:none}
+.sidebar.collapsed .menu-item{justify-content:center;padding:0}
+.sidebar-foot{padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-4);white-space:nowrap}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.header{height:56px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.icon-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:.15s;position:relative;flex-shrink:0}
+.icon-btn:hover{background:var(--fill-2);color:var(--text-1)}
+.icon-btn svg{width:19px;height:19px}
+.noti-dot{position:absolute;top:7px;right:7px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:1.5px solid #fff}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3)}
+.breadcrumb b{color:var(--text-1);font-weight:600}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.header-search{display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;background:var(--fill-1);border:1px solid transparent;border-radius:8px;color:var(--text-4);width:200px;cursor:pointer;transition:.15s;font-size:13px}
+.header-search:hover{border-color:var(--primary)}
+.header-search svg{width:15px;height:15px;flex-shrink:0}
+.divider-v{width:1px;height:20px;background:var(--border);margin:0 6px}
+.user-chip{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:8px;cursor:pointer;transition:.15s}
+.user-chip:hover{background:var(--fill-2)}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#095AFF,#4D8AFF);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.user-info{line-height:1.25}
+.user-name{font-size:13px;color:var(--text-1)}
+.user-role{font-size:11px;color:var(--text-3)}
+.user-chip .chev{width:13px;height:13px;color:var(--text-3)}
+.content{flex:1;overflow-y:auto;padding:16px 20px 28px}
+
+/* ============ 通用组件 ============ */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:16px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:600;line-height:1.3;display:flex;align-items:center;gap:8px}
+.page-desc{font-size:13px;color:var(--text-3);margin-top:4px}
+.page-actions{display:flex;gap:8px;align-items:center}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0;gap:12px;flex-wrap:wrap}
+.card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-title svg{width:17px;height:17px;color:var(--primary)}
+.card-sub{font-size:12px;color:var(--text-3)}
+.card-body{padding:16px 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid transparent;transition:.15s;user-select:none;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-600)}
+.btn-default{background:#fff;border-color:var(--border);color:var(--text-2)}
+.btn-default:hover{border-color:var(--primary);color:var(--primary)}
+.tag{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:4px;font-size:12px;line-height:1;white-space:nowrap;font-weight:400}
+.tag.dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.blue{background:var(--primary-50);color:var(--primary)}
+.tag.green{background:var(--success-50);color:var(--success)}
+.tag.red{background:var(--danger-50);color:var(--danger)}
+.tag.orange{background:var(--warning-50);color:var(--warning)}
+.tag.gray{background:var(--fill-2);color:var(--text-3)}
+.tag.purple{background:var(--purple-50);color:var(--purple)}
+.v-select{position:relative;min-width:170px}
+.v-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;height:32px;padding:0 10px 0 12px;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-1);cursor:pointer;transition:.15s;width:100%}
+.v-select-trigger:hover{border-color:var(--primary)}
+.v-select.open .v-select-trigger{border-color:var(--primary);box-shadow:0 0 0 2px rgba(9,90,255,.1)}
+.v-select-trigger .chev{width:14px;height:14px;color:var(--text-3);transition:.2s;flex-shrink:0}
+.v-select.open .chev{transform:rotate(180deg)}
+.v-select-menu{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(29,33,41,.12);padding:4px;z-index:60;display:none;max-height:260px;overflow-y:auto}
+.v-select.open .v-select-menu{display:block}
+.v-select-option{padding:7px 10px;border-radius:6px;font-size:13px;color:var(--text-2);cursor:pointer}
+.v-select-option:hover{background:var(--fill-2)}
+.v-select-option.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.date-range{display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-2);background:#fff;white-space:nowrap}
+.date-range svg{width:14px;height:14px;color:var(--text-3)}
+.filter-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.filter-item{display:flex;align-items:center;gap:8px}
+.filter-label{font-size:13px;color:var(--text-3);white-space:nowrap}
+.filter-actions{margin-left:auto;display:flex;gap:8px}
+
+/* ============ 表格 ============ */
+.table-wrap{overflow-x:auto}
+table.tb{width:100%;border-collapse:collapse}
+.tb th{background:var(--fill-1);font-size:12px;font-weight:500;color:var(--text-3);text-align:left;padding:10px 12px;white-space:nowrap;position:sticky;top:0}
+.tb td{padding:11px 12px;border-bottom:1px solid var(--fill-2);font-size:13px;color:var(--text-2);vertical-align:middle;line-height:1.55}
+.tb tbody tr:hover td{background:#F7F9FF}
+.tb tr.group-row td{background:#FAFBFC;font-weight:600;color:var(--text-1);font-size:13px;padding:9px 12px}
+.tb tr.group-row td small{font-weight:400;color:var(--text-3);margin-left:6px}
+.tb .task-name{color:var(--text-1);font-weight:500}
+.tb .task-out{font-size:12px;color:var(--text-3)}
+.date-cell{white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.row-urgent td{background:var(--danger-50)!important}
+tr.row-urgent:hover td{background:#FFE0DA!important}
+tr.row-soon td{background:var(--warning-50)}
+tr.row-soon:hover td{background:#FFEFDA}
+.deadline-chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;height:18px;padding:0 6px;border-radius:4px;margin-left:6px;font-weight:500}
+.deadline-chip.urgent{background:var(--danger);color:#fff}
+.deadline-chip.soon{background:var(--warning);color:#fff}
+.deadline-chip svg{width:11px;height:11px}
+
+/* ============ 概览条 ============ */
+.sum-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:4px 0}
+.sum-item{display:flex;flex-direction:column;gap:6px;padding:12px 20px;border-right:1px solid var(--fill-2)}
+.sum-item:last-child{border-right:none}
+.sum-label{font-size:12px;color:var(--text-3)}
+.sum-value{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sum-value .big{font-size:22px}
+
+/* ============ 报批时间轴 ============ */
+.flow-note{font-size:12px;color:var(--text-3);background:var(--fill-1);border-radius:6px;padding:8px 12px;margin-bottom:20px;line-height:1.6}
+.flow-note b{color:var(--text-2)}
+.tl{display:flex;position:relative;padding-top:6px}
+.tl::before{content:'';position:absolute;top:22px;left:6%;right:6%;height:2px;background:var(--fill-2);z-index:0}
+.tl-node{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;padding:0 4px}
+.tl-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px;border:2px solid var(--fill-2);background:#fff;color:var(--text-4);font-size:12px;font-weight:600;transition:.2s}
+.tl-dot svg{width:16px;height:16px}
+.tl-node.done .tl-dot{background:var(--success);border-color:var(--success);color:#fff}
+.tl-node.current .tl-dot{background:#fff;border-color:var(--primary);color:var(--primary);box-shadow:0 0 0 4px rgba(9,90,255,.15);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 3px rgba(9,90,255,.2)}70%{box-shadow:0 0 0 8px rgba(9,90,255,.05)}100%{box-shadow:0 0 0 3px rgba(9,90,255,.2)}}
+.tl-name{font-size:12.5px;font-weight:600;color:var(--text-1);line-height:1.4}
+.tl-node.current .tl-name{color:var(--primary)}
+.tl-date{font-size:11px;color:var(--text-3);margin-top:3px;font-variant-numeric:tabular-nums}
+.tl-status{margin-top:6px}
+.tl-node.missing .tl-dot{border:2px dashed var(--warning);background:var(--warning-50);color:var(--warning)}
+.tl-node.missing .tl-name{color:var(--text-3)}
+.tl-node.missing .tl-date{color:var(--warning)}
+
+/* ============ 布局 ============ */
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+
+/* ============ 较上周变化 ============ */
+.week-card .card-body{display:flex;flex-direction:column;gap:10px}
+.wk-item{display:flex;gap:10px;border:1px solid var(--fill-2);border-radius:10px;padding:12px;align-items:flex-start;transition:.15s}
+.wk-item:hover{border-color:#D6E4FF;background:#FAFBFF}
+.wk-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wk-icon svg{width:15px;height:15px}
+.wk-icon.done{background:var(--success-50);color:var(--success)}
+.wk-icon.doing{background:var(--primary-50);color:var(--primary)}
+.wk-icon.new{background:var(--purple-50);color:var(--purple)}
+.wk-txt{font-size:12.5px;color:var(--text-2);line-height:1.6}
+.wk-txt b{color:var(--text-1)}
+.wk-time{font-size:11px;color:var(--text-4);margin-top:3px}
+@media (max-width:1280px){.two-col{grid-template-columns:1fr}.sum-strip{grid-template-columns:repeat(2,1fr)}.sum-item{border-bottom:1px solid var(--fill-2)}}
+@media (max-width:900px){.tl{flex-wrap:wrap;gap:16px}.tl::before{display:none}.tl-node{flex:1 1 20%}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ 侧边栏 ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+      <span class="logo-text">项目交付中心</span>
+    </div>
+    <nav class="menu">
+      <div class="menu-group-title">项目交付</div>
+      <a class="menu-item" href="project-overview.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>项目总览</span></a>
+      <a class="menu-item active" href="approval-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m3 15 2 2 4-4"/></svg><span>项目立项报批</span></a>
+      <a class="menu-item" href="tasks-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg><span>项目详细任务</span></a>
+      <a class="menu-item" href="milestone-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg><span>里程碑达成</span></a>
+      <a class="menu-item" href="risk-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>项目风险</span></a>
+      <a class="menu-item" href="coordination-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><span>需要协调的事项</span></a>
+      <div class="menu-group-title">智能服务</div>
+      <a class="menu-item" href="ai-assistant.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg><span>项目智能助手</span><span class="menu-badge">AI</span></a>
+    </nav>
+    <div class="sidebar-foot">Vben Admin · v2.3.0</div>
+  </aside>
+
+  <!-- ============ 主区域 ============ -->
+  <div class="main">
+    <header class="header">
+      <button class="icon-btn" id="sidebarToggle" title="折叠菜单"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+      <div class="breadcrumb">项目交付中心 <span>/</span> <b>项目立项报批</b></div>
+      <div class="header-right">
+        <div class="header-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>搜索项目 / 风险 / 事项</div>
+        <button class="icon-btn" title="消息通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><i class="noti-dot"></i></button>
+        <div class="divider-v"></div>
+        <div class="user-chip">
+          <div class="avatar">李</div>
+          <div class="user-info"><div class="user-name">李标</div><div class="user-role">交付中心 总监</div></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 页头 -->
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">项目立项报批</h1>
+          <p class="page-desc">专项监控立项审批进度 · 龙岗区AI+HR“数智组工”系统 · 数据截至 2026-08-26（周三）</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-default"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>导出报批台账</button>
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增报批任务</button>
+        </div>
+      </div>
+
+      <!-- 筛选区 -->
+      <div class="card">
+        <div class="card-body">
+          <div class="filter-bar">
+            <div class="filter-item">
+              <span class="filter-label">项目</span>
+              <div class="v-select" data-select style="min-width:280px">
+                <button class="v-select-trigger" type="button"><span class="v-select-label">龙岗区AI+HR“数智组工”系统</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="v-select-menu">
+                  <div class="v-select-option active">龙岗区AI+HR“数智组工”系统</div>
+                </div>
+              </div>
+            </div>
+            <div class="filter-item">
+              <span class="filter-label">报批阶段</span>
+              <div class="v-select" data-select style="min-width:150px" id="stageSelect">
+                <button class="v-select-trigger" type="button"><span class="v-select-label">全部阶段</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="v-select-menu">
+                  <div class="v-select-option active" data-value="all">全部阶段</div>
+                  <div class="v-select-option" data-value="s1">项目建议书</div>
+                  <div class="v-select-option" data-value="s2">项目初设编制与审批</div>
+                  <div class="v-select-option" data-value="s3">项目招投标</div>
+                  <div class="v-select-option" data-value="s4">项目合同签订</div>
+                </div>
+              </div>
+            </div>
+            <div class="filter-item">
+              <span class="filter-label">时间范围</span>
+              <div class="date-range"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>2026-07-14 ~ 2026-12-20</div>
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-primary">查询</button>
+              <button class="btn btn-default">重置</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 概览 + 时间轴 -->
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m3 15 2 2 4-4"/></svg>报批进度时间轴</div>
+            <div class="card-sub" style="margin-top:3px">龙岗区AI+HR“数智组工”系统</div>
+          </div>
+          <span class="tag orange dot">进行中 · 初设编制与内部评审</span>
+        </div>
+        <div class="card-body">
+          <div class="flow-note"><b>报批流程</b>：项目建议书 → 立项预审（政数局） → 可研预审 → 初设预审 → 党组会/分管区领导审议 → 发改批复 → 招投标 → 合同签订<br><b style="color:var(--warning)">环节缺失提示</b>：可研预审阶段在当前报批计划中未安排独立任务，可研相关工作随初设编制及发改批复推进</div>
+          <div class="sum-strip" style="margin-bottom:18px">
+            <div class="sum-item"><span class="sum-label">当前节点</span><span class="sum-value"><span class="tag blue dot">初设预审</span></span></div>
+            <div class="sum-item"><span class="sum-label">流程进度</span><span class="sum-value"><span class="big" style="color:var(--primary)">2</span>/ 8 节点已完成</span></div>
+            <div class="sum-item"><span class="sum-label">最近截止</span><span class="sum-value">初设内部评审及修改<span class="deadline-chip urgent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>剩 4 天</span></span></div>
+            <div class="sum-item"><span class="sum-label">预计合同签订</span><span class="sum-value">2026-12-20</span></div>
+          </div>
+          <div class="tl">
+            <div class="tl-node done">
+              <div class="tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <div class="tl-name">项目建议书</div>
+              <div class="tl-date">07-26 已报送</div>
+              <div class="tl-status"><span class="tag green">已完成</span></div>
+            </div>
+            <div class="tl-node done">
+              <div class="tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <div class="tl-name">立项预审<br>（政数局）</div>
+              <div class="tl-date">08-20 通过</div>
+              <div class="tl-status"><span class="tag green">已完成</span></div>
+            </div>
+            <div class="tl-node missing" title="该环节未安排报批任务，可研相关工作随初设与发改批复推进">
+              <div class="tl-dot">3</div>
+              <div class="tl-name">可研预审</div>
+              <div class="tl-date">无独立报批任务</div>
+              <div class="tl-status"><span class="tag orange dot">环节缺失</span></div>
+            </div>
+            <div class="tl-node current">
+              <div class="tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M12 4v16"/></svg></div>
+              <div class="tl-name">初设预审</div>
+              <div class="tl-date">初稿已完成 · 评审 08-30</div>
+              <div class="tl-status"><span class="tag blue">进行中</span></div>
+            </div>
+            <div class="tl-node">
+              <div class="tl-dot">5</div>
+              <div class="tl-name">党组会审议</div>
+              <div class="tl-date">计划 10-11</div>
+              <div class="tl-status"><span class="tag gray">未开始</span></div>
+            </div>
+            <div class="tl-node">
+              <div class="tl-dot">6</div>
+              <div class="tl-name">发改批复</div>
+              <div class="tl-date">计划 11-01</div>
+              <div class="tl-status"><span class="tag gray">未开始</span></div>
+            </div>
+            <div class="tl-node">
+              <div class="tl-dot">7</div>
+              <div class="tl-name">招投标</div>
+              <div class="tl-date">计划 11-30</div>
+              <div class="tl-status"><span class="tag gray">未开始</span></div>
+            </div>
+            <div class="tl-node">
+              <div class="tl-dot">8</div>
+              <div class="tl-name">合同签订</div>
+              <div class="tl-date">计划 12-20</div>
+              <div class="tl-status"><span class="tag gray">未开始</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <!-- 关键节点表格 -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>关键节点明细</div>
+              <div class="card-sub" style="margin-top:3px">共 20 项报批任务 · <span style="color:var(--danger)">红色</span>为临期高亮（7 天内截止）</div>
+            </div>
+            <span class="tag gray">数据来源：立项报批推进计划</span>
+          </div>
+          <div class="card-body no-pad" style="padding-bottom:8px">
+            <div class="table-wrap">
+              <table class="tb">
+                <thead>
+                  <tr>
+                    <th style="width:60px">序号</th>
+                    <th style="min-width:190px">任务</th>
+                    <th style="min-width:170px">输出物/验收标准</th>
+                    <th>责任单位</th>
+                    <th style="width:120px">计划开始</th>
+                    <th style="width:150px">计划完成</th>
+                    <th style="width:100px">状态</th>
+                  </tr>
+                </thead>
+                <tbody id="taskBody">
+                  <tr class="group-row" data-stage="s1"><td colspan="7">一、项目建议书 <small>3 项任务</small></td></tr>
+                  <tr data-stage="s1">
+                    <td>1</td>
+                    <td><div class="task-name">项目建议书内容确认并正式提交政数局审核</div></td>
+                    <td class="task-out">正式提交政数局审核的项目建议书</td>
+                    <td>华策咨询、数据集团、中电数据</td>
+                    <td class="date-cell">2026-07-14</td>
+                    <td class="date-cell">2026-07-26</td>
+                    <td><span class="tag green">已完成</span></td>
+                  </tr>
+                  <tr data-stage="s1">
+                    <td>2</td>
+                    <td><div class="task-name">项目建议书审批跟进及意见调整</div></td>
+                    <td class="task-out">8.20 已通过局内审批，含批复及调整留痕</td>
+                    <td>华策咨询、数据集团、中电数据</td>
+                    <td class="date-cell">2026-07-27</td>
+                    <td class="date-cell">2026-08-31</td>
+                    <td><span class="tag green">已完成</span></td>
+                  </tr>
+                  <tr data-stage="s1">
+                    <td>3</td>
+                    <td><div class="task-name">上报区发改批复</div></td>
+                    <td class="task-out">项目建议书审批批复</td>
+                    <td>区发改</td>
+                    <td class="date-cell">2026-09-01</td>
+                    <td class="date-cell">2026-09-15</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+
+                  <tr class="group-row" data-stage="s2"><td colspan="7">二、项目初设编制与审批 <small>8 项任务</small></td></tr>
+                  <tr data-stage="s2">
+                    <td>4</td>
+                    <td><div class="task-name">系统功能清单评审确认</div></td>
+                    <td class="task-out">系统功能清单、评审确认纪要</td>
+                    <td>华策咨询、数据集团、中电数据</td>
+                    <td class="date-cell">2026-07-29</td>
+                    <td class="date-cell">2026-07-29</td>
+                    <td><span class="tag green">已完成</span></td>
+                  </tr>
+                  <tr data-stage="s2">
+                    <td>5</td>
+                    <td><div class="task-name">技术路线选型与方案确认</div></td>
+                    <td class="task-out">技术路线选型意见、总体技术方案要点</td>
+                    <td>数据集团、中电数据</td>
+                    <td class="date-cell">2026-07-29</td>
+                    <td class="date-cell">2026-07-29</td>
+                    <td><span class="tag green">已完成</span></td>
+                  </tr>
+                  <tr data-stage="s2">
+                    <td>6</td>
+                    <td><div class="task-name">项目初设初稿编制</div></td>
+                    <td class="task-out">项目初设初稿、概算测算基础表</td>
+                    <td>华策咨询、数据集团、中电数据</td>
+                    <td class="date-cell">2026-07-28</td>
+                    <td class="date-cell">2026-08-15</td>
+                    <td><span class="tag green">已完成</span></td>
+                  </tr>
+                  <tr class="row-soon" data-stage="s2">
+                    <td>7</td>
+                    <td><div class="task-name">初设内部评审及修改</div></td>
+                    <td class="task-out">内部评审意见、初设修改稿</td>
+                    <td>华策咨询、数据集团、中电数据</td>
+                    <td class="date-cell">2026-08-24</td>
+                    <td class="date-cell">2026-08-30<span class="deadline-chip soon">4 天</span></td>
+                    <td><span class="tag blue">进行中</span></td>
+                  </tr>
+                  <tr data-stage="s2">
+                    <td>8</td>
+                    <td><div class="task-name">与政数局完成初设交流评审并调整</div></td>
+                    <td class="task-out">交流评审纪要、初设调整稿</td>
+                    <td>华策咨询、数据集团、中电数据</td>
+                    <td class="date-cell">2026-09-16</td>
+                    <td class="date-cell">2026-09-20</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s2">
+                    <td>9</td>
+                    <td><div class="task-name">局党组会审议</div></td>
+                    <td class="task-out">局党组会审议意见</td>
+                    <td>政数局</td>
+                    <td class="date-cell">2026-09-21</td>
+                    <td class="date-cell">2026-10-11</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s2">
+                    <td>10</td>
+                    <td><div class="task-name">初设提交政数局审批及意见调整</div></td>
+                    <td class="task-out">初设送审材料、审批意见答复和修订稿</td>
+                    <td>华策咨询、数据集团、中电数据</td>
+                    <td class="date-cell">2026-10-12</td>
+                    <td class="date-cell">2026-10-18</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s2">
+                    <td>11</td>
+                    <td><div class="task-name">提交区发改批复</div></td>
+                    <td class="task-out">初设送审材料、审批意见答复和修订稿</td>
+                    <td>区发改</td>
+                    <td class="date-cell">2026-10-19</td>
+                    <td class="date-cell">2026-11-01</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+
+                  <tr class="group-row" data-stage="s3"><td colspan="7">三、项目招投标 <small>6 项任务</small></td></tr>
+                  <tr data-stage="s3">
+                    <td>12</td>
+                    <td><div class="task-name">采购意向公示（30 天）</div></td>
+                    <td class="task-out">采购意向公示</td>
+                    <td>政数局、数据集团</td>
+                    <td class="date-cell">2026-11-01</td>
+                    <td class="date-cell">2026-11-30</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s3">
+                    <td>13</td>
+                    <td><div class="task-name">招标文件编制与确认</div></td>
+                    <td class="task-out">招标文件</td>
+                    <td>政数局、数据集团、中电数据</td>
+                    <td class="date-cell">2026-11-02</td>
+                    <td class="date-cell">2026-11-06</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s3">
+                    <td>14</td>
+                    <td><div class="task-name">投标文件编制</div></td>
+                    <td class="task-out">投标文件初稿及定稿</td>
+                    <td>数据集团、中电数据</td>
+                    <td class="date-cell">2026-11-02</td>
+                    <td class="date-cell">2026-11-06</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s3">
+                    <td>15</td>
+                    <td><div class="task-name">合作伙伴采购费用商务谈判</div></td>
+                    <td class="task-out">合作伙伴项目报价</td>
+                    <td>数据集团、中电数据</td>
+                    <td class="date-cell">2026-11-06</td>
+                    <td class="date-cell">2026-11-13</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s3">
+                    <td>16</td>
+                    <td><div class="task-name">招标公告挂网公示</div></td>
+                    <td class="task-out">招标公告挂网</td>
+                    <td>政数局、数据集团、中电数据</td>
+                    <td class="date-cell">2026-11-13</td>
+                    <td class="date-cell">2026-11-18</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s3">
+                    <td>17</td>
+                    <td><div class="task-name">投标、开标、评标、中标通知及公示</div></td>
+                    <td class="task-out">评标结果、中标通知书、中标公示</td>
+                    <td>政数局、数据集团、中电数据</td>
+                    <td class="date-cell">2026-11-18</td>
+                    <td class="date-cell">2026-11-30</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+
+                  <tr class="group-row" data-stage="s4"><td colspan="7">四、项目合同签订 <small>3 项任务</small></td></tr>
+                  <tr data-stage="s4">
+                    <td>18</td>
+                    <td><div class="task-name">数据集团公司与局方签订技术服务合同</div></td>
+                    <td class="task-out">技术服务合同</td>
+                    <td>政数局、数据集团</td>
+                    <td class="date-cell">2026-11-30</td>
+                    <td class="date-cell">2026-12-05</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s4">
+                    <td>19</td>
+                    <td><div class="task-name">同步准备合作伙伴招投标工作</div></td>
+                    <td class="task-out">合作伙伴采购文件、评审或招投标资料</td>
+                    <td>数据集团、中电数据</td>
+                    <td class="date-cell">2026-11-25</td>
+                    <td class="date-cell">2026-12-10</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                  <tr data-stage="s4">
+                    <td>20</td>
+                    <td><div class="task-name">各合作伙伴合同签订</div></td>
+                    <td class="task-out">合作伙伴合同</td>
+                    <td>数据集团、中电数据</td>
+                    <td class="date-cell">2026-12-11</td>
+                    <td class="date-cell">2026-12-20</td>
+                    <td><span class="tag gray">未开始</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 较上周变化 -->
+        <div class="card week-card">
+          <div class="card-head">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>较上周变化</div>
+            <div class="card-sub">本周新完成 / 新启动</div>
+          </div>
+          <div class="card-body">
+            <div class="wk-item">
+              <div class="wk-icon done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div>
+              <div>
+                <div class="wk-txt"><b>项目建议书</b>：8.20 确认已通过局内审批（立项预审节点完成），下一步 09-01 上报区发改批复</div>
+                <div class="wk-time">08-20 · 本周完成</div>
+              </div>
+            </div>
+            <div class="wk-item">
+              <div class="wk-icon done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div>
+              <div>
+                <div class="wk-txt"><b>项目初设初稿</b>：已完成编制并输出概算测算基础表；系统功能清单与技术路线已于 07-29 评审确认</div>
+                <div class="wk-time">08-15 · 本月完成</div>
+              </div>
+            </div>
+            <div class="wk-item">
+              <div class="wk-icon doing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></div>
+              <div>
+                <div class="wk-txt"><b>初设内部评审及修改</b>：08-24 ~ 08-30 输出内部评审意见与初设修改稿</div>
+                <div class="wk-time">08-30 截止 · 剩 4 天</div>
+              </div>
+            </div>
+            <div class="wk-item">
+              <div class="wk-icon new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></div>
+              <div>
+                <div class="wk-txt"><b>组工系统接口文档</b>：08-21 获取完整版接口文档，接入侧接口开发全面启动</div>
+                <div class="wk-time">本周新启动 · 进行中</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// 侧边栏折叠
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+// 下拉选择（通用）
+document.querySelectorAll('[data-select]').forEach(sel=>{
+  const trigger=sel.querySelector('.v-select-trigger');
+  trigger.addEventListener('click',e=>{
+    e.stopPropagation();
+    document.querySelectorAll('[data-select].open').forEach(o=>{if(o!==sel)o.classList.remove('open')});
+    sel.classList.toggle('open');
+  });
+  sel.querySelectorAll('.v-select-option').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      sel.querySelector('.v-select-label').textContent=opt.textContent;
+      sel.querySelectorAll('.v-select-option').forEach(o=>o.classList.remove('active'));
+      opt.classList.add('active');
+      sel.classList.remove('open');
+      sel.dispatchEvent(new CustomEvent('selectchange',{detail:opt.dataset.value}));
+    });
+  });
+});
+document.addEventListener('click',()=>document.querySelectorAll('[data-select].open').forEach(o=>o.classList.remove('open')));
+// 报批阶段筛选
+document.getElementById('stageSelect').addEventListener('selectchange',e=>{
+  const v=e.detail||'all';
+  document.querySelectorAll('#taskBody tr[data-stage]').forEach(tr=>{
+    tr.style.display=(v==='all'||tr.dataset.stage===v)?'':'none';
+  });
+});
+</script>
+</body>
+</html>

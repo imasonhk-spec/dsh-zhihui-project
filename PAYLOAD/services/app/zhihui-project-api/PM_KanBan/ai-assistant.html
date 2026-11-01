@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目智能助手 - 项目交付中心</title>
+<style>
+/* ============ Vben Admin 风格设计系统 ============ */
+:root{
+  --primary:#095AFF;--primary-600:#2E73FF;--primary-50:#EDF3FF;
+  --success:#00B42A;--success-50:#E8FFEA;
+  --warning:#FF7D00;--warning-50:#FFF7E8;
+  --danger:#F53F3F;--danger-50:#FFECE8;
+  --purple:#722ED1;--purple-50:#F4EBFF;
+  --cyan:#0FB6C4;--cyan-50:#E6FAFB;
+  --text-1:#1D2129;--text-2:#4E5969;--text-3:#86909C;--text-4:#C0C6CF;
+  --border:#E5E6EB;--fill-1:#F7F8FA;--fill-2:#F2F3F5;
+  --bg:#F5F6FA;--radius:10px;
+  --shadow:0 1px 2px rgba(29,33,41,.04),0 2px 8px rgba(29,33,41,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{height:100%}
+body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text-1);background:var(--bg);-webkit-font-smoothing:antialiased}
+ul,ol{list-style:none}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#D4D7DE;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#B8BCC4}
+::-webkit-scrollbar-track{background:transparent}
+svg{display:block}
+/* ============ 布局 ============ */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:236px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .25s cubic-bezier(.4,0,.2,1);z-index:100}
+.sidebar.collapsed{width:64px}
+.sidebar-logo{height:56px;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden;white-space:nowrap}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#095AFF,#4D8AFF);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.logo-mark svg{width:18px;height:18px}
+.logo-text{font-size:15px;font-weight:600;color:var(--text-1)}
+.menu{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px}
+.menu-group-title{font-size:11px;color:#A9AEB8;padding:12px 10px 6px;letter-spacing:1px;white-space:nowrap}
+.menu-item{display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;margin:2px 0;border-radius:8px;color:var(--text-2);font-size:14px;white-space:nowrap;transition:all .15s}
+.menu-item svg{width:18px;height:18px;flex-shrink:0}
+.menu-item:hover{background:var(--fill-2);color:var(--text-1)}
+.menu-item.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.menu-badge{margin-left:auto;font-size:10px;height:16px;padding:0 5px;border-radius:4px;background:linear-gradient(135deg,#722ED1,#B37FEB);color:#fff;display:flex;align-items:center;font-weight:600}
+.sidebar.collapsed .logo-text,.sidebar.collapsed .menu-group-title,.sidebar.collapsed .menu-item span,.sidebar.collapsed .menu-badge,.sidebar.collapsed .sidebar-foot{display:none}
+.sidebar.collapsed .menu-item{justify-content:center;padding:0}
+.sidebar-foot{padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-4);white-space:nowrap}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.header{height:56px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.icon-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:.15s;position:relative;flex-shrink:0}
+.icon-btn:hover{background:var(--fill-2);color:var(--text-1)}
+.icon-btn svg{width:19px;height:19px}
+.noti-dot{position:absolute;top:7px;right:7px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:1.5px solid #fff}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3)}
+.breadcrumb b{color:var(--text-1);font-weight:600}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.header-search{display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;background:var(--fill-1);border:1px solid transparent;border-radius:8px;color:var(--text-4);width:200px;cursor:pointer;transition:.15s;font-size:13px}
+.header-search:hover{border-color:var(--primary)}
+.header-search svg{width:15px;height:15px;flex-shrink:0}
+.divider-v{width:1px;height:20px;background:var(--border);margin:0 6px}
+.user-chip{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:8px;cursor:pointer;transition:.15s}
+.user-chip:hover{background:var(--fill-2)}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#095AFF,#4D8AFF);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.user-info{line-height:1.25}
+.user-name{font-size:13px;color:var(--text-1)}
+.user-role{font-size:11px;color:var(--text-3)}
+.user-chip .chev{width:13px;height:13px;color:var(--text-3)}
+.content{flex:1;overflow-y:auto;padding:16px 20px 28px}
+/* ============ 通用 ============ */
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-title svg{width:17px;height:17px;color:var(--primary)}
+.card-sub{font-size:12px;color:var(--text-3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid transparent;transition:.15s;user-select:none;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-600)}
+.btn-default{background:#fff;border-color:var(--border);color:var(--text-2)}
+.btn-default:hover{border-color:var(--primary);color:var(--primary)}
+.tag{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:4px;font-size:12px;line-height:1;white-space:nowrap;font-weight:400}
+.tag.dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.blue{background:var(--primary-50);color:var(--primary)}
+.tag.green{background:var(--success-50);color:var(--success)}
+.tag.red{background:var(--danger-50);color:var(--danger)}
+.tag.orange{background:var(--warning-50);color:var(--warning)}
+.tag.gray{background:var(--fill-2);color:var(--text-3)}
+.tag.purple{background:var(--purple-50);color:var(--purple)}
+/* ============ 三栏 ============ */
+.assistant-layout{display:grid;grid-template-columns:288px minmax(0,1fr) 300px;gap:16px;align-items:start}
+/* ============ 文档树 ============ */
+.doc-tree{position:sticky;top:0}
+.doc-tree .card-head{padding:16px 18px 10px}
+.doc-tree-body{padding:6px 10px 12px;max-height:calc(100vh - 210px);overflow-y:auto}
+.tree-node{border-radius:8px}
+.tree-row{display:flex;align-items:center;gap:8px;height:34px;padding:0 8px;border-radius:8px;font-size:13px;color:var(--text-2);cursor:pointer;transition:.12s;user-select:none}
+.tree-row:hover{background:var(--fill-2);color:var(--text-1)}
+.tree-row .chev{width:14px;height:14px;color:var(--text-4);transition:.2s;flex-shrink:0}
+.tree-node.open>.tree-row .chev{transform:rotate(90deg)}
+.tree-row .node-icon{width:16px;height:16px;flex-shrink:0;color:var(--primary)}
+.tree-row .node-icon.file{color:var(--text-3)}
+.tree-row .node-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tree-row .node-badge{margin-left:auto;font-size:10px;height:16px;padding:0 5px;border-radius:4px;background:var(--fill-2);color:var(--text-3);flex-shrink:0}
+.tree-row .node-badge.hot{background:var(--purple-50);color:var(--purple)}
+.tree-children{display:none;padding-left:16px}
+.tree-node.open>.tree-children{display:block}
+.tree-row.file-row.active{background:var(--primary-50);color:var(--primary)}
+/* ============ 对话区 ============ */
+.chat-card{display:flex;flex-direction:column;height:calc(100vh - 130px);min-height:560px}
+.chat-head{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border)}
+.chat-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.chat-title .ai-orb{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#722ED1,#B37FEB);display:flex;align-items:center;justify-content:center;color:#fff}
+.chat-title .ai-orb svg{width:15px;height:15px}
+.chat-head-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.model-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-2);cursor:pointer}
+.model-chip svg{width:13px;height:13px;color:var(--text-3)}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px}
+.msg{display:flex;gap:12px;animation:msgIn .3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg-avt{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600}
+.msg-avt.ai{background:linear-gradient(135deg,#722ED1,#B37FEB)}
+.msg-avt.user{background:linear-gradient(135deg,#095AFF,#4D8AFF)}
+.msg-avt svg{width:17px;height:17px}
+.msg-body{max-width:calc(100% - 60px);min-width:0}
+.msg-name{font-size:11.5px;color:var(--text-3);margin-bottom:6px}
+.msg-bubble{border-radius:12px;padding:14px 18px;font-size:13.5px;line-height:1.75;color:var(--text-1)}
+.msg.user .msg-bubble{background:var(--primary-50);border:1px solid #D6E2FF}
+.msg.ai .msg-bubble{background:var(--fill-1);border:1px solid var(--fill-2)}
+/* AI 富文本 */
+.ai-md h4{font-size:14px;font-weight:600;margin:2px 0 8px;padding-left:10px;border-left:3px solid var(--primary)}
+.ai-md h5{font-size:13px;font-weight:600;margin:14px 0 6px;color:var(--text-1)}
+.ai-md p{margin:6px 0}
+.ai-md ol,.ai-md ul{margin:6px 0;padding-left:20px}
+.ai-md ol li{list-style:decimal;margin:4px 0}
+.ai-md ul li{list-style:disc;margin:4px 0}
+.ai-md b{font-weight:600;color:var(--text-1)}
+.ai-md table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px;background:#fff;border-radius:8px;overflow:hidden}
+.ai-md th{background:var(--fill-2);color:var(--text-2);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+.ai-md td{padding:8px 10px;border-bottom:1px solid var(--fill-2);color:var(--text-2)}
+.ai-md tr:last-child td{border-bottom:none}
+.ai-md .src{margin-top:12px;padding:8px 12px;background:#fff;border-radius:8px;border:1px dashed var(--border);font-size:11.5px;color:var(--text-3);display:flex;align-items:center;gap:6px}
+.ai-md .src svg{width:13px;height:13px;color:var(--primary);flex-shrink:0}
+/* 打字中 */
+.typing{display:inline-flex;gap:5px;padding:4px 0}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--purple);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}
+.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.85)}40%{opacity:1;transform:scale(1)}}
+/* 预设指令 + 输入区 */
+.chat-input-zone{border-top:1px solid var(--border);padding:12px 20px 16px;background:#fff;border-radius:0 0 var(--radius) var(--radius)}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.preset-chip{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:15px;border:1px solid #D9C2FF;background:var(--purple-50);color:var(--purple);font-size:12.5px;cursor:pointer;transition:.15s;white-space:nowrap}
+.preset-chip svg{width:13px;height:13px}
+.preset-chip:hover{background:#E7D6FF;border-color:#B37FEB}
+.input-box{display:flex;align-items:flex-end;gap:10px;background:var(--fill-1);border:1px solid var(--border);border-radius:12px;padding:10px 12px;transition:.15s}
+.input-box:focus-within{border-color:var(--primary);box-shadow:0 0 0 2px rgba(9,90,255,.1);background:#fff}
+.input-box textarea{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:13.5px;line-height:1.6;resize:none;max-height:100px;color:var(--text-1)}
+.input-box textarea::placeholder{color:var(--text-4)}
+.input-tools{display:flex;align-items:center;gap:4px}
+.tool-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:.15s}
+.tool-ico:hover{background:var(--fill-2);color:var(--primary)}
+.tool-ico svg{width:16px;height:16px}
+.send-btn{height:32px;padding:0 16px;border-radius:8px;background:var(--primary);color:#fff;font-size:13px;display:inline-flex;align-items:center;gap:6px;transition:.15s;flex-shrink:0}
+.send-btn:hover{background:var(--primary-600)}
+.send-btn:disabled{background:#C0C6CF;cursor:not-allowed}
+.send-btn svg{width:14px;height:14px}
+.input-hint{font-size:11px;color:var(--text-4);margin-top:8px;display:flex;align-items:center;gap:6px}
+/* ============ 右侧栏 ============ */
+.right-col{position:sticky;top:0;display:flex;flex-direction:column;gap:16px}
+.right-col .card-head{padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--fill-2)}
+.right-col .card-body{padding:12px 14px 16px}
+/* 最近更新文件 */
+.file-tabs{display:flex;gap:4px;padding:10px 14px 4px}
+.file-tab{height:26px;padding:0 12px;border-radius:13px;font-size:12px;color:var(--text-3);cursor:pointer;transition:.15s;white-space:nowrap}
+.file-tab:hover{color:var(--text-1);background:var(--fill-2)}
+.file-tab.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.file-tab .cnt{margin-left:2px;font-size:11px;opacity:.7;font-weight:400}
+.file-list{padding:4px 8px 8px}
+.file-item{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:.15s}
+.file-item:hover{background:var(--fill-1)}
+.file-item:hover .file-name{color:var(--primary)}
+.file-item.hidden{display:none}
+.file-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9.5px;font-weight:700;letter-spacing:.4px}
+.file-icon.xlsx{background:var(--success-50);color:#16A34A}
+.file-icon.doc{background:#E8EFFC;color:#2B579A}
+.file-icon.pdf{background:var(--danger-50);color:#D9372C}
+.file-icon.md{background:var(--purple-50);color:var(--purple)}
+.file-main{flex:1;min-width:0}
+.file-name{font-size:12.5px;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;transition:.15s}
+.file-meta{font-size:11px;color:var(--text-3);margin-top:3px;display:flex;gap:8px}
+.file-meta .new{color:var(--danger)}
+.file-proj{flex-shrink:0;height:20px;padding:0 7px;border-radius:5px;background:var(--fill-2);color:var(--text-3);font-size:10.5px;display:inline-flex;align-items:center;font-weight:500;transition:.15s}
+.file-item:hover .file-proj{background:var(--primary-50);color:var(--primary)}
+.file-foot{padding:4px 14px 14px}
+.file-foot-link{display:flex;align-items:center;justify-content:center;gap:5px;height:30px;border-radius:8px;font-size:12.5px;color:var(--primary);cursor:pointer;transition:.15s}
+.file-foot-link:hover{background:var(--primary-50)}
+.file-foot-link svg{width:13px;height:13px}
+/* 知识库统计 */
+.kb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kb-cell{padding:12px 6px 10px;border-radius:10px;background:var(--fill-1);text-align:center;transition:.15s}
+.kb-cell:hover{background:var(--primary-50)}
+.kb-cell .num{font-size:20px;font-weight:600;color:var(--primary);font-variant-numeric:tabular-nums;line-height:1.1}
+.kb-cell .lbl{font-size:11px;color:var(--text-3);margin-top:4px}
+.kb-chart-title{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--text-1);margin:16px 2px 9px}
+.kb-chart-title small{font-weight:400;color:var(--text-3);font-size:11px}
+.kb-bars{display:flex;flex-direction:column;gap:7px}
+.kb-bar-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-2)}
+.kb-bar-row:hover .kb-bar-label{color:var(--text-1)}
+.kb-bar-label{width:96px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;color:var(--text-3);transition:.15s}
+.kb-bar-track{flex:1;height:6px;border-radius:3px;background:var(--fill-2);overflow:hidden}
+.kb-bar-fill{height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#4D8AFF,#095AFF);transition:width .7s cubic-bezier(.4,0,.2,1)}
+.kb-bar-val{width:26px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text-3);flex-shrink:0}
+.kb-trend{display:flex;align-items:flex-end;gap:6px;height:58px;padding:0 2px}
+.kb-trend-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.kb-trend-bar{width:100%;max-width:22px;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,#4D8AFF,#8FB3FF);min-height:4px;transition:.3s}
+.kb-trend-col:hover .kb-trend-bar{background:linear-gradient(180deg,#095AFF,#4D8AFF)}
+.kb-trend-day{font-size:10px;color:var(--text-4)}
+.kb-tip{margin-top:16px;padding:10px 12px;background:var(--primary-50);border-radius:8px;font-size:12px;color:var(--text-2);line-height:1.7}
+@media (max-width:1280px){.assistant-layout{grid-template-columns:260px minmax(0,1fr)}.right-col{display:none}}
+@media (max-width:900px){.assistant-layout{grid-template-columns:1fr}.doc-tree{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ 侧边栏 ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+      <span class="logo-text">项目交付中心</span>
+    </div>
+    <nav class="menu">
+      <div class="menu-group-title">项目交付</div>
+      <a class="menu-item" href="project-overview.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>项目总览</span></a>
+      <a class="menu-item" href="approval-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m3 15 2 2 4-4"/></svg><span>项目立项报批</span></a>
+      <a class="menu-item" href="tasks-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg><span>项目详细任务</span></a>
+      <a class="menu-item" href="milestone-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg><span>里程碑达成</span></a>
+      <a class="menu-item" href="risk-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>项目风险</span></a>
+      <a class="menu-item" href="coordination-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><span>需要协调的事项</span></a>
+      <div class="menu-group-title">智能服务</div>
+      <a class="menu-item active" href="ai-assistant.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg><span>项目智能助手</span><span class="menu-badge">AI</span></a>
+    </nav>
+    <div class="sidebar-foot">Vben Admin · v2.3.0</div>
+  </aside>
+
+  <!-- ============ 主区域 ============ -->
+  <div class="main">
+    <header class="header">
+      <button class="icon-btn" id="sidebarToggle" title="折叠菜单"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+      <div class="breadcrumb">项目交付中心 <span>/</span> <b>项目智能助手</b></div>
+      <div class="header-right">
+        <div class="header-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>搜索文档 / 知识</div>
+        <button class="icon-btn" title="消息通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><i class="noti-dot"></i></button>
+        <div class="divider-v"></div>
+        <div class="user-chip">
+          <div class="avatar">李</div>
+          <div class="user-info"><div class="user-name">李标</div><div class="user-role">交付中心 总监</div></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="assistant-layout">
+        <!-- ============ 左：文档架构树 ============ -->
+        <div class="doc-tree">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>文档架构树</div>
+                <div class="card-sub" style="margin-top:3px">10 个项目 · 标准 8 大目录架构 · 项目 → 分类 → 文档</div>
+              </div>
+            </div>
+            <div class="doc-tree-body" id="docTree">
+
+              <div class="tree-node open">
+                <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">龙岗区AI+HR“数智组工”系统</span><span class="node-badge hot">当前</span></div>
+                <div class="tree-children">
+
+                  <div class="tree-node open">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 4-4 5 5-5 5-4-4Z"/><path d="m8 13 5 5 4-4-5-5"/></svg><span class="node-name">01-项目管理过程</span><span class="node-badge">9</span></div>
+                    <div class="tree-children">
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">01-启动与规划</span><span class="node-badge">2</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="项目管理计划（范围/进度/成本基准）">项目管理计划（基准）</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="项目启动会材料（PPT、签到表、纪要）">项目启动会材料</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node open">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">02-监控与报告</span><span class="node-badge">4</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="本周重点工作（8月24日-8月28日）">本周重点工作（8月24日-…）</span><span class="node-badge hot">本周</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="风险与问题清单">风险与问题清单</span><span class="node-badge hot">常用</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="需协调/升级事项清单">需协调/升级事项清单</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="数字人MVP联调总结-0819">数字人MVP联调总结-0819</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">03-沟通与干系人</span><span class="node-badge">2</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="干系人登记册（含决策链、关键签字人）">干系人登记册</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="8.19 与中电沟通确认纪要（接口口径）">8.19 与中电沟通确认纪要</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 4-4 5 5-5 5-4-4Z"/><path d="m8 13 5 5 4-4-5-5"/></svg><span class="node-name">04-质量保证</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="系统功能清单评审确认纪要">系统功能清单评审确认纪要</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node open">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg><span class="node-name">02-需求与设计</span><span class="node-badge">6</span></div>
+                    <div class="tree-children">
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">01-原始需求</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="需求调研记录（区委组织部访谈）">需求调研记录（组织部访谈）</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">02-需求规格</span><span class="node-badge">2</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="原型图/界面设计稿（登录页已定稿）">原型图/界面设计稿</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="需求规格说明书（初稿，待初设评审）">需求规格说明书（初稿）</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node open">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">03-概要设计</span><span class="node-badge">2</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="数据库设计文档（8.20 数据科核查通过）">数据库设计文档（核查通…）</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="系统架构图（内外网部署拓扑）">系统架构图（内外网拓扑）</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">04-详细设计</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="数据字典（干部管理模块）">数据字典（干部管理模块）</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg><span class="node-name">03-开发与测试</span><span class="node-badge">4</span></div>
+                    <div class="tree-children">
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">02-测试交付物</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="安全测评事项清单（待与政数局确认）">安全测评事项清单（待确认）</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">03-第三方接口</span><span class="node-badge">2</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="组工系统接口文档 v2.0（8.21 完整版）">组工系统接口文档 v2.0</span><span class="node-badge hot">常用</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="数字人多路部署联调报告（含性能优化）">数字人多路部署联调报告</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-9-4v16l9-4 6 4V8Z"/></svg><span class="node-name">04-部署与运维</span><span class="node-badge">2</span></div>
+                    <div class="tree-children">
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">01-部署手册</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="部署拓扑图（内网5台+外网3台，待资源协调）">部署拓扑图（待资源协调）</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">03-培训材料</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="试运行方案与用户培训计划（模板）">试运行方案与培训计划</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg><span class="node-name">05-最终交付物</span><span class="node-badge">0</span></div>
+                    <div class="tree-children">
+                      <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="交付物清单索引（待立项批复后按合同 1:1 映射编制）">待立项后按合同 1:1 编制</span></div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M9 13h6"/><path d="M9 17h3"/></svg><span class="node-name">06-合同与商务</span><span class="node-badge">1</span></div>
+                    <div class="tree-children">
+                      <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="合规与廉政协议（提前建设阶段适用）">合规与廉政协议</span></div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node open">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/><rect width="16" height="18" x="4" y="4" rx="2"/></svg><span class="node-name">07-前期筹备与变更</span><span class="node-badge">5</span></div>
+                    <div class="tree-children">
+                      <div class="tree-node open">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">01-立项批复与可研</span><span class="node-badge">3</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="项目建议书（8.20 已通过局内审批）">项目建议书（8.20 已通…）</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="项目初设初稿（8.14 完成编制）">项目初设初稿（编制完成）</span></div>
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="概算测算基础表（随初设初稿）">概算测算基础表</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">02-委托函/进场通知</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="提前启动建设委托函（法律依据）">提前启动建设委托函</span></div>
+                        </div>
+                      </div>
+                      <div class="tree-node">
+                        <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="node-name">05-过程证据链</span><span class="node-badge">1</span></div>
+                        <div class="tree-children">
+                          <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="8.20 局内审批意见截图（带时间戳留痕）">8.20 局内审批意见（留痕）</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node">
+                    <div class="tree-row"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><circle cx="12" cy="14" r="6"/><path d="M8.5 10.5 11 8"/><path d="M12 20v2"/></svg><span class="node-name">08-知识传递与总结</span><span class="node-badge">1</span></div>
+                    <div class="tree-children">
+                      <div class="tree-row file-row"><svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg><span class="node-name" data-file="技术决策日志：技术路线选型意见与总体方案要点">技术决策日志（技术路线…）</span></div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ 中：AI 对话区 ============ -->
+        <div class="card chat-card">
+          <div class="chat-head">
+            <div class="chat-title">
+              <span class="ai-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></span>
+              项目智能助手
+            </div>
+            <span class="tag purple dot">知识库增强</span>
+            <div class="chat-head-right">
+              <div class="model-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><circle cx="12" cy="14" r="6"/><path d="M8.5 10.5 11 8"/><path d="M12 20v2"/></svg>GLM-4.6 · 项目知识库</div>
+              <button class="btn btn-default" id="clearChat" style="height:28px;font-size:12px">清空对话</button>
+            </div>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg ai">
+              <div class="msg-avt ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></div>
+              <div class="msg-body">
+                <div class="msg-name">AI 助手 · 14:02</div>
+                <div class="msg-bubble">
+                  您好，李标。我已加载<b>项目交付中心知识库</b>（307 份文档，覆盖 <b>10 个在管项目</b>，本周更新 14 份），每个项目均按标准 8 大目录架构归档：项目管理过程 / 需求与设计 / 开发与测试 / 部署与运维 / 最终交付物 / 合同与商务 / 前期筹备与变更 / 知识传递与总结。<br>
+                  您可以点击下方<b>预设指令</b>生成组合级汇报材料，或在左侧文档树切换项目、选择文档加入提问，也可以直接输入问题。
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-zone">
+            <div class="preset-row">
+              <button class="preset-chip" data-cmd="weekly"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/><rect width="16" height="18" x="4" y="4" rx="2"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>生成项目组合周报</button>
+              <button class="preset-chip" data-cmd="risk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>总结各项目风险与协调事项</button>
+              <button class="preset-chip" data-cmd="milestone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>梳理各项目里程碑与预警</button>
+            </div>
+            <div class="input-box">
+              <div class="input-tools">
+                <button class="tool-ico" title="引用文档"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+              </div>
+              <textarea id="chatInput" rows="1" placeholder="输入问题，如“IAM 升级项目终验还有哪些前置条件？”（Enter 发送）"></textarea>
+              <button class="send-btn" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>发送</button>
+            </div>
+            <div class="input-hint"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>内容由 AI 基于项目知识库生成，请核对关键数据后使用</div>
+          </div>
+        </div>
+
+        <!-- ============ 右：最近更新 + 统计 ============ -->
+        <div class="right-col">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/><rect width="16" height="18" x="4" y="4" rx="2"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>最近更新文件</div>
+              <span class="card-sub">本周 14 份</span>
+            </div>
+            <div class="file-tabs">
+              <div class="file-tab active" data-time="all">全部 <span class="cnt">8</span></div>
+              <div class="file-tab" data-time="today">今天 <span class="cnt">2</span></div>
+              <div class="file-tab" data-time="yest">昨天 <span class="cnt">2</span></div>
+              <div class="file-tab" data-time="earlier">更早 <span class="cnt">4</span></div>
+            </div>
+            <div class="file-list">
+              <div class="file-item" data-time="today">
+                <div class="file-icon xlsx">XLS</div>
+                <div class="file-main"><div class="file-name">龙岗区AI+HR“数智组工”系统项目实施计划表</div><div class="file-meta"><span class="new">王忻欤 · 2 小时前</span></div></div>
+                <span class="file-proj">数智组工</span>
+              </div>
+              <div class="file-item" data-time="today">
+                <div class="file-icon doc">DOC</div>
+                <div class="file-main"><div class="file-name">城市运行事件数据回流接口催办函（草稿）</div><div class="file-meta"><span class="new">超图软件 · 08-26</span></div></div>
+                <span class="file-proj">城管平台</span>
+              </div>
+              <div class="file-item" data-time="yest">
+                <div class="file-icon doc">DOC</div>
+                <div class="file-main"><div class="file-name">融合通信系统联调报告（通过初步验收）</div><div class="file-meta"><span>中通服 · 昨天</span></div></div>
+                <span class="file-proj">应急指挥</span>
+              </div>
+              <div class="file-item" data-time="yest">
+                <div class="file-icon xlsx">XLS</div>
+                <div class="file-main"><div class="file-name">本周重点工作（8月24日-8月28日）</div><div class="file-meta"><span>数据集团 · 昨天</span></div></div>
+                <span class="file-proj">数智组工</span>
+              </div>
+              <div class="file-item" data-time="earlier">
+                <div class="file-icon pdf">PDF</div>
+                <div class="file-main"><div class="file-name">等保三级测评报告（终版·签章）</div><div class="file-meta"><span>数字认证 · 08-24</span></div></div>
+                <span class="file-proj">IAM 升级</span>
+              </div>
+              <div class="file-item" data-time="earlier">
+                <div class="file-icon pdf">PDF</div>
+                <div class="file-main"><div class="file-name">资产台账模块业务验收意见书</div><div class="file-meta"><span>金蝶 · 08-23</span></div></div>
+                <span class="file-proj">国资监管</span>
+              </div>
+              <div class="file-item" data-time="earlier">
+                <div class="file-icon md">MD</div>
+                <div class="file-main"><div class="file-name">智慧课堂公开课评审纪要</div><div class="file-meta"><span>科大讯飞 · 08-22</span></div></div>
+                <span class="file-proj">教育二期</span>
+              </div>
+              <div class="file-item" data-time="earlier">
+                <div class="file-icon doc">DOC</div>
+                <div class="file-main"><div class="file-name">组工系统接口文档 v2.0（8.21 完整版）</div><div class="file-meta"><span>中电数据 · 08-21</span></div></div>
+                <span class="file-proj">数智组工</span>
+              </div>
+            </div>
+            <div class="file-foot">
+              <div class="file-foot-link">查看全部 14 份更新<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>知识库统计</div>
+              <span class="card-sub">标准 8 大目录</span>
+            </div>
+            <div class="card-body">
+              <div class="kb-stats">
+                <div class="kb-cell"><div class="num">307</div><div class="lbl">文档总数</div></div>
+                <div class="kb-cell"><div class="num">10</div><div class="lbl">覆盖项目</div></div>
+                <div class="kb-cell"><div class="num">14</div><div class="lbl">本周更新</div></div>
+              </div>
+              <div class="kb-chart-title">目录分布<small>共 307 份</small></div>
+              <div class="kb-bars">
+                <div class="kb-bar-row"><span class="kb-bar-label">01-项目管理过程</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="100"></div></div><span class="kb-bar-val">96</span></div>
+                <div class="kb-bar-row"><span class="kb-bar-label">02-需求与设计</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="65"></div></div><span class="kb-bar-val">62</span></div>
+                <div class="kb-bar-row"><span class="kb-bar-label">03-开发与测试</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="47"></div></div><span class="kb-bar-val">45</span></div>
+                <div class="kb-bar-row"><span class="kb-bar-label">04-部署与运维</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="40"></div></div><span class="kb-bar-val">38</span></div>
+                <div class="kb-bar-row"><span class="kb-bar-label">07-前期筹备与变更</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="25"></div></div><span class="kb-bar-val">24</span></div>
+                <div class="kb-bar-row"><span class="kb-bar-label">06-合同与商务</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="19"></div></div><span class="kb-bar-val">18</span></div>
+                <div class="kb-bar-row"><span class="kb-bar-label">05-最终交付物</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="13"></div></div><span class="kb-bar-val">12</span></div>
+                <div class="kb-bar-row"><span class="kb-bar-label">08-知识传递总结</span><div class="kb-bar-track"><div class="kb-bar-fill" data-w="13"></div></div><span class="kb-bar-val">12</span></div>
+              </div>
+              <div class="kb-chart-title" style="margin-top:16px">本周更新趋势<small>08-20 ~ 08-26</small></div>
+              <div class="kb-trend">
+                <div class="kb-trend-col" title="08-20 · 更新 1 份"><div class="kb-trend-bar" style="height:20%"></div><span class="kb-trend-day">20</span></div>
+                <div class="kb-trend-col" title="08-21 · 更新 2 份"><div class="kb-trend-bar" style="height:40%"></div><span class="kb-trend-day">21</span></div>
+                <div class="kb-trend-col" title="08-22 · 更新 2 份"><div class="kb-trend-bar" style="height:40%"></div><span class="kb-trend-day">22</span></div>
+                <div class="kb-trend-col" title="08-23 · 更新 1 份"><div class="kb-trend-bar" style="height:20%"></div><span class="kb-trend-day">23</span></div>
+                <div class="kb-trend-col" title="08-24 · 更新 2 份"><div class="kb-trend-bar" style="height:40%"></div><span class="kb-trend-day">24</span></div>
+                <div class="kb-trend-col" title="08-25 · 更新 1 份"><div class="kb-trend-bar" style="height:20%"></div><span class="kb-trend-day">25</span></div>
+                <div class="kb-trend-col" title="08-26 · 更新 5 份"><div class="kb-trend-bar" style="height:100%"></div><span class="kb-trend-day">今天</span></div>
+              </div>
+              <div class="kb-tip"><b style="color:var(--primary)">小贴士</b>：点击左侧文档树中的文件，可快速向 AI 提问该文档的核心内容。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// 侧边栏折叠
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+// ============ 其他 9 个项目：按标准 8 大目录架构动态生成 ============
+const STD_CATS=[
+  {name:'01-项目管理过程',docs:['项目章程与任命书','周/月度进展报告','风险登记册']},
+  {name:'02-需求与设计',docs:['需求规格说明书（签字版）','系统架构图']},
+  {name:'03-开发与测试',docs:['功能测试用例及报告','接口对接文档']},
+  {name:'04-部署与运维',docs:['部署拓扑图','用户操作手册']},
+  {name:'05-最终交付物',docs:['验收测试报告（签章版）','交付物清单索引']},
+  {name:'06-合同与商务',docs:['主合同及附录','付款与发票记录']},
+  {name:'07-前期筹备与变更',docs:['立项批复与可研','变更申请单']},
+  {name:'08-知识传递与总结',docs:['项目复盘报告','档案移交确认单']}
+];
+const OTHER_PROJECTS=[
+  {name:'龙岗区智慧应急指挥平台（一期）',badge:41},
+  {name:'区政务服务中心“一网通办”能力升级',badge:38},
+  {name:'龙岗区城市运行管理服务平台',badge:35},
+  {name:'区属国企国有资产在线监管系统',badge:29},
+  {name:'龙岗区智慧社区综合服务平台',badge:24},
+  {name:'龙岗区教育公共服务平台（二期）',badge:33},
+  {name:'龙岗区医疗卫生数据中枢',badge:8},
+  {name:'区统一身份认证平台（IAM）升级工程',badge:45},
+  {name:'龙岗区产业经济运行监测平台',badge:22}
+];
+(function(){
+  const tree=document.getElementById('docTree');
+  const chevSvg='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+  const dirSvg='<svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>';
+  const fileSvg='<svg class="node-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>';
+  OTHER_PROJECTS.forEach(p=>{
+    const node=document.createElement('div');
+    node.className='tree-node';
+    let html='<div class="tree-row">'+chevSvg+dirSvg+'<span class="node-name">'+p.name+'</span><span class="node-badge">'+p.badge+'</span></div><div class="tree-children">';
+    STD_CATS.forEach(cat=>{
+      html+='<div class="tree-node"><div class="tree-row">'+chevSvg+dirSvg+'<span class="node-name">'+cat.name+'</span></div><div class="tree-children">';
+      cat.docs.forEach(f=>{
+        const full=p.name.replace(/[（(].*?[)）]/g,'')+' · '+f;
+        html+='<div class="tree-row file-row">'+fileSvg+'<span class="node-name" data-file="'+full+'">'+f+'</span></div>';
+      });
+      html+='</div></div>';
+    });
+    html+='</div>';
+    node.innerHTML=html;
+    tree.appendChild(node);
+  });
+})();
+// 文档树展开/收起
+document.querySelectorAll('#docTree .tree-row').forEach(row=>{
+  row.addEventListener('click',e=>{
+    const node=row.closest('.tree-node');
+    const isFile=row.classList.contains('file-row');
+    if(node&&row.querySelector('.chev')){node.classList.toggle('open');e.stopPropagation();return}
+    if(isFile){
+      document.querySelectorAll('.file-row.active').forEach(f=>f.classList.remove('active'));
+      row.classList.add('active');
+      const name=row.querySelector('.node-name').dataset.file||row.querySelector('.node-name').textContent;
+      const input=document.getElementById('chatInput');
+      input.value='请总结《'+name+'》的核心内容';
+      input.focus();
+    }
+  });
+});
+// ============ 对话逻辑 ============
+const msgs=document.getElementById('chatMessages');
+const input=document.getElementById('chatInput');
+const sendBtn=document.getElementById('sendBtn');
+const now=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+function scrollBottom(){msgs.scrollTop=msgs.scrollHeight}
+function addUserMsg(text){
+  const el=document.createElement('div');
+  el.className='msg user';
+  el.innerHTML='<div class="msg-avt user">李</div><div class="msg-body"><div class="msg-name">李标 · '+now()+'</div><div class="msg-bubble"></div></div>';
+  el.querySelector('.msg-bubble').textContent=text;
+  msgs.appendChild(el);scrollBottom();
+}
+function addAiMsg(html){
+  const el=document.createElement('div');
+  el.className='msg ai';
+  el.innerHTML='<div class="msg-avt ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></div><div class="msg-body"><div class="msg-name">AI 助手 · '+now()+'</div><div class="msg-bubble"><span class="typing"><i></i><i></i><i></i></span></div></div>';
+  msgs.appendChild(el);scrollBottom();
+  const bubble=el.querySelector('.msg-bubble');
+  setTimeout(()=>{bubble.innerHTML='<div class="ai-md">'+html+'</div>';scrollBottom()},900);
+}
+// 预设指令的 AI 回复（基于 10 个项目组合 Mock 数据）
+const responses={
+weekly:`<h4>项目组合周报（10 个在管项目 · 2026-08-24 ~ 08-28）</h4>
+<h5>一、组合整体情况</h5>
+<p>整体进度 <b>48%</b>：健康 4 · 需关注 4 · 高风险 1 · 规划立项 1。本周达成关键里程碑 6 项，新增风险 3 项（含升级 1 项），新增待协调事项 4 项。</p>
+<h5>二、各项目本周进展</h5>
+<table>
+<tr><th>项目</th><th>进度</th><th>本周动态</th></tr>
+<tr><td>数智组工系统</td><td>32%</td><td>中电 8.21 补充完整接口文档，数据集成开发解除阻塞；数字人 MVP 联调完成</td></tr>
+<tr><td>智慧应急指挥平台</td><td>68%</td><td>融合通信系统联调完成，指挥大屏与通信模块通过初步验收</td></tr>
+<tr><td>“一网通办”能力升级</td><td>45%</td><td>事项库标准化改造过半；“好差评”对接延期风险已闭环</td></tr>
+<tr><td>城市运行管理服务平台</td><td>38%</td><td>渣土车 AI 识别准确率 92% 达标；事件数据回流接口仍未打通（高风险）</td></tr>
+<tr><td>国资在线监管系统</td><td>82%</td><td>资产台账模块通过业务验收，试点国企数据迁移校验完成</td></tr>
+<tr><td>智慧社区综合服务平台</td><td>27%</td><td>首批 12 个试点社区门禁联动上线；网格数据标准待统一</td></tr>
+<tr><td>教育公共服务平台（二期）</td><td>55%</td><td>学业质量分析模块上线试运行，覆盖 40 所样本学校</td></tr>
+<tr><td>医疗卫生数据中枢</td><td>前期 60%</td><td>完成三甲医院需求调研，可研报告编制中</td></tr>
+<tr><td>IAM 升级工程</td><td>94%</td><td>等保三级测评通过，47 个系统完成单点接入，计划 09.10 终验</td></tr>
+<tr><td>产业经济运行监测平台</td><td>33%</td><td>企业图谱关系挖掘引擎进场开发</td></tr>
+</table>
+<h5>三、下周重点与风险提示</h5>
+<ul>
+<li><b>数智组工</b>：UI 定稿（08-27）与组工接口开发（08-28）本周到期，初设内部评审 08-30 截止；</li>
+<li><b>城管平台</b>：事件数据回流接口影响 09.10 一网统管区级演示，需书面催办；</li>
+<li><b>IAM 升级</b>：09.10 提交终验申请，需提前完成交付物清单索引（合同 1:1 映射）整理。</li>
+</ul>
+<div class="src"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>参考来源：各项目 01-项目管理过程/02-监控与报告（周报、风险登记册）等 307 份知识库文档</div>`,
+risk:`<h4>各项目风险与协调事项总结（截至 2026-08-26）</h4>
+<h5>一、组合风险总览（23 项 · 跟进中 12 · 高影响 5）</h5>
+<table>
+<tr><th>项目</th><th>等级</th><th>风险项与应对</th></tr>
+<tr><td>城市运行管理服务平台</td><td><b style="color:#F53F3F">高</b></td><td>城管事件数据回流接口未打通，影响 09.10 区级演示；已发书面催办函</td></tr>
+<tr><td>数智组工系统</td><td><b style="color:#F53F3F">高</b></td><td>内外网服务器资源待政数局协调，影响 09.08 部署节点；每日跟进</td></tr>
+<tr><td>数智组工系统</td><td><b style="color:#F53F3F">高</b></td><td>数字人音色方案双重不确定性（08-25 已超期）；已提交全部音色需求</td></tr>
+<tr><td>医疗卫生数据中枢</td><td><b style="color:#FF7D00">中</b></td><td>可研未批复存在预算裁减风险；加快 10 月报区发改节奏</td></tr>
+<tr><td>智慧社区平台</td><td><b style="color:#FF7D00">中</b></td><td>街道网格化数据标准不统一；待政数局出台统一规范</td></tr>
+</table>
+<h5>二、本周闭环（4 项）</h5>
+<ul>
+<li>数智组工：中电接口文档缺失（08-21 补齐）、龙岗湾嵌入需求（08-22 确认移出）；</li>
+<li>一网通办：“好差评”系统对接延期风险（08-24 市政务中台排期确认）；</li>
+<li>教育平台：智慧课堂设备到货延迟风险（08-22 分批到货闭环）。</li>
+</ul>
+<h5>三、待协调事项（15 项 · 跨部门 9 · 跨层级 6）</h5>
+<p>优先级最高的两项：<b>数智组工内外网服务器资源（内网5台+外网3台，剩 13 天）</b>、<b>智慧社区网格化数据标准（影响 11 个街道数据归集）</b>，均需提请区领导协调政数局。建议在 09 月第一次项目例会前形成书面协调清单。</p>
+<div class="src"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>参考来源：各项目 01-项目管理过程（风险登记册、问题跟踪日志）与需协调事项清单</div>`,
+milestone:`<h4>各项目里程碑达成与预警（截至 2026-08-26）</h4>
+<h5>一、本周关键节点（8 项 · 达成 6 · 预警 1）</h5>
+<table>
+<tr><th>项目</th><th>里程碑</th><th>状态</th></tr>
+<tr><td>IAM 升级工程</td><td>等保三级测评通过</td><td><b style="color:#00B42A">已达成</b></td></tr>
+<tr><td>应急指挥平台</td><td>融合通信系统联调完成</td><td><b style="color:#00B42A">已达成</b></td></tr>
+<tr><td>国资监管系统</td><td>资产台账模块业务验收</td><td><b style="color:#00B42A">已达成</b></td></tr>
+<tr><td>教育平台（二期）</td><td>智慧课堂公开课验收</td><td><b style="color:#00B42A">已达成</b></td></tr>
+<tr><td>数智组工</td><td>数字人 MVP 联调（8.19）</td><td><b style="color:#00B42A">已达成</b></td></tr>
+<tr><td>数智组工</td><td>组工接口文档交付</td><td><b style="color:#00B42A">已达成（延期4天闭环）</b></td></tr>
+<tr><td>数智组工</td><td>UI 设计定稿（08-27）</td><td><b style="color:#FF7D00">预警：剩 1 天</b>，驾驶舱参考样式未定稿</td></tr>
+<tr><td>智慧社区平台</td><td>首批社区门禁联动上线</td><td><b style="color:#00B42A">已达成</b></td></tr>
+</table>
+<h5>二、未来 30 天重点节点</h5>
+<ul>
+<li><b>09.02</b> 数智组工：组工接口开发完成（接入侧）——当前进度 20%，存在延期风险；</li>
+<li><b>09.08</b> 数智组工：基础环境部署完成——依赖政数局服务器资源协调；</li>
+<li><b>09.10</b> IAM 升级：提交终验申请；城管平台：一网统管区级演示——依赖数据回流接口；</li>
+<li><b>09.20</b> 数智组工：安全测评完成；<b>09.30</b> 试运行启动（16 项里程碑中后程节点密集）。</li>
+</ul>
+<h5>三、建议</h5>
+<p>数智组工后程里程碑密集（9-11 月共 10 项），建议按周滚动核对前置依赖；城管平台演示节点建议提前组织一次全链路演练以暴露集成问题。</p>
+<div class="src"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>参考来源：各项目 01-项目管理过程/02-监控与报告（周报）与里程碑计划总览</div>`,
+generic:`<p>已收到您的问题。基于项目组合知识库（10 个项目 · 307 份文档），与“<b>%Q%</b>”最相关的信息如下：</p>
+<ul>
+<li><b>组合状态</b>：10 个在管项目整体进度 48%，IAM 升级（94%）与应急指挥平台（68%）进入收尾；数智组工（32%）处于提前建设阶段，医疗数据中枢处于可研编制阶段；</li>
+<li><b>重点关注</b>：数智组工 UI 定稿与初设评审（本周）、城管平台数据回流接口（09.10 演示）、政数局服务器资源与网格化数据标准两项跨项目协调；</li>
+<li>如需结构化输出，可点击下方预设指令生成<b>项目组合周报</b>、<b>各项目风险与协调总结</b>或<b>各项目里程碑分析</b>；也可以在左侧文档树中定位具体项目的文档后精确提问。</li>
+</ul>
+<div class="src"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>参考来源：项目交付中心知识库（标准 8 大目录架构 · 10 个项目）</div>`
+};
+const cmdLabel={weekly:'生成项目组合周报',risk:'总结各项目风险与协调事项',milestone:'梳理各项目里程碑与预警'};
+function ask(text,cmd){
+  addUserMsg(text);
+  const html=cmd?responses[cmd]:responses.generic.replace('%Q%',text.length>40?text.slice(0,40)+'…':text);
+  addAiMsg(html);
+}
+document.querySelectorAll('.preset-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>ask(cmdLabel[chip.dataset.cmd],chip.dataset.cmd));
+});
+function send(){
+  const text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  ask(text,null);
+}
+sendBtn.addEventListener('click',send);
+input.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}
+});
+document.getElementById('clearChat').addEventListener('click',()=>{
+  msgs.innerHTML='<div class="msg ai"><div class="msg-avt ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></div><div class="msg-body"><div class="msg-name">AI 助手 · '+now()+'</div><div class="msg-bubble">对话已清空。您可以点击下方<b>预设指令</b>快速生成汇报材料，或直接输入问题。</div></div></div>';
+});
+// 最近更新文件时间筛选
+document.querySelectorAll('.file-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.file-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const v=tab.dataset.time;
+    document.querySelectorAll('.file-list .file-item').forEach(item=>{
+      item.classList.toggle('hidden',v!=='all'&&item.dataset.time!==v);
+    });
+  });
+});
+// 目录分布条形图入场动画
+document.querySelectorAll('.kb-bar-fill').forEach((bar,i)=>{
+  setTimeout(()=>bar.style.width=bar.dataset.w+'%',150+i*70);
+});
+</script>
+</body>
+</html>

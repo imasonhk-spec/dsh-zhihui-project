@@ -1,0 +1,18 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { RouterProvider } from 'react-router-dom'
+import '@arco-design/web-react/dist/css/arco.css'
+import './theme/arco-theme.css'
+import './styles/global.css'
+import './styles/meeting-todos.css'
+import { router } from './router.tsx'
+import { ensureAuth } from './lib/auth-gate.ts'
+
+// 智汇统一登录守卫：未登录先跳门户，登录后才渲染业务页面
+void ensureAuth('project').then(() => {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>,
+  )
+})

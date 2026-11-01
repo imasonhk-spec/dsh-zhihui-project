@@ -1,0 +1,13 @@
+restore_point_status=verified
+created_at=2026-09-14T11:54:00+08:00
+server_major=16
+pg_dump_version=pg_dump (PostgreSQL) 16.13
+pg_restore_version=pg_restore (PostgreSQL) 16.13
+source_database=project_manager
+source_baseline=14/1015/21/0/20/0
+restored_baseline=14/1015/21/0/20/0
+backup_file=project-manager-pre-g3.dump
+backup_bytes=5219603
+backup_sha256=3818c85b61b15bf59b0f48acc7db05559f4c319206f84bb329bcd7c2a7313cbf
+restore_list_entries=840
+restore_database_ephemeral=true

@@ -1,0 +1,94 @@
+{
+  "registerVersion": "1.0.0",
+  "policy": {
+    "unit": "artifact",
+    "defaultStatus": "blocked",
+    "publishRequires": "verified",
+    "indexRequires": "verified",
+    "sameSiteInferenceAllowed": false
+  },
+  "artifacts": [
+    {
+      "artifactId": "zhihui-cn-government-project-management-1.0.0",
+      "title": "智汇中国政企项目管理原创模板包",
+      "origin": "original",
+      "sourceAuthority": "智汇项目团队",
+      "sourceUrl": null,
+      "license": "Proprietary-Internal",
+      "licenseEvidence": "仓库内原创声明与本登记；不含复制的外部模板正文",
+      "verificationStatus": "verified",
+      "verifiedBy": "template-engineer",
+      "verifiedAt": "2026-09-15",
+      "publishable": true,
+      "indexable": true,
+      "notes": "仅表示制品许可核验通过；manifest仍保持candidate且禁止生产导入。"
+    },
+    {
+      "artifactId": "open-pm2-business-case",
+      "title": "Open PM² Business Case（候选外部制品）",
+      "origin": "external",
+      "sourceAuthority": "European Commission",
+      "sourceUrl": null,
+      "license": null,
+      "licenseEvidence": null,
+      "verificationStatus": "blocked",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "publishable": false,
+      "indexable": false,
+      "notes": "本任务未下载、未复制、未导入；须逐件取得权威URL、具体版本与许可证据后复核。"
+    },
+    {
+      "artifactId": "open-pm2-project-charter",
+      "title": "Open PM² Project Charter（候选外部制品）",
+      "origin": "external",
+      "sourceAuthority": "European Commission",
+      "sourceUrl": null,
+      "license": null,
+      "licenseEvidence": null,
+      "verificationStatus": "blocked",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "publishable": false,
+      "indexable": false,
+      "notes": "未以同项目许可推定逐件许可；禁止发布与索引。"
+    },
+    {
+      "artifactId": "open-pm2-status-report",
+      "title": "Open PM² Project Status Report（候选外部制品）",
+      "origin": "external",
+      "sourceAuthority": "European Commission",
+      "sourceUrl": null,
+      "license": null,
+      "licenseEvidence": null,
+      "verificationStatus": "blocked",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "publishable": false,
+      "indexable": false,
+      "notes": "本包project_progress为原创字段契约，不宣称Open PM²官方中文译本。"
+    },
+    {
+      "artifactId": "open-pm2-acceptance-and-end",
+      "title": "Open PM² Acceptance/Project-end artefacts（候选外部制品组）",
+      "origin": "external",
+      "sourceAuthority": "European Commission",
+      "sourceUrl": null,
+      "license": null,
+      "licenseEvidence": null,
+      "verificationStatus": "blocked",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "publishable": false,
+      "indexable": false,
+      "notes": "制品组不能代替逐文件登记；发现具体文件时须拆分新条目并分别核验。"
+    }
+  ],
+  "attestation": {
+    "externalArtifactsCopied": false,
+    "externalArtifactsPublished": false,
+    "externalArtifactsIndexed": false,
+    "productionKnowledgeBaseImported": false,
+    "wechatKnowledgeBaseModified": false
+  }
+}

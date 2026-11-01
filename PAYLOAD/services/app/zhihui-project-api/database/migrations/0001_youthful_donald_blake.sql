@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "approval_project_stage_task_uidx" ON "approval_items" USING btree ("project_id","stage_code","task_name");

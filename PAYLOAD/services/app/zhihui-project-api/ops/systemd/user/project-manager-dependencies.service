@@ -1,0 +1,15 @@
+[Unit]
+Description=Project Manager dependency containers
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/lgsj/harness/project-manager
+ExecStart=/bin/sh -c '/run/current-system/sw/bin/podman start project-manager-postgres project-manager-redis project-manager-minio'
+ExecStart=/bin/sh -c 'for attempt in $(seq 1 60); do /run/current-system/sw/bin/pg_isready -h 127.0.0.1 -p 55432 -U pm_user -d project_manager >/dev/null 2>&1 && exit 0; sleep 2; done; echo "PostgreSQL is not ready on 127.0.0.1:55432" >&2; exit 1'
+TimeoutStartSec=130
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

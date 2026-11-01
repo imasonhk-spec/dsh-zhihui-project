@@ -1,0 +1,20 @@
+[Unit]
+Description=Weixin Account Manager
+After=network-online.target dsh-web.service
+Wants=dsh-web.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/lgsj/harness/weixin-account-manager
+Environment=PATH=/home/lgsj/.local/pnpm/bin:/home/lgsj/.nix-profile/bin:/run/current-system/sw/bin:/usr/bin:/bin
+Environment=PORT=3212
+Environment=DSH_CONTROL_ENABLED=1
+Environment=DSH_CONTROL_URL=http://127.0.0.1:3080/dsh-channels/api/v2
+ExecStart=/run/current-system/sw/bin/node server.mjs
+Restart=always
+RestartSec=3
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+[Install]
+WantedBy=default.target

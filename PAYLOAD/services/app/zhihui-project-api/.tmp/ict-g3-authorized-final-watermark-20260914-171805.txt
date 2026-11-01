@@ -1,0 +1,13 @@
+watermark_status=authorized_final_import_complete
+captured_at=2026-09-14T17:18:05+08:00
+authorized_session=session-afcc3a25-d740-42e7-af15-e175834f692e
+user_confirmation=all_imports_completed
+business_counts=14/1180/21/64/0
+journal=21
+project_structure=3/18
+project_ledgers=16/759/4800
+opportunity_ledgers=2/128/813/1/5
+import_jobs=355
+project_public_empty_rollback=permanently_forbidden
+production_capture=repeatable_read_read_only
+sensitive_values_recorded=false

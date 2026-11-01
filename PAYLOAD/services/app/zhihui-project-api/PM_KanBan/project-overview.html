@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目总览 - 项目交付中心</title>
+<style>
+/* ============ Vben Admin 风格设计系统 ============ */
+:root{
+  --primary:#095AFF;--primary-600:#2E73FF;--primary-50:#EDF3FF;
+  --success:#00B42A;--success-50:#E8FFEA;
+  --warning:#FF7D00;--warning-50:#FFF7E8;
+  --danger:#F53F3F;--danger-50:#FFECE8;
+  --purple:#722ED1;--purple-50:#F4EBFF;
+  --cyan:#0FB6C4;--cyan-50:#E6FAFB;
+  --gold:#DC9B04;--gold-50:#FFF9E6;
+  --text-1:#1D2129;--text-2:#4E5969;--text-3:#86909C;--text-4:#C0C6CF;
+  --border:#E5E6EB;--fill-1:#F7F8FA;--fill-2:#F2F3F5;
+  --bg:#F5F6FA;--radius:10px;
+  --shadow:0 1px 2px rgba(29,33,41,.04),0 2px 8px rgba(29,33,41,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{height:100%}
+body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text-1);background:var(--bg);-webkit-font-smoothing:antialiased}
+ul,ol{list-style:none}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#D4D7DE;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#B8BCC4}
+::-webkit-scrollbar-track{background:transparent}
+svg{display:block}
+
+/* ============ 布局 ============ */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:236px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .25s cubic-bezier(.4,0,.2,1);z-index:100}
+.sidebar.collapsed{width:64px}
+.sidebar-logo{height:56px;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden;white-space:nowrap}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#095AFF,#4D8AFF);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.logo-mark svg{width:18px;height:18px}
+.logo-text{font-size:15px;font-weight:600;color:var(--text-1)}
+.menu{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px}
+.menu-group-title{font-size:11px;color:#A9AEB8;padding:12px 10px 6px;letter-spacing:1px;white-space:nowrap}
+.menu-item{display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;margin:2px 0;border-radius:8px;color:var(--text-2);font-size:14px;white-space:nowrap;transition:all .15s}
+.menu-item svg{width:18px;height:18px;flex-shrink:0}
+.menu-item:hover{background:var(--fill-2);color:var(--text-1)}
+.menu-item.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.menu-badge{margin-left:auto;font-size:10px;height:16px;padding:0 5px;border-radius:4px;background:linear-gradient(135deg,#722ED1,#B37FEB);color:#fff;display:flex;align-items:center;font-weight:600}
+.sidebar.collapsed .logo-text,.sidebar.collapsed .menu-group-title,.sidebar.collapsed .menu-item span,.sidebar.collapsed .menu-badge,.sidebar.collapsed .sidebar-foot{display:none}
+.sidebar.collapsed .menu-item{justify-content:center;padding:0}
+.sidebar-foot{padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-4);white-space:nowrap}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.header{height:56px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.icon-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:.15s;position:relative;flex-shrink:0}
+.icon-btn:hover{background:var(--fill-2);color:var(--text-1)}
+.icon-btn svg{width:19px;height:19px}
+.noti-dot{position:absolute;top:7px;right:7px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:1.5px solid #fff}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3)}
+.breadcrumb b{color:var(--text-1);font-weight:600}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.header-search{display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;background:var(--fill-1);border:1px solid transparent;border-radius:8px;color:var(--text-4);width:200px;cursor:pointer;transition:.15s;font-size:13px}
+.header-search:hover{border-color:var(--primary)}
+.header-search svg{width:15px;height:15px;flex-shrink:0}
+.divider-v{width:1px;height:20px;background:var(--border);margin:0 6px}
+.user-chip{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:8px;cursor:pointer;transition:.15s}
+.user-chip:hover{background:var(--fill-2)}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#095AFF,#4D8AFF);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.user-info{line-height:1.25}
+.user-name{font-size:13px;color:var(--text-1)}
+.user-role{font-size:11px;color:var(--text-3)}
+.user-chip .chev{width:13px;height:13px;color:var(--text-3)}
+.content{flex:1;overflow-y:auto;padding:16px 20px 28px}
+
+/* ============ 通用组件 ============ */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:16px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:600;line-height:1.3;display:flex;align-items:center;gap:8px}
+.page-desc{font-size:13px;color:var(--text-3);margin-top:4px}
+.page-actions{display:flex;gap:8px;align-items:center}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0;gap:12px;flex-wrap:wrap}
+.card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-title svg{width:17px;height:17px;color:var(--primary)}
+.card-sub{font-size:12px;color:var(--text-3)}
+.card-body{padding:16px 20px}
+.card-body.no-pad{padding:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid transparent;transition:.15s;user-select:none;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-600)}
+.btn-default{background:#fff;border-color:var(--border);color:var(--text-2)}
+.btn-default:hover{border-color:var(--primary);color:var(--primary)}
+.tag{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:4px;font-size:12px;line-height:1;white-space:nowrap;font-weight:400}
+.tag.dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.blue{background:var(--primary-50);color:var(--primary)}
+.tag.green{background:var(--success-50);color:var(--success)}
+.tag.red{background:var(--danger-50);color:var(--danger)}
+.tag.orange{background:var(--warning-50);color:var(--warning)}
+.tag.gray{background:var(--fill-2);color:var(--text-3)}
+.tag.purple{background:var(--purple-50);color:var(--purple)}
+.tag.cyan{background:var(--cyan-50);color:var(--cyan)}
+.v-select{position:relative;min-width:150px}
+.v-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;height:32px;padding:0 10px 0 12px;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-1);cursor:pointer;transition:.15s;width:100%}
+.v-select-trigger:hover{border-color:var(--primary)}
+.v-select.open .v-select-trigger{border-color:var(--primary);box-shadow:0 0 0 2px rgba(9,90,255,.1)}
+.v-select-trigger .chev{width:14px;height:14px;color:var(--text-3);transition:.2s;flex-shrink:0}
+.v-select.open .chev{transform:rotate(180deg)}
+.v-select-menu{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(29,33,41,.12);padding:4px;z-index:60;display:none;max-height:260px;overflow-y:auto}
+.v-select.open .v-select-menu{display:block}
+.v-select-option{padding:7px 10px;border-radius:6px;font-size:13px;color:var(--text-2);cursor:pointer}
+.v-select-option:hover{background:var(--fill-2)}
+.v-select-option.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.date-range{display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-2);background:#fff;white-space:nowrap}
+.date-range svg{width:14px;height:14px;color:var(--text-3)}
+.filter-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.filter-item{display:flex;align-items:center;gap:8px}
+.filter-label{font-size:13px;color:var(--text-3);white-space:nowrap}
+.progress{display:flex;align-items:center;gap:8px;min-width:120px}
+.progress-track{flex:1;height:6px;background:var(--fill-2);border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;border-radius:3px;background:var(--primary)}
+.progress-num{font-size:12px;color:var(--text-3);min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ============ 页面专属 ============ */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+.stat-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;display:flex;align-items:center;gap:16px}
+.stat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-icon svg{width:22px;height:22px}
+.stat-icon.blue{background:var(--primary-50);color:var(--primary)}
+.stat-icon.cyan{background:var(--cyan-50);color:var(--cyan)}
+.stat-icon.red{background:var(--danger-50);color:var(--danger)}
+.stat-icon.orange{background:var(--warning-50);color:var(--warning)}
+.stat-value{font-size:26px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat-label{font-size:13px;color:var(--text-3);margin-top:3px}
+.stat-trend{font-size:12px;margin-top:4px;display:flex;align-items:center;gap:4px}
+.stat-trend .up{color:var(--danger)}
+.stat-trend .down{color:var(--success)}
+.stat-trend .flat{color:var(--text-4)}
+.stat-trend svg{width:12px;height:12px}
+.ov-layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;align-items:start}
+.health-legend{display:flex;gap:14px;font-size:12px;color:var(--text-3)}
+.health-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:1px}
+.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.proj-card{border:1px solid var(--fill-2);border-radius:10px;padding:14px 16px;transition:.15s;cursor:default;background:#fff}
+.proj-card:hover{border-color:#C9D8FF;box-shadow:0 4px 12px rgba(9,90,255,.08)}
+.proj-head{display:flex;align-items:flex-start;gap:8px}
+.health-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px;position:relative}
+.health-dot.green{background:var(--success)}
+.health-dot.yellow{background:var(--warning)}
+.health-dot.red{background:var(--danger)}
+.health-dot.gray{background:var(--text-4)}
+.health-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:inherit;opacity:.2}
+.proj-name{font-size:13.5px;font-weight:600;line-height:1.45;flex:1;color:var(--text-1)}
+.proj-tags{display:flex;align-items:center;gap:6px;margin:10px 0 8px 18px;flex-wrap:wrap}
+.proj-vendors{font-size:12px;color:var(--text-3)}
+.proj-issue{display:flex;gap:6px;margin:0 0 10px 18px;font-size:12.5px;color:var(--danger);background:var(--danger-50);border-radius:6px;padding:6px 10px;line-height:1.5;align-items:flex-start}
+.proj-issue svg{width:14px;height:14px;flex-shrink:0;margin-top:1px}
+.proj-issue.warn{color:var(--warning);background:var(--warning-50)}
+.proj-issue.ok{color:var(--success);background:var(--success-50)}
+.proj-issue.info{color:var(--text-3);background:var(--fill-1)}
+.proj-progress-row{display:flex;align-items:center;gap:10px;margin-left:18px}
+.proj-progress-label{font-size:12px;color:var(--text-3);white-space:nowrap}
+.proj-foot{display:flex;align-items:center;justify-content:space-between;margin:12px 0 0 18px;gap:8px}
+.week-chip{font-size:12px;color:var(--text-2);background:var(--fill-1);border-radius:4px;padding:3px 8px;display:inline-flex;align-items:center;gap:5px;max-width:75%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.week-chip::before{content:'Δ';color:var(--primary);font-weight:700}
+.proj-link{font-size:12px;color:var(--primary);white-space:nowrap}
+.proj-link:hover{text-decoration:underline}
+/* AI 洞察 */
+.ai-card{background:linear-gradient(180deg,#F7F9FF 0%,#FFFFFF 45%)}
+.ai-head{display:flex;align-items:center;gap:10px;padding:16px 20px 0}
+.ai-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#722ED1,#B37FEB);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.ai-avatar svg{width:19px;height:19px}
+.ai-name{font-size:15px;font-weight:600}
+.ai-time{font-size:11px;color:var(--text-3);margin-top:2px}
+.ai-body{padding:14px 20px 16px;display:flex;flex-direction:column;gap:10px}
+.ai-item{display:flex;gap:10px;background:#fff;border:1px solid #EDE9FE;border-radius:10px;padding:12px 14px;line-height:1.65;font-size:13px;color:var(--text-2)}
+.ai-item b{color:var(--text-1)}
+.ai-emoji{flex-shrink:0;font-size:15px;line-height:1.5}
+.ai-item .delta{display:block;margin-top:6px;font-size:12px;color:var(--purple);background:var(--purple-50);border-radius:4px;padding:3px 8px}
+.ai-suggest{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-2);background:var(--fill-1);border-radius:8px;padding:10px 12px}
+.ai-suggest svg{width:15px;height:15px;color:var(--primary);flex-shrink:0}
+/* 本周变化 */
+.chip-group{display:flex;gap:6px;flex-wrap:wrap}
+.chip{height:26px;padding:0 12px;border-radius:14px;border:1px solid var(--border);font-size:12px;color:var(--text-2);display:inline-flex;align-items:center;cursor:pointer;transition:.15s;background:#fff}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.change-list{display:flex;flex-direction:column}
+.change-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px dashed var(--fill-2);align-items:flex-start}
+.change-item:last-child{border-bottom:none}
+.change-tag{flex-shrink:0;width:44px;height:22px;border-radius:4px;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.change-tag.progress{background:var(--primary-50);color:var(--primary)}
+.change-tag.risk{background:var(--danger-50);color:var(--danger)}
+.change-tag.coord{background:var(--warning-50);color:var(--warning)}
+.change-tag.done{background:var(--success-50);color:var(--success)}
+.change-txt{font-size:13px;color:var(--text-2);line-height:1.6}
+.change-txt b{color:var(--text-1);font-weight:600}
+.change-time{font-size:11px;color:var(--text-4);margin-top:2px}
+@media (max-width:1280px){.ov-layout{grid-template-columns:1fr}.proj-grid{grid-template-columns:1fr}}
+@media (max-width:1000px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ 侧边栏 ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+      <span class="logo-text">项目交付中心</span>
+    </div>
+    <nav class="menu">
+      <div class="menu-group-title">项目交付</div>
+      <a class="menu-item active" href="project-overview.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>项目总览</span></a>
+      <a class="menu-item" href="approval-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m3 15 2 2 4-4"/></svg><span>项目立项报批</span></a>
+      <a class="menu-item" href="tasks-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg><span>项目详细任务</span></a>
+      <a class="menu-item" href="milestone-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg><span>里程碑达成</span></a>
+      <a class="menu-item" href="risk-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>项目风险</span></a>
+      <a class="menu-item" href="coordination-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><span>需要协调的事项</span></a>
+      <div class="menu-group-title">智能服务</div>
+      <a class="menu-item" href="ai-assistant.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg><span>项目智能助手</span><span class="menu-badge">AI</span></a>
+    </nav>
+    <div class="sidebar-foot">Vben Admin · v2.3.0</div>
+  </aside>
+
+  <!-- ============ 主区域 ============ -->
+  <div class="main">
+    <header class="header">
+      <button class="icon-btn" id="sidebarToggle" title="折叠菜单"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+      <div class="breadcrumb">项目交付中心 <span>/</span> <b>项目总览</b></div>
+      <div class="header-right">
+        <div class="header-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>搜索项目 / 风险 / 事项</div>
+        <button class="icon-btn" title="消息通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><i class="noti-dot"></i></button>
+        <div class="divider-v"></div>
+        <div class="user-chip">
+          <div class="avatar">李</div>
+          <div class="user-info"><div class="user-name">李标</div><div class="user-role">交付中心 总监</div></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 页头 -->
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">项目总览</h1>
+          <p class="page-desc">在管项目组合总览 · 10 个项目（建设/试运行 8 · 待验收 1 · 规划立项 1）· 数据截至 2026-08-26 18:00（周三）</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-default"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>导出周报</button>
+          <a class="btn btn-primary" href="approval-view.html" style="text-decoration:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m3 15 2 2 4-4"/></svg>立项报批进度</a>
+        </div>
+      </div>
+
+      <!-- 统计卡片 -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></div>
+          <div>
+            <div class="stat-value">10</div>
+            <div class="stat-label">在管项目总数</div>
+            <div class="stat-trend"><span class="flat">— 组合整体进度 48%</span> 健康 4 · 需关注 4 · 高风险 1</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg></div>
+          <div>
+            <div class="stat-value">8</div>
+            <div class="stat-label">本周关键里程碑</div>
+            <div class="stat-trend"><span class="down">▼ 6 已达成</span> 进行中 1 · 预警 1</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div>
+          <div>
+            <div class="stat-value">23</div>
+            <div class="stat-label">风险与问题</div>
+            <div class="stat-trend"><span class="up">▲ 3 较上周</span> 跟进中 12 · 高影响 5</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></div>
+          <div>
+            <div class="stat-value">15</div>
+            <div class="stat-label">待协调事项</div>
+            <div class="stat-trend"><span class="up">▲ 4 本周新增</span> 跨部门 9 · 跨层级 6</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ov-layout">
+        <!-- 左：项目概览与阶段进度 -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>项目健康度总览</div>
+              <div class="card-sub" style="margin-top:3px">10 个在管项目 · 按健康度与整体进度排序 · 点击卡片查看详情</div>
+            </div>
+            <div class="health-legend">
+              <span><i style="background:var(--success)"></i>健康</span>
+              <span><i style="background:var(--warning)"></i>需关注</span>
+              <span><i style="background:var(--danger)"></i>高风险</span>
+              <span><i style="background:var(--text-4)"></i>未启动</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="proj-grid">
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot yellow" title="需关注"></span>
+                  <span class="proj-name">龙岗区AI+HR“数智组工”系统</span>
+                  <span class="tag red">未立项</span>
+                </div>
+                <div class="proj-tags"><span class="tag blue">提前投入建设</span><span class="tag orange dot">接口联调周</span><span class="proj-vendors">数据集团 · 中电数据 · 华策咨询</span></div>
+                <div class="proj-issue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>尚未正式立项；建设工期预计立项批复后 6 个月内完成终验</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:32%"></div></div><span class="progress-num">32%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">建议书 8.20 通过局内审批</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot green" title="健康"></span>
+                  <span class="proj-name">龙岗区智慧应急指挥平台（一期）</span>
+                  <span class="tag green">建设中</span>
+                </div>
+                <div class="proj-tags"><span class="tag cyan">智慧应急</span><span class="proj-vendors">中通服 · 华为云 · 08.03-12.20</span></div>
+                <div class="proj-issue ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>指挥大屏与融合通信模块通过初步验收，进入试运行准备阶段</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:68%;background:var(--success)"></div></div><span class="progress-num">68%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">融合通信系统联调完成</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot yellow" title="需关注"></span>
+                  <span class="proj-name">区政务服务中心“一网通办”能力升级</span>
+                  <span class="tag blue">建设中</span>
+                </div>
+                <div class="proj-tags"><span class="tag blue">政务服务</span><span class="proj-vendors">数字集团 · 深圳CA · 07.14-11.30</span></div>
+                <div class="proj-issue warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>“好差评”系统对接市政务中台延期 1 周，影响事项评价上线节点</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:45%;background:var(--warning)"></div></div><span class="progress-num">45%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">事项库标准化改造过半</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot red" title="高风险"></span>
+                  <span class="proj-name">龙岗区城市运行管理服务平台</span>
+                  <span class="tag blue">建设中</span>
+                </div>
+                <div class="proj-tags"><span class="tag purple">一网统管</span><span class="proj-vendors">中电数据 · 超图软件 · 06.02-12.31</span></div>
+                <div class="proj-issue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>城管事件数据回流接口未打通，影响 09.10 一网统管区级演示节点（高影响风险）</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:38%;background:var(--danger)"></div></div><span class="progress-num">38%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">渣土车AI识别准确率 92% 达标</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot green" title="健康"></span>
+                  <span class="proj-name">区属国企国有资产在线监管系统</span>
+                  <span class="tag green">试运行</span>
+                </div>
+                <div class="proj-tags"><span class="tag cyan">国资监管</span><span class="proj-vendors">金蝶 · 致远互联 · 03.10-09.30</span></div>
+                <div class="proj-issue ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>首批 3 家试点国企资产数据完成迁移校验，账实相符率 99.2%</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:82%;background:var(--success)"></div></div><span class="progress-num">82%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">资产台账模块通过业务验收</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot yellow" title="需关注"></span>
+                  <span class="proj-name">龙岗区智慧社区综合服务平台</span>
+                  <span class="tag blue">建设中</span>
+                </div>
+                <div class="proj-tags"><span class="tag cyan">智慧社区</span><span class="proj-vendors">腾讯云 · 海康威视 · 07.28-12.15</span></div>
+                <div class="proj-issue warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>各街道网格化数据标准不统一，待区政数局出台统一数据规范后推进归集</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:27%;background:var(--warning)"></div></div><span class="progress-num">27%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">首批 12 个试点社区门禁联动上线</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot green" title="健康"></span>
+                  <span class="proj-name">龙岗区教育公共服务平台（二期）</span>
+                  <span class="tag blue">建设中</span>
+                </div>
+                <div class="proj-tags"><span class="tag blue">智慧教育</span><span class="proj-vendors">科大讯飞 · 天喻信息 · 05.12-11.28</span></div>
+                <div class="proj-issue ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>学业质量分析模块上线试运行，覆盖全区 40 所样本学校，反馈良好</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:55%;background:var(--success)"></div></div><span class="progress-num">55%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">智慧课堂公开课验收通过</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot gray" title="未启动"></span>
+                  <span class="proj-name">龙岗区医疗卫生数据中枢</span>
+                  <span class="tag gray">规划立项</span>
+                </div>
+                <div class="proj-tags"><span class="tag purple">智慧医疗</span><span class="proj-vendors">待招标 · 概算 2800 万 · 计划 10 月报区发改</span></div>
+                <div class="proj-issue info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>可研报告编制中（完成 60%），需先完成立项批复方可启动建设</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">前期工作</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:60%"></div></div><span class="progress-num">60%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">完成三甲医院需求调研</span><a class="proj-link" href="approval-view.html">立项进度 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot green" title="健康"></span>
+                  <span class="proj-name">区统一身份认证平台（IAM）升级工程</span>
+                  <span class="tag green">待验收</span>
+                </div>
+                <div class="proj-tags"><span class="tag blue">公共支撑</span><span class="proj-vendors">数字集团 · 数字认证 · 04.07-08.30</span></div>
+                <div class="proj-issue ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>等保三级测评通过，信创环境适配完成，全区 47 个系统完成单点接入</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:94%;background:var(--success)"></div></div><span class="progress-num">94%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">计划 09.10 提交终验申请</span><a class="proj-link" href="milestone-view.html">查看详情 →</a></div>
+              </div>
+
+              <div class="proj-card">
+                <div class="proj-head">
+                  <span class="health-dot yellow" title="需关注"></span>
+                  <span class="proj-name">龙岗区产业经济运行监测平台</span>
+                  <span class="tag blue">建设中</span>
+                </div>
+                <div class="proj-tags"><span class="tag purple">经济运行</span><span class="proj-vendors">中电数据 · 商汤科技 · 07.07-12.31</span></div>
+                <div class="proj-issue warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>经济指标归集口径待区统计局书面确认，企业图谱开发先行推进</div>
+                <div class="proj-progress-row"><span class="proj-progress-label">整体进度</span>
+                  <div class="progress"><div class="progress-track"><div class="progress-bar" style="width:33%;background:var(--warning)"></div></div><span class="progress-num">33%</span></div>
+                </div>
+                <div class="proj-foot"><span class="week-chip">企业图谱关系挖掘引擎进场</span><a class="proj-link" href="tasks-view.html">查看详情 →</a></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 右：AI 洞察 + 本周变化 -->
+        <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div class="card ai-card">
+            <div class="ai-head">
+              <div class="ai-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></div>
+              <div>
+                <div class="ai-name">AI 洞察分析</div>
+                <div class="ai-time">基于 10 个项目 · 23 项风险 · 15 项协调事项 · 自动生成于 08-26 08:00</div>
+              </div>
+            </div>
+            <div class="ai-body">
+              <div class="ai-item">
+                <span class="ai-emoji">📌</span>
+                <div><b>组合进展</b>：10 个在管项目整体进度 48%；IAM 升级（94%）与应急指挥平台（68%）进入收尾/试运行；“数智组工”提前投入建设尚未立项，建议书已过局内审批；医疗数据中枢处于可研编制阶段。
+                <span class="delta">较上周变化：数智组工接口文档阻塞解除、网办好差评对接风险闭环；新增城管平台数据回流、产业平台口径确认 2 项风险</span></div>
+              </div>
+              <div class="ai-item">
+                <span class="ai-emoji">⚠️</span>
+                <div><b>重点风险</b>：城管平台事件数据回流接口未打通（影响 09.10 区级演示）；数智组工内外网服务器资源待政数局协调（影响 09.08 部署）；医疗数据中枢可研未批复存在预算裁减风险。</div>
+              </div>
+              <div class="ai-item">
+                <span class="ai-emoji">💡</span>
+                <div><b>综合建议</b>：本周优先保障数智组工接口联调与初设内部评审；提请区领导协调政数局统一社区网格化数据标准，避免智慧社区平台多头返工；同步推进城管平台回流接口书面催办。</div>
+              </div>
+              <div class="ai-suggest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+                需要完整分析？前往 <a href="ai-assistant.html" style="color:var(--primary);font-weight:500">&nbsp;项目智能助手&nbsp;</a> 一键生成周报
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>本周变化摘要</div>
+              <div class="card-sub">08.24 - 08.28 · 依据下周工作计划</div>
+            </div>
+            <div class="card-body" style="padding-top:12px">
+              <div class="chip-group" style="margin-bottom:10px">
+                <span class="chip active" data-cat="all">全部</span>
+                <span class="chip" data-cat="progress">进展</span>
+                <span class="chip" data-cat="risk">风险</span>
+                <span class="chip" data-cat="coord">协调</span>
+              </div>
+              <div class="change-list">
+                <div class="change-item" data-cat="progress">
+                  <span class="change-tag progress">进展</span>
+                  <div><div class="change-txt"><b>数智组工</b>：中电 8.21 补充完整接口文档，数据集成开发解除阻塞；组工接入侧接口开发完成 20%</div><div class="change-time">08-26 · 详细任务</div></div>
+                </div>
+                <div class="change-item" data-cat="progress">
+                  <span class="change-tag progress">进展</span>
+                  <div><div class="change-txt"><b>应急指挥平台</b>：融合通信系统完成联调，指挥大屏与通信模块通过初步验收</div><div class="change-time">08-25 · 里程碑</div></div>
+                </div>
+                <div class="change-item" data-cat="progress">
+                  <span class="change-tag done">完成</span>
+                  <div><div class="change-txt"><b>IAM 升级</b>：等保三级测评通过，信创适配完成，全区 47 个系统完成单点接入</div><div class="change-time">08-24 · 里程碑</div></div>
+                </div>
+                <div class="change-item" data-cat="progress">
+                  <span class="change-tag done">完成</span>
+                  <div><div class="change-txt"><b>数智组工</b>：数字人 MVP 版本联调完成；龙岗湾嵌入需求变更闭环（移出干部成长伙伴）</div><div class="change-time">08-21 · 风险管理</div></div>
+                </div>
+                <div class="change-item" data-cat="risk">
+                  <span class="change-tag risk">风险</span>
+                  <div><div class="change-txt"><b>城管平台</b>：事件数据回流接口未打通，影响 09.10 一网统管区级演示节点，已升级高影响</div><div class="change-time">08-26 · 风险管理</div></div>
+                </div>
+                <div class="change-item" data-cat="coord">
+                  <span class="change-tag coord">协调</span>
+                  <div><div class="change-txt"><b>数智组工 / 智慧社区</b>：内外网服务器资源、网格化数据标准均待区政数局协调确认</div><div class="change-time">08-26 · 协调事项</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// 侧边栏折叠
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+// 下拉选择（通用）
+document.querySelectorAll('[data-select]').forEach(sel=>{
+  const trigger=sel.querySelector('.v-select-trigger');
+  trigger.addEventListener('click',e=>{
+    e.stopPropagation();
+    document.querySelectorAll('[data-select].open').forEach(o=>{if(o!==sel)o.classList.remove('open')});
+    sel.classList.toggle('open');
+  });
+  sel.querySelectorAll('.v-select-option').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      sel.querySelector('.v-select-label').textContent=opt.textContent;
+      sel.querySelectorAll('.v-select-option').forEach(o=>o.classList.remove('active'));
+      opt.classList.add('active');
+      sel.classList.remove('open');
+    });
+  });
+});
+document.addEventListener('click',()=>document.querySelectorAll('[data-select].open').forEach(o=>o.classList.remove('open')));
+// 本周变化摘要筛选
+const chips=document.querySelectorAll('.chip[data-cat]');
+chips.forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    chips.forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    const cat=chip.dataset.cat;
+    document.querySelectorAll('.change-item').forEach(item=>{
+      item.style.display=(cat==='all'||item.dataset.cat===cat)?'flex':'none';
+    });
+  });
+});
+</script>
+</body>
+</html>

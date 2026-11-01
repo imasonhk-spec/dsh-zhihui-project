@@ -1,0 +1,31 @@
+deployment_model=candidate only; no production deployment, migration, rollback, delete, or service restart performed
+candidate_reason=ICT-1 final development closeout; production currently requires a new differential G3 plan
+34741226b005d6f3e725ac26eac3bfdc6586c66a3a8752200b8c456ba5936365  apps/api/src/server.ts
+d92f17cd4357be9f08ce96fd74d2c25c3ac19246c9f530f7c8e6713c2aede84b  apps/api/src/ai/deepseek-harness.ts
+7c548b02524cd48256fab8d2bddf2fab0163fa7e602d22ae354e18a92ff38d3d  apps/api/src/ai/harness-mux.ts
+d3246803a516bf7e07ecca1b01c5d5c71089718dd5b6012cce20d98592f0cbfd  apps/api/src/ai/harness-mux.test.ts
+bef7729be3b4b2f997770f463131820b6ac34f7abc8889d71f28ba5e677f0b3b  apps/api/src/modules/ai/ai-stream-service.ts
+07f5160a727e793cc3273e577d4d49591d6eaaeea0fdc2e2e59281e097f84f88  apps/api/src/modules/ai/ai-stream-service.test.ts
+b4a9ca26a9f9f99b68e378d9e692fa0b09c229141181eaf59daba497d0c11382  apps/api/src/modules/imports/import-change-feature.ts
+c07fb832bb142af596a7030d8e6e7d4b5c4b754016a23070a86c2ec420348768  apps/api/src/modules/imports/import-change-feature.test.ts
+a6cae5377934a7af20c8ba16366a6fdb3ce9f1cfec38fd03789cf224ce5fccf8  apps/api/src/modules/imports/project-import-change-service.ts
+fd7b63f0b812dd8f6eed4e8843802bbb28d93d9d6797a0b4a4a4000b67ddd261  apps/api/src/modules/imports/project-import-change-service.integration.test.ts
+8fae2d26520477b74c778cc08592bd4811b250b145843a1765f3c369c4013534  apps/api/src/modules/imports/import-service.ts
+e9455c21709c1f824602c0b7c99bddb9a6d11f7fb005ef594d00458a4e4136d1  apps/web/src/api/projects.ts
+5ba6370ca98a95c7f5d9cb4ed67d2e747d9b83a4247359fceaef64782f012212  apps/web/src/pages/projects/ProjectImportsPage.tsx
+a9afb1e1693f5ab21ed6d4cba5b09b918250fa13cc33fb192e24e2e36d49556d  apps/web/src/pages/projects/ProjectTasksPage.tsx
+6746dd934174de9d895f9a340ada061720bfec9e666fedd3eb3359862eedc8ca  apps/web/src/styles/global.css
+02a94ae247381a02f05f487e544c451b03c814bfbe7eebd8507878038adedbda  database/migrations/0021_project_import_change_tracking.sql
+7c012305d7c9d513933efefdf7cefa3faea84da57653562fbd5edd5c68b8549c  scripts/ict-release-preflight.sh
+4144bf29a70cabee9dbd5f4585b1306424854091b19aacca99635aa8a5e708ed  scripts/ict-g3-release.sh
+de3302b5dfa1ebc89000230fb468474a48536affe2b4f537be0562e7c6667156  scripts/ict-g3-post-verify.sh
+07d2d9086d83b21aa20a2bcfac20c0363174d69b02d460a3e2a295dc8dfa729d  docs/日志记录改造.md
+7a16b066865b155fdc9e7368905494420c355960df91dbc70c8444d74a21fab4  docs/ICT-1-G3-Edge145迁移后验收模板.md
+dd5ddec3e606a7fd970400aff50e5e47bb798e7580b3e938fb1f7af8fd84bf7a  /home/lgsj/harness/bussiness-manager/database/0005_opportunity_import_change_tracking.sql
+b4a9ca26a9f9f99b68e378d9e692fa0b09c229141181eaf59daba497d0c11382  /home/lgsj/harness/bussiness-manager/apps/api/src/import-change-feature.ts
+5317aa56967719dd84886560a428151ad0fe2e3d2d0b452236d668120648c877  /home/lgsj/harness/bussiness-manager/apps/api/src/import-change-feature.test.ts
+2caf120486462070e7e2b47e0cd0e82c40ba7cfd585b48519647352d4925f605  /home/lgsj/harness/bussiness-manager/apps/api/src/opportunity-import-change-service.ts
+c1269aa126f79e0c965a2ec44bce24a58e4ba3f57e17bccb20c8f2baf3624b91  /home/lgsj/harness/bussiness-manager/apps/api/src/opportunity-import-change-service.integration.test.ts
+4b1c705085ed570e42cfc37daaf452e0edfac36bc13caa5e5b6c1779833c1274  /home/lgsj/harness/bussiness-manager/apps/api/src/server.ts
+b9a60dae0d59da497aa3bb8e389f87597a2ae04dd7212d2ac9374313e1c25f43  /home/lgsj/harness/bussiness-manager/apps/web/src/main.tsx
+4af94736a93b4d54837d099a69724dc3614c76681f3a88a8b569171d8d9ad952  /home/lgsj/harness/bussiness-manager/apps/web/src/styles.css

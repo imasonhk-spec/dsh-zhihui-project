@@ -20,7 +20,7 @@ export const MANIFEST = {
   order: 30,
   icon: '📋',
   category: '项目管理',
-  version: 'v0.1.0',
+  version: 'v0.2.0',
   tags: ['项目交付', '里程碑', '风险', '协调单', '周报'],
   subs: ['组合总览', '项目详情', '任务与里程碑', '风险与协调', 'AI 助手'],
   openEvent: 'cappacks:open-zhihui-project',

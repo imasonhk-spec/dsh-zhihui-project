@@ -1,0 +1,32 @@
+{
+  "name": "dsh-zhihui-project",
+  "unit": "dsh-zhihui-project",
+  "version": "0.3.0",
+  "previousVersion": "0.2.0",
+  "title": "智汇·项目",
+  "kind": "plugin",
+  "services": [
+    "zhihui-project-api",
+    "zhihui-project-web",
+    "redis-zhihui",
+    "zhihui-sso",
+    "dsh-docs-engine",
+    "dsh-ollama-shim"
+  ],
+  "ports": [
+    3100,
+    3200
+  ],
+  "pluginDir": "@local/zhihui-project",
+  "hasVenv": false,
+  "hasNode": false,
+  "hasHarness": false,
+  "generatedAt": "2026-11-01T22:37:32+08:00",
+  "host": "lgsj",
+  "installScope": [
+    "host-profile",
+    "all-existing-accounts"
+  ],
+  "baseRepo": "imasonhk-spec/dsh",
+  "baseTag": "v0.2.0"
+}

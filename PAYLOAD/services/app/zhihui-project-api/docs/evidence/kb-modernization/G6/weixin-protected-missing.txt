@@ -1,0 +1,4 @@
+# authorized paths/categories absent at capture time
+/home/lgsj/harness/weixin-account-manager/src (directory missing or 0 files)
+/home/lgsj/.dsh/channels/weixin
+/home/lgsj/.dsh/runtime-agent-routes.json (legacy incorrect path; actual route is /home/lgsj/.dsh/dsh-channels/runtime-agent-routes.json)

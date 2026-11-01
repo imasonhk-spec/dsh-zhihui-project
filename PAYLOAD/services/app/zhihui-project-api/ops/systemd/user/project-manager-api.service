@@ -1,0 +1,17 @@
+[Unit]
+Description=Project Manager API
+Wants=project-manager-dependencies.service
+After=network-online.target project-manager-dependencies.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/lgsj/harness/project-manager
+Environment=PATH=/home/lgsj/.local/pnpm/bin:/home/lgsj/.nix-profile/bin:/run/current-system/sw/bin:/usr/bin:/bin
+ExecStart=/home/lgsj/.local/pnpm/bin/pnpm exec tsx apps/api/src/server.ts
+Restart=always
+RestartSec=2
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+[Install]
+WantedBy=default.target

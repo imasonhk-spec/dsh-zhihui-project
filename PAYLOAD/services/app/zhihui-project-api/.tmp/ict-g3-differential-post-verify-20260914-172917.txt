@@ -1,0 +1,16 @@
+verification_status=automated_pass_edge_pending
+verified_at=2026-09-14T17:29:17+08:00
+authorized_session=session-afcc3a25-d740-42e7-af15-e175834f692e
+evidence_source=ict-g3-authorized-final-watermark-20260914-171805.txt
+watermark_sha256=41d68d869d30a830012a4479231aeea140dcc77653bc307006f3e22775e1711f
+business_counts=14/1180/21/64/0
+journal=21
+project_structure=3/18
+project_ledgers=16/759/4800
+opportunity_ledgers=2/128/813/1/5
+import_jobs=355
+production_verification_read_only=true
+project_public_empty_rollback=permanently_forbidden
+service_state=active_running_success_nrestarts_0
+sensitive_values_recorded=false
+next_gate=windows_edge_145

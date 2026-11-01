@@ -1,0 +1,15 @@
+release_stage=pre-g3
+created_at=2026-09-14T11:38:45+08:00
+database_name=project_manager
+projects=14
+tasks=1015
+knowledge_bases=21
+opportunities=0
+organizations=0
+ict_core_tables=0
+drizzle_journal_rows=20
+backup_file=project-manager-pre-g3.dump
+backup_bytes=5224310
+backup_sha256=7461ec7dae8c6ff4ee307d8ada3643ddf99796766cd27c962e8a96005f5a2928
+restore_list_entries=839
+rollback_owner=开发负责人

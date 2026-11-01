@@ -1,0 +1,16 @@
+[Unit]
+Description=Zhihui Project web sidecar (static 3200 + /api proxy)
+After=network.target zhihui-project-api.service
+
+[Service]
+Type=simple
+User=lgsj
+Group=lgsj
+WorkingDirectory=/opt/zhihui/runtime
+EnvironmentFile=/opt/zhihui/env/project-web.env
+ExecStart=/home/lgsj/.nvm/versions/node/v22.23.3/bin/node /opt/zhihui/runtime/static-proxy.mjs
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,30 @@
+deployment_model=development-complete candidate; no production write, migration, rollback, deployment, or restart
+candidate_reason=ICT-1 all code gaps closed; Edge and observation are non-development gates
+908f406b500e9e279c17b751b399f8791634d20e9a038bbc6a39907782a44daf  package.json
+34741226b005d6f3e725ac26eac3bfdc6586c66a3a8752200b8c456ba5936365  apps/api/src/server.ts
+d92f17cd4357be9f08ce96fd74d2c25c3ac19246c9f530f7c8e6713c2aede84b  apps/api/src/ai/deepseek-harness.ts
+7c548b02524cd48256fab8d2bddf2fab0163fa7e602d22ae354e18a92ff38d3d  apps/api/src/ai/harness-mux.ts
+d3246803a516bf7e07ecca1b01c5d5c71089718dd5b6012cce20d98592f0cbfd  apps/api/src/ai/harness-mux.test.ts
+eeb3df42487d1588e17882b151b1ff917ee291c766e2502024c870dd6d29a4f9  apps/api/src/modules/ai/ai-stream-service.ts
+8fdb1fd408cd688d8fc8849e08836e9658aa89c8e4f79140e42ae0bf693bc8e3  apps/api/src/modules/ai/ai-stream-service.test.ts
+b4a9ca26a9f9f99b68e378d9e692fa0b09c229141181eaf59daba497d0c11382  apps/api/src/modules/imports/import-change-feature.ts
+c07fb832bb142af596a7030d8e6e7d4b5c4b754016a23070a86c2ec420348768  apps/api/src/modules/imports/import-change-feature.test.ts
+8291182ded40522bca8def1d37ed3878ef6320c48a98e4ed03e8043da790ac65  apps/api/src/modules/imports/project-import-change-service.ts
+fd7b63f0b812dd8f6eed4e8843802bbb28d93d9d6797a0b4a4a4000b67ddd261  apps/api/src/modules/imports/project-import-change-service.integration.test.ts
+a31aa5a3cd6ff36c99df4719e4273ea6f1fb73ce20fdf5eb2c56d900dc69b566  apps/api/src/modules/imports/implementation-plan-route-gate.integration.test.ts
+95b2415ec47f4dbaa367bd18ee7933daf7ce25dd9df0fc572bbdefff6a6f00f3  apps/api/src/modules/imports/ict-server-capture-loader.mjs
+02a94ae247381a02f05f487e544c451b03c814bfbe7eebd8507878038adedbda  database/migrations/0021_project_import_change_tracking.sql
+7f7737c0e29002c0c78f3a00b015ab0fcc17967bbe055415c2cb9c344de42958  database/rollback/0021_public_empty_only.sql
+fb9c877b36f4504068f049e5ea306222d5a648f630fccfce0578696bafd19ecb  scripts/ict-g3-differential-backup-verify.sh
+79b4851ec31c7589b56f26893b32cdf4bcbd2b606fa870c8acc5edd91a9d7f52  scripts/ict-g3-differential-release.sh
+abc2861f0de3a887e6b03bb05243c22650f627e921a499f03b8861925ab7b0cf  scripts/ict-g3-differential-post-verify.sh
+6d9833195a4044d522aa996ac6e46706de61c119f3166df4805b33f64eef339e  scripts/ict-g3-differential-tools.test.sh
+89e9b9f81f2645bf1744679ba8f785244a2ddb6c9daba4242f1731d8e3d08781  docs/ICT-1-差异化G3执行方案.md
+480133c97be003664f9fafe26b4f2ffb8dc6f41268ce0ec885f842bdd71f40be  docs/ICT-1-G3-Edge145迁移后验收模板.md
+2144341ba15367bd25c6ca21bef007e260d507931f5eace113534078cab935cf  docs/日志记录改造.md
+dd5ddec3e606a7fd970400aff50e5e47bb798e7580b3e938fb1f7af8fd84bf7a  /home/lgsj/harness/bussiness-manager/database/0005_opportunity_import_change_tracking.sql
+b4a9ca26a9f9f99b68e378d9e692fa0b09c229141181eaf59daba497d0c11382  /home/lgsj/harness/bussiness-manager/apps/api/src/import-change-feature.ts
+5317aa56967719dd84886560a428151ad0fe2e3d2d0b452236d668120648c877  /home/lgsj/harness/bussiness-manager/apps/api/src/import-change-feature.test.ts
+b06121b39224af3151f6e689377cfe92eac9645644b74e3833a858756501f5dd  /home/lgsj/harness/bussiness-manager/apps/api/src/opportunity-import-change-service.ts
+4882ed557bb6d34d0a37b2cbbdefd55a219a518b7ce10071a624c14db501b528  /home/lgsj/harness/bussiness-manager/apps/api/src/opportunity-import-change-service.integration.test.ts
+d34597051b4a816b2c0427ec1e21940290e9b8d3cb7ba942f2cd43f76031d43a  /home/lgsj/harness/bussiness-manager/apps/api/src/server.ts

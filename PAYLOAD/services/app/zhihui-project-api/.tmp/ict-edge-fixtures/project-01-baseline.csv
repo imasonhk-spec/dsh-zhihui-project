@@ -1,0 +1,5 @@
+"wbsCode","name","vendor","ownerName","plannedStartDate","plannedEndDate","priority","status","progress"
+"1","Edge验收阶段","厂商A","验收人","2026-09-14","2026-09-20","high","in_progress","20"
+"1.1","Edge验收子任务","厂商A","验收人","2026-09-14","2026-09-16","medium","not_started","0"
+"1.2","待归档任务","厂商B","验收人","2026-09-17","2026-09-18","low","not_started","0"
+"1.4","保持不变任务","厂商D","验收人","2026-09-18","2026-09-19","low","not_started","0"

@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>需要协调的事项 - 项目交付中心</title>
+<style>
+/* ============ Vben Admin 风格设计系统 ============ */
+:root{
+  --primary:#095AFF;--primary-600:#2E73FF;--primary-50:#EDF3FF;
+  --success:#00B42A;--success-50:#E8FFEA;
+  --warning:#FF7D00;--warning-50:#FFF7E8;
+  --danger:#F53F3F;--danger-50:#FFECE8;
+  --purple:#722ED1;--purple-50:#F4EBFF;
+  --cyan:#0FB6C4;--cyan-50:#E6FAFB;
+  --text-1:#1D2129;--text-2:#4E5969;--text-3:#86909C;--text-4:#C0C6CF;
+  --border:#E5E6EB;--fill-1:#F7F8FA;--fill-2:#F2F3F5;
+  --bg:#F5F6FA;--radius:10px;
+  --shadow:0 1px 2px rgba(29,33,41,.04),0 2px 8px rgba(29,33,41,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{height:100%}
+body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text-1);background:var(--bg);-webkit-font-smoothing:antialiased}
+ul,ol{list-style:none}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#D4D7DE;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#B8BCC4}
+::-webkit-scrollbar-track{background:transparent}
+svg{display:block}
+/* ============ 布局 ============ */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:236px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .25s cubic-bezier(.4,0,.2,1);z-index:100}
+.sidebar.collapsed{width:64px}
+.sidebar-logo{height:56px;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden;white-space:nowrap}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#095AFF,#4D8AFF);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.logo-mark svg{width:18px;height:18px}
+.logo-text{font-size:15px;font-weight:600;color:var(--text-1)}
+.menu{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px}
+.menu-group-title{font-size:11px;color:#A9AEB8;padding:12px 10px 6px;letter-spacing:1px;white-space:nowrap}
+.menu-item{display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;margin:2px 0;border-radius:8px;color:var(--text-2);font-size:14px;white-space:nowrap;transition:all .15s}
+.menu-item svg{width:18px;height:18px;flex-shrink:0}
+.menu-item:hover{background:var(--fill-2);color:var(--text-1)}
+.menu-item.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.menu-badge{margin-left:auto;font-size:10px;height:16px;padding:0 5px;border-radius:4px;background:linear-gradient(135deg,#722ED1,#B37FEB);color:#fff;display:flex;align-items:center;font-weight:600}
+.sidebar.collapsed .logo-text,.sidebar.collapsed .menu-group-title,.sidebar.collapsed .menu-item span,.sidebar.collapsed .menu-badge,.sidebar.collapsed .sidebar-foot{display:none}
+.sidebar.collapsed .menu-item{justify-content:center;padding:0}
+.sidebar-foot{padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-4);white-space:nowrap}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.header{height:56px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.icon-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:.15s;position:relative;flex-shrink:0}
+.icon-btn:hover{background:var(--fill-2);color:var(--text-1)}
+.icon-btn svg{width:19px;height:19px}
+.noti-dot{position:absolute;top:7px;right:7px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:1.5px solid #fff}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3)}
+.breadcrumb b{color:var(--text-1);font-weight:600}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.header-search{display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;background:var(--fill-1);border:1px solid transparent;border-radius:8px;color:var(--text-4);width:200px;cursor:pointer;transition:.15s;font-size:13px}
+.header-search:hover{border-color:var(--primary)}
+.header-search svg{width:15px;height:15px;flex-shrink:0}
+.divider-v{width:1px;height:20px;background:var(--border);margin:0 6px}
+.user-chip{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:8px;cursor:pointer;transition:.15s}
+.user-chip:hover{background:var(--fill-2)}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#095AFF,#4D8AFF);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.user-info{line-height:1.25}
+.user-name{font-size:13px;color:var(--text-1)}
+.user-role{font-size:11px;color:var(--text-3)}
+.user-chip .chev{width:13px;height:13px;color:var(--text-3)}
+.content{flex:1;overflow-y:auto;padding:16px 20px 28px}
+/* ============ 通用组件 ============ */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:16px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:600;line-height:1.3;display:flex;align-items:center;gap:8px}
+.page-desc{font-size:13px;color:var(--text-3);margin-top:4px}
+.page-actions{display:flex;gap:8px;align-items:center}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0;gap:12px;flex-wrap:wrap}
+.card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-title svg{width:17px;height:17px;color:var(--primary)}
+.card-sub{font-size:12px;color:var(--text-3)}
+.card-body{padding:16px 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid transparent;transition:.15s;user-select:none;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-600)}
+.btn-default{background:#fff;border-color:var(--border);color:var(--text-2)}
+.btn-default:hover{border-color:var(--primary);color:var(--primary)}
+.tag{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:4px;font-size:12px;line-height:1;white-space:nowrap;font-weight:400}
+.tag.dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.blue{background:var(--primary-50);color:var(--primary)}
+.tag.green{background:var(--success-50);color:var(--success)}
+.tag.red{background:var(--danger-50);color:var(--danger)}
+.tag.orange{background:var(--warning-50);color:var(--warning)}
+.tag.gray{background:var(--fill-2);color:var(--text-3)}
+.tag.purple{background:var(--purple-50);color:var(--purple)}
+.v-select{position:relative;min-width:150px}
+.v-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;height:32px;padding:0 10px 0 12px;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-1);cursor:pointer;transition:.15s;width:100%}
+.v-select-trigger:hover{border-color:var(--primary)}
+.v-select.open .v-select-trigger{border-color:var(--primary);box-shadow:0 0 0 2px rgba(9,90,255,.1)}
+.v-select-trigger .chev{width:14px;height:14px;color:var(--text-3);transition:.2s;flex-shrink:0}
+.v-select.open .chev{transform:rotate(180deg)}
+.v-select-menu{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(29,33,41,.12);padding:4px;z-index:60;display:none;max-height:260px;overflow-y:auto}
+.v-select.open .v-select-menu{display:block}
+.v-select-option{padding:7px 10px;border-radius:6px;font-size:13px;color:var(--text-2);cursor:pointer}
+.v-select-option:hover{background:var(--fill-2)}
+.v-select-option.active{background:var(--primary-50);color:var(--primary);font-weight:500}
+.filter-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.filter-item{display:flex;align-items:center;gap:8px}
+.filter-label{font-size:13px;color:var(--text-3);white-space:nowrap}
+.filter-actions{margin-left:auto;display:flex;gap:8px}
+/* ============ 统计 ============ */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+.stat-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;display:flex;align-items:center;gap:16px}
+.stat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-icon svg{width:22px;height:22px}
+.stat-icon.blue{background:var(--primary-50);color:var(--primary)}
+.stat-icon.red{background:var(--danger-50);color:var(--danger)}
+.stat-icon.orange{background:var(--warning-50);color:var(--warning)}
+.stat-icon.green{background:var(--success-50);color:var(--success)}
+.stat-value{font-size:26px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat-label{font-size:13px;color:var(--text-3);margin-top:3px}
+.stat-trend{font-size:12px;margin-top:4px;display:flex;align-items:center;gap:4px;color:var(--text-4)}
+.stat-trend .up{color:var(--danger)}
+.stat-trend .down{color:var(--success)}
+/* ============ 主体（并列面板布局） ============ */
+/* ============ 协调事项表格 ============ */
+.coord-table{width:100%;border-collapse:collapse;font-size:13px}
+.coord-table th{text-align:left;font-size:12px;font-weight:500;color:var(--text-3);padding:10px 12px;background:var(--fill-1);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:5}
+.coord-table td{padding:12px;border-bottom:1px solid var(--fill-2);vertical-align:middle;color:var(--text-2)}
+.coord-table tbody tr{transition:.12s}
+.coord-table tbody tr:hover{background:var(--primary-50)}
+.coord-table tbody tr.f-hidden{display:none}
+.coord-table tbody tr.resolved td{opacity:.66}
+.coord-id{font-size:11px;color:var(--text-4);font-variant-numeric:tabular-nums;white-space:nowrap}
+.date-cell{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--text-2)}
+.coord-desc{min-width:260px}
+.coord-desc .desc-main{color:var(--text-1);line-height:1.6;font-weight:500}
+.coord-desc .desc-sub{font-size:11.5px;color:var(--text-3);margin-top:4px;line-height:1.6}
+.coord-cat{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;background:var(--cyan-50);color:var(--cyan);font-size:11px;white-space:nowrap;margin-right:6px}
+.owner-cell{max-width:170px;line-height:1.6;font-size:12.5px}
+.due-cell{white-space:nowrap;font-variant-numeric:tabular-nums}
+.due-cell .due-days{display:block;font-size:11px;margin-top:2px}
+.due-cell .due-days.urgent{color:var(--danger)}
+.due-cell .due-days.soon{color:var(--warning)}
+/* 进度条 */
+.prog-cell{min-width:130px}
+.prog{display:flex;align-items:center;gap:8px}
+.prog-track{flex:1;height:6px;border-radius:3px;background:var(--fill-2);overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:var(--primary);transition:width .4s}
+.prog.p0 .prog-fill{background:#C9CDD4}
+.prog.p0 .prog-num{color:var(--text-4)}
+.prog.pmid .prog-fill{background:var(--warning)}
+.prog.pmid .prog-num{color:var(--warning)}
+.prog.pdone .prog-fill{background:var(--success)}
+.prog.pdone .prog-num{color:var(--success)}
+.prog-num{font-size:11px;color:var(--primary);font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
+.empty-tip{padding:40px 0;text-align:center;color:var(--text-4);font-size:13px;display:none}
+/* ============ 我的待办 ============ */
+.todo-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px dashed var(--fill-2)}
+.todo-item:last-child{border-bottom:none}
+.todo-rank{width:26px;height:26px;border-radius:8px;background:var(--danger-50);color:var(--danger);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.todo-rank.m{background:var(--warning-50);color:var(--warning)}
+.todo-main{flex:1;min-width:0}
+.todo-title{font-size:13px;color:var(--text-1);font-weight:500;line-height:1.55}
+.todo-meta{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:11.5px;color:var(--text-3);flex-wrap:wrap}
+.todo-meta .dd{color:var(--danger);font-weight:600}
+.todo-meta .dd.w{color:var(--warning);font-weight:600}
+.todo-action{margin-top:8px;display:flex;gap:6px}
+.mini-btn{height:24px;padding:0 10px;border-radius:5px;font-size:11.5px;border:1px solid var(--border);color:var(--text-2);display:inline-flex;align-items:center;gap:4px;transition:.15s;background:#fff}
+.mini-btn:hover{border-color:var(--primary);color:var(--primary)}
+.mini-btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.mini-btn.primary:hover{background:var(--primary-600)}
+/* ============ 状态分布（见下方横向分段样式） ============ */
+/* ============ 较上周变化 ============ */
+/* ============ 面板切换（面包屑 + 并列面板） ============ */
+.panel-nav{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.crumbs{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text-3);min-width:0;flex-wrap:wrap}
+.crumbs .crumb{white-space:nowrap;transition:.15s}
+.crumbs .crumb.link{cursor:pointer}
+.crumbs .crumb.link:hover{color:var(--primary)}
+.crumbs .crumb-sep{color:var(--text-4);display:flex;align-items:center}
+.crumbs .crumb-sep svg{width:13px;height:13px}
+.crumbs .crumb.current{color:var(--text-1);font-weight:600}
+.panel-tabs{display:flex;gap:6px;background:var(--fill-2);padding:4px;border-radius:10px}
+.panel-tab{position:relative;height:32px;padding:0 16px;border-radius:8px;font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px;white-space:nowrap;transition:.18s}
+.panel-tab:hover{color:var(--text-1)}
+.panel-tab.active{background:#fff;color:var(--primary);font-weight:500;box-shadow:0 1px 4px rgba(29,33,41,.08)}
+.panel-tab .tab-badge{min-width:17px;height:17px;padding:0 5px;border-radius:9px;background:var(--danger-50);color:var(--danger);font-size:10.5px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.panel-tab.active .tab-badge{background:var(--danger);color:#fff}
+.panel{display:none}
+.panel.active{display:block;animation:panelIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* ============ 处理进度分布（横向分段） ============ */
+.dist-strip{display:flex;gap:18px;flex-wrap:wrap}
+.dist-seg{flex:1;min-width:180px}
+.dist-seg-head{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);margin-bottom:7px}
+.dist-seg-head .dist-num{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--text-3)}
+.dist-track{height:8px;border-radius:4px;background:var(--fill-2);overflow:hidden}
+.dist-track .dist-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.dist-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.ai-tip{margin-top:14px;padding:10px 12px;background:var(--warning-50);border-radius:8px;font-size:12px;color:var(--text-2);line-height:1.7}
+/* ============ 我的待办（面板网格） ============ */
+.todo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+/* ============ 较上周变化（对比版） ============ */
+.wk-compare{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.wk-stat{min-width:92px}
+.wk-stat .wk-label{font-size:11.5px;color:var(--text-3);margin-bottom:4px;white-space:nowrap}
+.wk-stat .wk-num{font-size:22px;font-weight:600;color:var(--text-1);font-variant-numeric:tabular-nums;line-height:1.1;white-space:nowrap}
+.wk-stat .wk-num small{font-size:12px;font-weight:400;color:var(--text-3)}
+.wk-stat .wk-num em{font-style:normal;font-size:13px;color:var(--text-3);font-weight:400}
+.wk-arrow{color:var(--text-4);display:flex;align-items:center}
+.wk-arrow svg{width:18px;height:18px}
+.wk-delta{height:24px;padding:0 10px;border-radius:12px;font-size:12px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.wk-delta.down{background:var(--success-50);color:var(--success)}
+.wk-delta.up{background:var(--danger-50);color:var(--danger)}
+.wk-divider{width:1px;height:36px;background:var(--border)}
+.chg-tag{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:11px;font-size:11.5px;font-weight:500;white-space:nowrap}
+.chg-tag.solved{background:var(--success-50);color:var(--success)}
+.chg-tag.prog{background:var(--primary-50);color:var(--primary)}
+.chg-tag.over{background:var(--danger-50);color:var(--danger)}
+.chg-tag.due{background:var(--warning-50);color:var(--warning)}
+.chg-tag.hold{background:var(--fill-2);color:var(--text-3)}
+.st-change{white-space:nowrap;font-size:12px}
+.st-change .st-prev{color:var(--text-4)}
+.st-change .st-arrow{color:var(--text-4);margin:0 4px}
+.st-change .st-now{font-weight:600}
+.st-change .st-now.green{color:var(--success)}
+.st-change .st-now.blue{color:var(--primary)}
+.st-change .st-now.orange{color:var(--warning)}
+.st-change .st-now.red{color:var(--danger)}
+.st-change .st-now.gray{color:var(--text-3)}
+.wk-note{font-size:11.5px;color:var(--text-3);line-height:1.6;margin-top:3px}
+.wk-analysis{display:flex;flex-direction:column;gap:11px}
+.wk-an-item{display:flex;gap:10px;font-size:12.5px;color:var(--text-2);line-height:1.7}
+.wk-an-item .an-ico{width:22px;height:22px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.wk-an-item .an-ico svg{width:12px;height:12px}
+.wk-an-item b{color:var(--text-1)}
+.week-table{width:100%;border-collapse:collapse;font-size:13px}
+.week-table th{text-align:left;font-size:12px;font-weight:500;color:var(--text-3);padding:10px 12px;background:var(--fill-1);border-bottom:1px solid var(--border);white-space:nowrap}
+.week-table td{padding:12px;border-bottom:1px solid var(--fill-2);color:var(--text-2);vertical-align:middle}
+.week-table tbody tr:hover{background:var(--primary-50)}
+.week-table .wk-name{color:var(--text-1);font-weight:500}
+@media (max-width:1000px){.stat-grid{grid-template-columns:repeat(2,1fr)}.todo-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ 侧边栏 ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+      <span class="logo-text">项目交付中心</span>
+    </div>
+    <nav class="menu">
+      <div class="menu-group-title">项目交付</div>
+      <a class="menu-item" href="project-overview.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>项目总览</span></a>
+      <a class="menu-item" href="approval-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m3 15 2 2 4-4"/></svg><span>项目立项报批</span></a>
+      <a class="menu-item" href="tasks-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg><span>项目详细任务</span></a>
+      <a class="menu-item" href="milestone-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg><span>里程碑达成</span></a>
+      <a class="menu-item" href="risk-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>项目风险</span></a>
+      <a class="menu-item active" href="coordination-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><span>需要协调的事项</span></a>
+      <div class="menu-group-title">智能服务</div>
+      <a class="menu-item" href="ai-assistant.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.27L3 12l5.8 1.9a2 2 0 0 1 1.27 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.27L21 12l-5.8-1.9a2 2 0 0 1-1.27-1.28Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg><span>项目智能助手</span><span class="menu-badge">AI</span></a>
+    </nav>
+    <div class="sidebar-foot">Vben Admin · v2.3.0</div>
+  </aside>
+
+  <!-- ============ 主区域 ============ -->
+  <div class="main">
+    <header class="header">
+      <button class="icon-btn" id="sidebarToggle" title="折叠菜单"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+      <div class="breadcrumb">项目交付中心 <span>/</span> <b>需要协调的事项</b></div>
+      <div class="header-right">
+        <div class="header-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>搜索事项 / 对接方</div>
+        <button class="icon-btn" title="消息通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><i class="noti-dot"></i></button>
+        <div class="divider-v"></div>
+        <div class="user-chip">
+          <div class="avatar">李</div>
+          <div class="user-info"><div class="user-name">李标</div><div class="user-role">交付中心 总监</div></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 页头 -->
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">需要协调的事项</h1>
+          <p class="page-desc">跨部门 / 跨层级待办跟进 · 龙岗区AI+HR“数智组工”系统 · 数据截至 2026-08-26（周三）</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-default"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>导出协调台账</button>
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>发起协调</button>
+        </div>
+      </div>
+
+      <!-- 统计卡片 -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></div>
+          <div><div class="stat-value">12</div><div class="stat-label">待协调事项总数</div><div class="stat-trend"><span class="down">▼ -4</span> 沟通中 5 · 已解决 5</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+          <div><div class="stat-value">7</div><div class="stat-label">高优先级事项</div><div class="stat-trend">沟通中 5 项 · 2 项临期/超期</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><div class="stat-value">2</div><div class="stat-label">待发起</div><div class="stat-trend">安全测评事项确认 · 大模型服务器部署</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div><div class="stat-value">1</div><div class="stat-label">本周已解决</div><div class="stat-trend">工作人员首页需求确认（08-26）</div></div>
+        </div>
+      </div>
+
+      <!-- 面板切换：面包屑 + 并列面板 -->
+      <div class="panel-nav">
+        <div class="crumbs">
+          <span class="crumb link" data-jump="list">项目交付中心</span>
+          <span class="crumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+          <span class="crumb link" data-jump="list">需要协调的事项</span>
+          <span class="crumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+          <span class="crumb current" id="crumbCurrent">协调事项列表</span>
+        </div>
+        <div class="panel-tabs">
+          <button class="panel-tab active" data-panel="list"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18"/><path d="M3 12h18"/><path d="M3 19h18"/></svg>协调事项列表</button>
+          <button class="panel-tab" data-panel="week"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>较上周变化</button>
+          <button class="panel-tab" data-panel="todo"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5V5a3 3 0 0 1 6 0v6.5"/><path d="M16.5 9.5H18a2 2 0 0 1 2 2v4a6 6 0 0 1-12 0v-4a2 2 0 0 1 2-2h1.5"/></svg>我的待办<span class="tab-badge">4</span></button>
+        </div>
+      </div>
+
+      <!-- 面板一：协调事项列表（含处理进度分布） -->
+      <div class="panel active" id="panel-list">
+          <!-- 筛选区 -->
+          <div class="card">
+            <div class="card-body">
+              <div class="filter-bar">
+                <div class="filter-item">
+                  <span class="filter-label">项目</span>
+                  <div class="v-select" data-select style="min-width:260px">
+                    <button class="v-select-trigger" type="button"><span class="v-select-label">龙岗区AI+HR“数智组工”系统</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                    <div class="v-select-menu">
+                      <div class="v-select-option active">龙岗区AI+HR“数智组工”系统</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="filter-item">
+                  <span class="filter-label">紧急程度</span>
+                  <div class="v-select" data-select id="prioritySelect" style="min-width:120px">
+                    <button class="v-select-trigger" type="button"><span class="v-select-label">全部</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                    <div class="v-select-menu">
+                      <div class="v-select-option active" data-value="all">全部</div>
+                      <div class="v-select-option" data-value="高">高</div>
+                      <div class="v-select-option" data-value="中">中</div>
+                      <div class="v-select-option" data-value="低">低</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="filter-item">
+                  <span class="filter-label">状态</span>
+                  <div class="v-select" data-select id="statusSelect" style="min-width:120px">
+                    <button class="v-select-trigger" type="button"><span class="v-select-label">全部</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                    <div class="v-select-menu">
+                      <div class="v-select-option active" data-value="all">全部</div>
+                      <div class="v-select-option" data-value="待发起">待发起</div>
+                      <div class="v-select-option" data-value="沟通中">沟通中</div>
+                      <div class="v-select-option" data-value="已解决">已解决</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="filter-actions">
+                  <button class="btn btn-primary">查询</button>
+                  <button class="btn btn-default" id="resetBtn">重置</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 协调事项列表 -->
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>协调事项列表</div>
+                <div class="card-sub" style="margin-top:3px">数据来源：需协调/升级事项 · 风险与问题清单（协调类）· 展示重点 12 项</div>
+              </div>
+              <span class="tag blue dot" id="coordCount">12 项事项</span>
+            </div>
+            <div class="card-body" style="overflow-x:auto">
+              <table class="coord-table">
+                <thead>
+                  <tr>
+                    <th style="width:70px">编号</th>
+                    <th>事项描述</th>
+                    <th style="width:150px">责任方 / 对接方</th>
+                    <th style="width:76px">优先级</th>
+                    <th style="width:110px">截止日期</th>
+                    <th style="width:92px">当前状态</th>
+                    <th style="width:140px">处理进度</th>
+                  </tr>
+                </thead>
+                <tbody id="coordBody">
+                  <tr data-priority="高" data-status="沟通中">
+                    <td class="coord-id">C1</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">资源协调</span><span class="desc-main">待区政务和数据局内部协调服务器资源（内网5台 + 外网3台）</span></div>
+                      <div class="desc-sub">影响自研数字人部署及联调、基础环境部署阶段 09-08 完成；每日跟进政数局资源协调事项</div>
+                    </td>
+                    <td class="owner-cell">区政务和数据局 · 数据集团</td>
+                    <td><span class="tag red">高</span></td>
+                    <td class="due-cell">2026-09-08<span class="due-days">剩 13 天</span></td>
+                    <td><span class="tag blue dot">沟通中</span></td>
+                    <td class="prog-cell"><div class="prog pmid"><div class="prog-track"><div class="prog-fill" style="width:50%"></div></div><span class="prog-num">50%</span></div></td>
+                  </tr>
+                  <tr data-priority="高" data-status="沟通中">
+                    <td class="coord-id">C2</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">网络与数据</span><span class="desc-main">内外网数据协调（WBS 6.2）</span></div>
+                      <div class="desc-sub">干部档案获取、考察/谈话/自评等数据回流链路需跨内外网交换，方案协调推进中</div>
+                    </td>
+                    <td class="owner-cell">区数据集团 · 王忻欤</td>
+                    <td><span class="tag red">高</span></td>
+                    <td class="due-cell">2026-08-28<span class="due-days urgent">⚠ 剩 2 天</span></td>
+                    <td><span class="tag blue dot">沟通中</span></td>
+                    <td class="prog-cell"><div class="prog pmid"><div class="prog-track"><div class="prog-fill" style="width:50%"></div></div><span class="prog-num">50%</span></div></td>
+                  </tr>
+                  <tr data-priority="高" data-status="待发起">
+                    <td class="coord-id">C3</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">安全合规</span><span class="desc-main">与政数局确认安全测评具体事项（WBS 1.4）</span></div>
+                      <div class="desc-sub">安全测评计划 09-01 启动、09-20 完成，需先确认测评事项清单及启动方案</div>
+                    </td>
+                    <td class="owner-cell">区政务和数据局 · 王忻欤</td>
+                    <td><span class="tag red">高</span></td>
+                    <td class="due-cell">2026-08-31<span class="due-days soon">剩 5 天</span></td>
+                    <td><span class="tag gray dot">待发起</span></td>
+                    <td class="prog-cell"><div class="prog p0"><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-num">0%</span></div></td>
+                  </tr>
+                  <tr data-priority="高" data-status="沟通中">
+                    <td class="coord-id">C4</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">供应商协同</span><span class="desc-main">中电驾驶舱参考页面催办（风险 RISK-002）</span></div>
+                      <div class="desc-sub">中电仅提供常规展示页；已升级至中电项目负责人书面催办，同步准备备选设计方案</div>
+                    </td>
+                    <td class="owner-cell">中电数据产业集团 · 胡鹏超</td>
+                    <td><span class="tag red">高</span></td>
+                    <td class="due-cell">2026-08-25<span class="due-days urgent">⚠ 已超期</span></td>
+                    <td><span class="tag blue dot">沟通中</span></td>
+                    <td class="prog-cell"><div class="prog pmid"><div class="prog-track"><div class="prog-fill" style="width:40%"></div></div><span class="prog-num">40%</span></div></td>
+                  </tr>
+                  <tr data-priority="高" data-status="沟通中">
+                    <td class="coord-id">C5</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">供应商协同</span><span class="desc-main">数字人多音色需求与数据科 / 科大讯飞协调（WBS 3.5）</span></div>
+                      <div class="desc-sub">已向数据科提出明确、具体的全部音色需求，待科大讯飞确认自定义音色功能支持时间</div>
+                    </td>
+                    <td class="owner-cell">数据科 · 科大讯飞</td>
+                    <td><span class="tag red">高</span></td>
+                    <td class="due-cell">2026-08-27<span class="due-days urgent">⚠ 剩 1 天</span></td>
+                    <td><span class="tag blue dot">沟通中</span></td>
+                    <td class="prog-cell"><div class="prog pmid"><div class="prog-track"><div class="prog-fill" style="width:50%"></div></div><span class="prog-num">50%</span></div></td>
+                  </tr>
+                  <tr data-priority="中" data-status="沟通中">
+                    <td class="coord-id">C6</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">需求确认</span><span class="desc-main">数字人形象方案待组织部领导确认（WBS 3.2）</span></div>
+                      <div class="desc-sub">已提供多种数字人形象给组织部龙科，待领导反馈意见后启动 3 款形象制作</div>
+                    </td>
+                    <td class="owner-cell">组织部 · 龙科</td>
+                    <td><span class="tag orange">中</span></td>
+                    <td class="due-cell">2026-08-28<span class="due-days urgent">⚠ 剩 2 天</span></td>
+                    <td><span class="tag blue dot">沟通中</span></td>
+                    <td class="prog-cell"><div class="prog pmid"><div class="prog-track"><div class="prog-fill" style="width:50%"></div></div><span class="prog-num">50%</span></div></td>
+                  </tr>
+                  <tr data-priority="中" data-status="待发起">
+                    <td class="coord-id">C7</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">供应商协同</span><span class="desc-main">大模型推理服务器部署推进（WBS 5.1）</span></div>
+                      <div class="desc-sub">08-31 启动部署 DeepSeek-V4、Qwen3.6-27B 等模型，用作干部分析研判、数字人推理；每日跟进胡鹏超</div>
+                    </td>
+                    <td class="owner-cell">中电数据产业集团 · 胡鹏超</td>
+                    <td><span class="tag orange">中</span></td>
+                    <td class="due-cell">2026-09-03<span class="due-days">剩 8 天</span></td>
+                    <td><span class="tag gray dot">待发起</span></td>
+                    <td class="prog-cell"><div class="prog p0"><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-num">0%</span></div></td>
+                  </tr>
+                  <tr data-priority="低" data-status="已解决" class="resolved">
+                    <td class="coord-id">C8</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">资源协调</span><span class="desc-main">协调政务和数据局申请应用域名（WBS 1.2）</span></div>
+                      <div class="desc-sub">已填写最新域名申请表并调试到最新域名环境 ✅</div>
+                    </td>
+                    <td class="owner-cell">区政务和数据局 · 杨扬、王忻欤</td>
+                    <td><span class="tag gray">低</span></td>
+                    <td class="due-cell">2026-08-21<span class="due-days" style="color:var(--success)">已完成</span></td>
+                    <td><span class="tag green dot">已解决</span></td>
+                    <td class="prog-cell"><div class="prog pdone"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-num">100%</span></div></td>
+                  </tr>
+                  <tr data-priority="高" data-status="已解决" class="resolved">
+                    <td class="coord-id">C9</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">供应商协同</span><span class="desc-main">组工系统接口文档补充催办（RISK-001）</span></div>
+                      <div class="desc-sub">8.21 18:30 获取到完整接口文档（含单位基本信息、组织变更同步、登录与用户同步等接口）✅</div>
+                    </td>
+                    <td class="owner-cell">中电数据产业集团 · 胡鹏超</td>
+                    <td><span class="tag red">高</span></td>
+                    <td class="due-cell">2026-08-21<span class="due-days" style="color:var(--success)">已完成</span></td>
+                    <td><span class="tag green dot">已解决</span></td>
+                    <td class="prog-cell"><div class="prog pdone"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-num">100%</span></div></td>
+                  </tr>
+                  <tr data-priority="中" data-status="已解决" class="resolved">
+                    <td class="coord-id">C10</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">需求确认</span><span class="desc-main">组工系统操作日志对接口径确认（WBS 4.7）</span></div>
+                      <div class="desc-sub">经 8.19 与中电沟通确认：操作日志 9 月底不上，暂时不对接，任务关闭 ✅</div>
+                    </td>
+                    <td class="owner-cell">中电数据产业集团</td>
+                    <td><span class="tag orange">中</span></td>
+                    <td class="due-cell">2026-08-19<span class="due-days" style="color:var(--success)">已完成</span></td>
+                    <td><span class="tag green dot">已解决</span></td>
+                    <td class="prog-cell"><div class="prog pdone"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-num">100%</span></div></td>
+                  </tr>
+                  <tr data-priority="高" data-status="已解决" class="resolved">
+                    <td class="coord-id">C11</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">需求确认</span><span class="desc-main">龙岗湾嵌入需求确认（RISK-004）</span></div>
+                      <div class="desc-sub">8.19 已确认龙岗湾不再纳入到干部成长伙伴功能中，事项关闭 ✅</div>
+                    </td>
+                    <td class="owner-cell">龙岗湾项目组</td>
+                    <td><span class="tag red">高</span></td>
+                    <td class="due-cell">2026-08-22<span class="due-days" style="color:var(--success)">已完成</span></td>
+                    <td><span class="tag green dot">已解决</span></td>
+                    <td class="prog-cell"><div class="prog pdone"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-num">100%</span></div></td>
+                  </tr>
+                  <tr data-priority="中" data-status="已解决" class="resolved">
+                    <td class="coord-id">C12</td>
+                    <td class="coord-desc">
+                      <div><span class="coord-cat">需求确认</span><span class="desc-main">首页-工作人员设计方案需求确认（RISK-005）</span></div>
+                      <div class="desc-sub">8.20 已确认 9 月底之前暂时不做工作人员首页 ✅</div>
+                    </td>
+                    <td class="owner-cell">区政务和数据局 · 龙岗数据</td>
+                    <td><span class="tag orange">中</span></td>
+                    <td class="due-cell">2026-08-26<span class="due-days" style="color:var(--success)">已完成</span></td>
+                    <td><span class="tag green dot">已解决</span></td>
+                    <td class="prog-cell"><div class="prog pdone"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-num">100%</span></div></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="empty-tip" id="emptyTip">未找到符合条件的协调事项，请调整筛选条件</div>
+            </div>
+          </div>
+
+          <!-- 处理进度分布（并入协调事项列表面板） -->
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>处理进度分布</div>
+                <div class="card-sub" style="margin-top:3px">共 12 项 · 沟通中与已解决各 5 项（42%）· 待发起 2 项（17%）</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="dist-strip">
+                <div class="dist-seg">
+                  <div class="dist-seg-head"><i class="dist-dot" style="background:#86909C"></i>待发起<span class="dist-num">2 项 · 17%</span></div>
+                  <div class="dist-track"><div class="dist-fill" style="width:17%;background:#C9CDD4"></div></div>
+                </div>
+                <div class="dist-seg">
+                  <div class="dist-seg-head"><i class="dist-dot" style="background:#095AFF"></i>沟通中<span class="dist-num">5 项 · 42%</span></div>
+                  <div class="dist-track"><div class="dist-fill" style="width:42%;background:linear-gradient(90deg,#095AFF,#4D8AFF)"></div></div>
+                </div>
+                <div class="dist-seg">
+                  <div class="dist-seg-head"><i class="dist-dot" style="background:#00B42A"></i>已解决<span class="dist-num">5 项 · 42%</span></div>
+                  <div class="dist-track"><div class="dist-fill" style="width:42%;background:#00C640"></div></div>
+                </div>
+              </div>
+              <div class="ai-tip"><b style="color:var(--warning)">AI 提示</b>：数字人音色方案确认（C5）截止 08-27 仅剩 1 天、内外网数据协调（C2）剩 2 天，若延期将影响组工接口联调与 09-01 数字人领导演示节点，建议今日催办。</div>
+            </div>
+          </div>
+      </div>
+
+      <!-- 面板二：我的待办 -->
+      <div class="panel" id="panel-todo">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5V5a3 3 0 0 1 6 0v6.5"/><path d="M16.5 9.5H18a2 2 0 0 1 2 2v4a6 6 0 0 1-12 0v-4a2 2 0 0 1 2-2h1.5"/></svg>我的待办</div>
+              <span class="tag red dot">4 项需亲自介入</span>
+            </div>
+            <div class="card-body">
+              <div class="todo-grid">
+              <div class="todo-item">
+                <div class="todo-rank">1</div>
+                <div class="todo-main">
+                  <div class="todo-title">跟进政数局服务器资源协调，保障 09-08 基础环境部署节点</div>
+                  <div class="todo-meta"><span class="tag red dot" style="height:20px">高</span><span>对接：区政务和数据局</span><span class="dd">截止 09-08 · 剩 13 天</span></div>
+                  <div class="todo-action"><button class="mini-btn primary">催办提醒</button><button class="mini-btn">协调记录</button></div>
+                </div>
+              </div>
+              <div class="todo-item">
+                <div class="todo-rank">2</div>
+                <div class="todo-main">
+                  <div class="todo-title">跟进科大讯飞自定义音色确认，保障 08-27 音色方案节点</div>
+                  <div class="todo-meta"><span class="tag red dot" style="height:20px">高</span><span>对接：数据科 · 科大讯飞</span><span class="dd">截止 08-27 · 剩 1 天</span></div>
+                  <div class="todo-action"><button class="mini-btn primary">催办提醒</button><button class="mini-btn">需求清单</button></div>
+                </div>
+              </div>
+              <div class="todo-item">
+                <div class="todo-rank">3</div>
+                <div class="todo-main">
+                  <div class="todo-title">向中电项目负责人书面催办驾驶舱参考页面（已超期）</div>
+                  <div class="todo-meta"><span class="tag red dot" style="height:20px">高</span><span>对接：中电数据产业集团</span><span class="dd w">08-25 已超期 · 同步备选方案</span></div>
+                  <div class="todo-action"><button class="mini-btn primary">发送催办函</button><button class="mini-btn">备选方案</button></div>
+                </div>
+              </div>
+              <div class="todo-item">
+                <div class="todo-rank m">4</div>
+                <div class="todo-main">
+                  <div class="todo-title">与政数局确认安全测评具体事项清单及启动方案</div>
+                  <div class="todo-meta"><span class="tag orange dot" style="height:20px">中</span><span>对接：区政务和数据局</span><span class="dd w">截止 08-31 · 剩 5 天</span></div>
+                  <div class="todo-action"><button class="mini-btn primary">发起沟通</button><button class="mini-btn">测评模板</button></div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- 面板三：较上周变化 -->
+      <div class="panel" id="panel-week">
+        <!-- 总量对比 -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>总量对比（在库未解决事项）</div>
+            <div class="card-sub">对比周期：08-19（上周同日）→ 08-26（今日）· 台账累计 12 项</div>
+          </div>
+          <div class="card-body">
+            <div class="wk-compare">
+              <div class="wk-stat"><div class="wk-label">上周在库</div><div class="wk-num">8<small> 项</small></div></div>
+              <div class="wk-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+              <div class="wk-stat"><div class="wk-label">本周在库</div><div class="wk-num">7<small> 项</small></div></div>
+              <span class="wk-delta down">▼ 净减 1 项</span>
+              <div class="wk-divider"></div>
+              <div class="wk-stat"><div class="wk-label">本周新增</div><div class="wk-num">0<small> 项</small></div></div>
+              <div class="wk-stat"><div class="wk-label">本周解决</div><div class="wk-num">1<em>（上周 4）</em></div></div>
+              <div class="wk-stat"><div class="wk-label">沟通中平均进度</div><div class="wk-num">48%<em>（上周 37%）</em></div></div>
+            </div>
+            <div class="wk-note">口径说明：在库 = 待发起 + 沟通中（不含已解决）；上周在库 8 项 = 本周在库 7 项 + 本周解决 1 项（C12）；台账另含已解决 5 项（C8~C12）。</div>
+          </div>
+        </div>
+
+        <!-- 变化明细 -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18"/><path d="M3 12h18"/><path d="M3 19h18"/></svg>逐项变化明细</div>
+            <div class="card-sub">本周动态 8 条（在库 7 项全覆盖）：已解决 1 · 进度推进 3 · 超期预警 1 · 临期预警 1 · 状态维持 2 · 新增 0</div>
+          </div>
+          <div class="card-body" style="overflow-x:auto">
+            <table class="week-table">
+              <thead>
+                <tr>
+                  <th style="width:88px">变化类型</th>
+                  <th style="width:56px">编号</th>
+                  <th style="min-width:170px">事项名称</th>
+                  <th style="width:88px">分类</th>
+                  <th style="width:64px">优先级</th>
+                  <th style="width:132px">状态变化</th>
+                  <th style="min-width:260px">变化说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="chg-tag solved">已解决</span></td>
+                  <td class="coord-id">C12</td>
+                  <td class="wk-name">首页-工作人员设计方案需求确认</td>
+                  <td>需求确认</td>
+                  <td><span class="tag orange">中</span></td>
+                  <td class="st-change"><span class="st-prev">沟通中 60%</span><span class="st-arrow">→</span><span class="st-now green">已解决</span></td>
+                  <td>08-26 确认 9 月底前暂缓工作人员首页建设，事项关闭，风险 RISK-005 同步闭环</td>
+                </tr>
+                <tr>
+                  <td><span class="chg-tag prog">进度推进</span></td>
+                  <td class="coord-id">C6</td>
+                  <td class="wk-name">数字人形象方案确认</td>
+                  <td>需求确认</td>
+                  <td><span class="tag orange">中</span></td>
+                  <td class="st-change"><span class="st-prev">沟通中 30%</span><span class="st-arrow">→</span><span class="st-now blue">沟通中 50%</span></td>
+                  <td>已向组织部提供多种数字人形象方案，待龙科反馈；08-28 到期，剩 2 天</td>
+                </tr>
+                <tr>
+                  <td><span class="chg-tag prog">进度推进</span></td>
+                  <td class="coord-id">C2</td>
+                  <td class="wk-name">内外网数据交换方案协调</td>
+                  <td>网络与数据</td>
+                  <td><span class="tag red">高</span></td>
+                  <td class="st-change"><span class="st-prev">沟通中 40%</span><span class="st-arrow">→</span><span class="st-now blue">沟通中 50%</span></td>
+                  <td>跨内外网数据交换方案已与政数局、数据集团三方对齐技术路线；08-28 到期，剩 2 天</td>
+                </tr>
+                <tr>
+                  <td><span class="chg-tag prog">进度推进</span></td>
+                  <td class="coord-id">C1</td>
+                  <td class="wk-name">服务器资源协调（内网5台+外网3台）</td>
+                  <td>资源协调</td>
+                  <td><span class="tag red">高</span></td>
+                  <td class="st-change"><span class="st-prev">沟通中 30%</span><span class="st-arrow">→</span><span class="st-now blue">沟通中 50%</span></td>
+                  <td>政数局内部资源审批流程推进中，目标 09-08 前完成基础环境部署（剩 13 天），每日跟进</td>
+                </tr>
+                <tr>
+                  <td><span class="chg-tag over">超期预警</span></td>
+                  <td class="coord-id">C4</td>
+                  <td class="wk-name">中电驾驶舱参考页面催办</td>
+                  <td>供应商协同</td>
+                  <td><span class="tag red">高</span></td>
+                  <td class="st-change"><span class="st-prev">沟通中 30%</span><span class="st-arrow">→</span><span class="st-now red">超期 · 40%</span></td>
+                  <td>计划 08-25 获取参考页面已超期，催办升级至中电项目负责人书面确认，同步准备备选方案</td>
+                </tr>
+                <tr>
+                  <td><span class="chg-tag due">临期预警</span></td>
+                  <td class="coord-id">C5</td>
+                  <td class="wk-name">数字人多音色需求协调</td>
+                  <td>供应商协同</td>
+                  <td><span class="tag red">高</span></td>
+                  <td class="st-change"><span class="st-prev">沟通中 30%</span><span class="st-arrow">→</span><span class="st-now orange">沟通中 50%</span></td>
+                  <td>音色需求已全部提交数据科，待科大讯飞确认自定义音色支持；08-27 到期，仅剩 1 天</td>
+                </tr>
+                <tr>
+                  <td><span class="chg-tag hold">状态维持</span></td>
+                  <td class="coord-id">C3</td>
+                  <td class="wk-name">安全测评事项清单确认</td>
+                  <td>安全合规</td>
+                  <td><span class="tag red">高</span></td>
+                  <td class="st-change"><span class="st-prev">待发起</span><span class="st-arrow">→</span><span class="st-now gray">待发起</span></td>
+                  <td>连续两周未发起，08-31 到期剩 5 天；已列入我的待办，建议今日与政数局启动沟通</td>
+                </tr>
+                <tr>
+                  <td><span class="chg-tag hold">状态维持</span></td>
+                  <td class="coord-id">C7</td>
+                  <td class="wk-name">大模型推理服务器部署推进（WBS 5.1）</td>
+                  <td>供应商协同</td>
+                  <td><span class="tag orange">中</span></td>
+                  <td class="st-change"><span class="st-prev">待发起</span><span class="st-arrow">→</span><span class="st-now gray">待发起</span></td>
+                  <td>计划 08-31 启动 DeepSeek-V4、Qwen3.6-27B 等模型部署，每日跟进中电胡鹏超；09-03 到期剩 8 天</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 对比变化分析 -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/><path d="M12 2a4 4 0 0 0-4 4c0 1.95 1.4 3.58 3.25 3.93"/><path d="M9 13.5l-4 2.5"/><path d="M15 13.5l4 2.5"/></svg>对比变化分析</div>
+            <span class="tag purple dot">AI 生成</span>
+          </div>
+          <div class="card-body">
+            <div class="wk-analysis">
+              <div class="wk-an-item"><span class="an-ico" style="background:var(--success-50);color:var(--success)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>解决速度放缓</b>：本周闭环 1 项（上周 4 项），需求确认类连续两周集中消化（C10/C11/C12 等 5 项），该类存量已基本出清。</div></div>
+              <div class="wk-an-item"><span class="an-ico" style="background:var(--primary-50);color:var(--primary)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span><div><b>堵点向供应商集中</b>：在库 7 项中供应商协同类占 3 项（C4/C5/C7），当前未闭环事项多依赖外部反馈（中电、科大讯飞、组织部、政数局），我方主动推进空间收窄，需靠升级协调层级破局。</div></div>
+              <div class="wk-an-item"><span class="an-ico" style="background:var(--danger-50);color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><div><b>48 小时内三项到期</b>：C5（剩 1 天）、C2/C6（剩 2 天），叠加 C4 已超期，若本周无法闭环将直接冲击 <b>09-01 数字人领导演示</b>节点，建议对 C4/C5 升级协调层级（数据集团层面对接中电总部）。</div></div>
+              <div class="wk-an-item"><span class="an-ico" style="background:var(--warning-50);color:var(--warning)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div><b>发起动作滞后</b>：C3 安全测评连续两周维持"待发起"，且为两项待发起事项中唯一临近到期的高优先级事项；参照等保测评 4~6 周周期倒排，最迟 09-05 前必须启动，否则影响 10 月初系统上线目标。</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// 侧边栏折叠
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+// 下拉选择（通用）
+const state={priority:'all',status:'all'};
+document.querySelectorAll('[data-select]').forEach(sel=>{
+  const trigger=sel.querySelector('.v-select-trigger');
+  trigger.addEventListener('click',e=>{
+    e.stopPropagation();
+    document.querySelectorAll('[data-select].open').forEach(o=>{if(o!==sel)o.classList.remove('open')});
+    sel.classList.toggle('open');
+  });
+  sel.querySelectorAll('.v-select-option').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      sel.querySelector('.v-select-label').textContent=opt.textContent;
+      sel.querySelectorAll('.v-select-option').forEach(o=>o.classList.remove('active'));
+      opt.classList.add('active');
+      sel.classList.remove('open');
+      sel.dispatchEvent(new CustomEvent('selectchange',{detail:opt.dataset.value}));
+    });
+  });
+});
+document.addEventListener('click',()=>document.querySelectorAll('[data-select].open').forEach(o=>o.classList.remove('open')));
+// ============ 面板切换（面包屑 + 并列面板） ============
+const panelNames={list:'协调事项列表',week:'较上周变化',todo:'我的待办'};
+function switchPanel(key){
+  if(!panelNames[key])return;
+  document.querySelectorAll('.panel-tab').forEach(t=>t.classList.toggle('active',t.dataset.panel===key));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+key));
+  document.getElementById('crumbCurrent').textContent=panelNames[key];
+}
+document.querySelectorAll('.panel-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>switchPanel(tab.dataset.panel));
+});
+document.querySelectorAll('.crumb.link[data-jump]').forEach(c=>{
+  c.addEventListener('click',()=>switchPanel(c.dataset.jump));
+});
+// 筛选
+function applyFilter(){
+  let visible=0;
+  document.querySelectorAll('#coordBody tr').forEach(tr=>{
+    const okP=state.priority==='all'||tr.dataset.priority===state.priority;
+    const okS=state.status==='all'||tr.dataset.status===state.status;
+    const show=okP&&okS;
+    tr.classList.toggle('f-hidden',!show);
+    if(show)visible++;
+  });
+  document.getElementById('emptyTip').style.display=visible===0?'block':'none';
+  document.getElementById('coordCount').textContent=visible+' 项事项';
+}
+document.getElementById('prioritySelect').addEventListener('selectchange',e=>{state.priority=e.detail||'all';applyFilter()});
+document.getElementById('statusSelect').addEventListener('selectchange',e=>{state.status=e.detail||'all';applyFilter()});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  state.priority='all';state.status='all';
+  ['prioritySelect','statusSelect'].forEach(id=>{
+    const sel=document.getElementById(id);
+    sel.querySelector('.v-select-label').textContent='全部';
+    sel.querySelectorAll('.v-select-option').forEach(o=>o.classList.toggle('active',o.dataset.value==='all'));
+  });
+  applyFilter();
+});
+</script>
+</body>
+</html>
