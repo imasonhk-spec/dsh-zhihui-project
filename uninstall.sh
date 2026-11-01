@@ -5,7 +5,7 @@ set -euo pipefail
 PKG_NAME="dsh-zhihui-project"
 PKG_VERSION="0.3.0"
 PLUGIN_DIR="@local/zhihui-project"
-SERVICES="zhihui-project-api zhihui-project-web redis-zhihui zhihui-sso dsh-docs-engine dsh-ollama-shim"
+SERVICES="zhihui-project-api zhihui-project-web redis-zhihui zhihui-sso dsh-ollama-shim"
 
 DSH_HOME="${DSH_HOME:-$HOME/.dsh}"
 PROFILE_DIR="$DSH_HOME/profiles/web"
