@@ -1,8 +1,8 @@
 {
   "name": "dsh-zhihui-project",
   "unit": "dsh-zhihui-project",
-  "version": "0.3.0",
-  "previousVersion": "0.2.0",
+  "version": "0.3.1",
+  "previousVersion": "0.3.0",
   "title": "智汇·项目",
   "kind": "plugin",
   "services": [
@@ -20,7 +20,7 @@
   "hasVenv": false,
   "hasNode": false,
   "hasHarness": false,
-  "generatedAt": "2026-11-02T07:53:42+08:00",
+  "generatedAt": "2026-11-10T10:26:55+08:00",
   "host": "lgsj",
   "installScope": [
     "host-profile",
@@ -39,8 +39,8 @@
       "dst": "fs/opt/zhihui/env/project-api.env",
       "type": "file",
       "mode": "0o600",
-      "size": 903,
-      "sha256": "ce04d26940327e9c5310394ba4cf81c558b5d9d6e6a28ed4096d645b4226a532"
+      "size": 1455,
+      "sha256": "90cfda25cf57e2c9097a53b9b20d86e365ed505cff9704310f147350ee29eba9"
     },
     {
       "src": "/opt/zhihui/runtime",

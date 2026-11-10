@@ -1,4 +1,4 @@
-# dsh-zhihui-project 0.3.0
+# dsh-zhihui-project 0.3.1
 
 智汇·项目
 
@@ -20,8 +20,8 @@
 ## 安装
 
 ```bash
-tar -xzf dsh-zhihui-project-0.3.0.tar.gz
-cd dsh-zhihui-project-0.3.0
+tar -xzf dsh-zhihui-project-0.3.1.tar.gz
+cd dsh-zhihui-project-0.3.1
 sudo ./install.sh
 ```
 

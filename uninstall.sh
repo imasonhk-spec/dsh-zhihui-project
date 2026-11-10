@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PKG_NAME="dsh-zhihui-project"
-PKG_VERSION="0.3.0"
+PKG_VERSION="0.3.1"
 PLUGIN_DIR="@local/zhihui-project"
 SERVICES="zhihui-project-api zhihui-project-web redis-zhihui zhihui-sso dsh-ollama-shim"
 
