@@ -1,0 +1,7 @@
+[Unit]
+Description=Project Manager application stack
+Wants=project-manager-api.service project-manager-web.service
+After=project-manager-api.service project-manager-web.service
+
+[Install]
+WantedBy=default.target

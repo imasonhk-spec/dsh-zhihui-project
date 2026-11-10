@@ -1,0 +1,19 @@
+[Unit]
+Description=Zhihui Project Manager API (port 3100)
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lgsj
+Group=lgsj
+WorkingDirectory=/opt/zhihui/project-manager
+EnvironmentFile=/opt/zhihui/env/project-api.env
+ExecStart=/home/lgsj/.nvm/versions/node/v22.23.3/bin/node /opt/zhihui/project-manager/node_modules/tsx/dist/cli.mjs apps/api/src/server.ts
+Restart=always
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

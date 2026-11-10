@@ -1,0 +1,17 @@
+[Unit]
+Description=Opportunity Manager Web
+After=network-online.target opportunity-manager-api.service
+Wants=opportunity-manager-api.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/lgsj/harness/bussiness-manager
+Environment=PATH=/home/lgsj/.local/pnpm/bin:/home/lgsj/.nix-profile/bin:/run/current-system/sw/bin:/usr/bin:/bin
+ExecStart=/home/lgsj/.local/pnpm/bin/pnpm dev:web
+Restart=always
+RestartSec=2
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "项目交付与知识底座",
+    "output": "project-data-foundation.html",
+    "quality_profile": "showcase",
+    "views": [
+      { "id": "plan-import", "label": "计划导入", "focus": ["users", "import", "coredb", "audit"], "note": "Excel 计划表先进入导入批次，再转换为项目执行数据。" },
+      { "id": "knowledge-pipeline", "label": "知识处理", "focus": ["upload", "object", "pipeline", "vector", "coredb"], "note": "原始材料经过解析、分块和向量化后进入项目知识空间。" },
+      { "id": "retrieval", "label": "项目检索", "focus": ["assistant", "retrieval", "coredb", "vector"], "note": "结构化项目上下文与项目范围内的混合检索共同支撑问答。" }
+    ]
+  },
+  "components": [
+    { "id": "users", "type": "external", "label": "项目经理/成员", "sublabel": "上传与维护", "pos": [40, 290], "size": [150, 64] },
+    { "id": "import", "type": "backend", "label": "导入与映射服务", "sublabel": "Excel 预览 / 幂等 / 血缘", "pos": [260, 180], "size": [180, 72], "tag": "P0" },
+    { "id": "coredb", "type": "database", "label": "PostgreSQL", "sublabel": "项目计划与审计", "pos": [520, 290], "size": [170, 72] },
+    { "id": "audit", "type": "security", "label": "权限与审计", "sublabel": "项目 scope / ACL", "pos": [520, 120], "size": [170, 64] },
+    { "id": "upload", "type": "backend", "label": "文档接入服务", "sublabel": "版本 / checksum", "pos": [260, 440], "size": [180, 72] },
+    { "id": "object", "type": "cloud", "label": "对象存储", "sublabel": "原始材料不可变版本", "pos": [520, 440], "size": [170, 72] },
+    { "id": "pipeline", "type": "backend", "label": "解析与索引流水线", "sublabel": "OCR / chunk / embedding", "pos": [780, 440], "size": [190, 72] },
+    { "id": "vector", "type": "database", "label": "pgvector", "sublabel": "全文 + HNSW 向量", "pos": [1030, 290], "size": [170, 72] },
+    { "id": "assistant", "type": "frontend", "label": "项目 AI 助手", "sublabel": "引用式回答", "pos": [780, 120], "size": [170, 64] },
+    { "id": "retrieval", "type": "backend", "label": "项目范围混合检索", "sublabel": "权限过滤 / RRF", "pos": [1030, 120], "size": [170, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "项目数据边界：所有业务与知识检索携带 project_id", "wraps": ["import", "coredb", "audit", "upload", "object", "pipeline", "vector", "assistant", "retrieval" ] },
+    { "kind": "security-group", "label": "敏感材料：合同 / 招投标 / 纪检材料 ACL", "wraps": ["object", "vector", "retrieval" ] }
+  ],
+  "connections": [
+    { "id": "user-import", "from": "users", "to": "import", "label": "上传计划表", "variant": "emphasis" },
+    { "id": "import-db", "from": "import", "to": "coredb", "label": "结构化任务 / 里程碑 / 风险" },
+    { "id": "import-audit", "from": "import", "to": "audit", "label": "导入血缘与审计", "variant": "security" },
+    { "id": "user-upload", "from": "users", "to": "upload", "label": "上传材料", "variant": "emphasis" },
+    { "id": "upload-object", "from": "upload", "to": "object", "label": "版本化存储" },
+    { "id": "object-pipeline", "from": "object", "to": "pipeline", "label": "解析任务", "variant": "dashed", "labelDy": 28 },
+    { "id": "pipeline-db", "from": "pipeline", "to": "coredb", "label": "文档 / 分块元数据" },
+    { "id": "pipeline-vector", "from": "pipeline", "to": "vector", "label": "embedding + FTS" },
+    { "id": "assistant-retrieval", "from": "assistant", "to": "retrieval", "label": "项目问题" },
+    { "id": "retrieval-db", "from": "retrieval", "to": "coredb", "label": "项目上下文" },
+    { "id": "retrieval-vector", "from": "retrieval", "to": "vector", "label": "混合召回", "labelDy": 24 },
+    { "id": "audit-retrieval", "from": "audit", "to": "retrieval", "label": "权限过滤", "variant": "security", "fromSide": "top", "toSide": "top", "via": [[605, 70], [1115, 70]], "labelDy": -14 }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "结构化计划", "items": ["WBS、里程碑、报批、风险和协调事项归属项目", "保留 source_file、sheet、row 形成可回溯血缘"] },
+    { "dot": "emerald", "title": "知识材料", "items": ["原始文件与不可变版本进入对象存储", "解析、OCR、分块和向量化均可重试"] },
+    { "dot": "rose", "title": "隔离与引用", "items": ["检索先做项目与 ACL 过滤", "AI 回答只引用可访问的当前版本"] }
+  ]
+}

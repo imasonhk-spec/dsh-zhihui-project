@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "types": ["node"]
+  },
+  "include": ["apps/api/**/*.ts", "database/**/*.ts", "packages/**/*.ts", "scripts/**/*.ts", "drizzle.config.ts"],
+  "exclude": ["apps/web", "dist", "node_modules"]
+}

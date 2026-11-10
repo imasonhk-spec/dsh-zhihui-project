@@ -1,0 +1,66 @@
+{
+  "catalogVersion": "1.0.0",
+  "commonSections": ["文档控制","范围与口径","执行摘要","当前进展","当前难点/问题","风险与依赖","未来预期/预测","下一步计划","需协调/决策事项","变更与影响","证据与引用","缺失/冲突信息","审批留痕"],
+  "templates": [
+    {
+      "templateId":"project_progress","templateVersion":"1.0.0","title":"项目进度与状态报告","documentType":"project_progress_report",
+      "requiredCategories":["progress","milestone","issue","risk","forecast","coordination","change"],
+      "fieldHints":["本期完成(observed)","在途事项(observed|plan)","里程碑计划/实际", "进度百分比及口径", "偏差与纠偏"],
+      "evidenceRule":"完成、进度、日期、状态均须项目事实或项目文档引用；无证据写入missingInformation。"
+    },
+    {
+      "templateId":"issue_difficulty","templateVersion":"1.0.0","title":"难点与问题清单","documentType":"issue_difficulty_register",
+      "requiredCategories":["issue","action","decision"],
+      "fieldHints":["问题现象","首次发现","影响范围","根因(可未知)","责任人","临时措施","闭环标准","截止日期"],
+      "evidenceRule":"问题现状为observed并引用；根因未验证时必须标assumption/opinion。"
+    },
+    {
+      "templateId":"risk_register","templateVersion":"1.0.0","title":"风险与依赖台账","documentType":"risk_register",
+      "requiredCategories":["risk","action","decision"],
+      "fieldHints":["风险事件","触发条件","概率","影响","等级","应对措施","责任人","残余风险","依赖"],
+      "evidenceRule":"概率和影响须给评估依据与asOf；风险不得写成已发生事实。"
+    },
+    {
+      "templateId":"forecast_outlook","templateVersion":"1.0.0","title":"未来预期与预测","documentType":"forecast_outlook",
+      "requiredCategories":["forecast"],
+      "fieldHints":["预测对象","预测值/日期","依据","假设","置信度","敏感因素","观察窗口"],
+      "evidenceRule":"每条forecast必须同时含basis、assumptions、confidence、asOf及证据引用；不得表述为承诺。"
+    },
+    {
+      "templateId":"coordination_escalation","templateVersion":"1.0.0","title":"协调升级单","documentType":"coordination_escalation",
+      "requiredCategories":["coordination","decision","action"],
+      "fieldHints":["协调主题","已采取措施","参与组织","影响","建议选项","决策人","最晚决策日","逾期后果"],
+      "evidenceRule":"事实经过须引用；建议为opinion；决策未形成前不得标为approved。"
+    },
+    {
+      "templateId":"weekly_report","templateVersion":"1.0.0","title":"项目周报","documentType":"weekly_report",
+      "requiredCategories":["progress","issue","risk","forecast","coordination","action"],
+      "fieldHints":["本周完成事实","本周未完成与原因","下周计划承诺","里程碑","需协调事项"],
+      "evidenceRule":"本周事实和下周plan分区；下周计划必须含责任人和日期。"
+    },
+    {
+      "templateId":"monthly_report","templateVersion":"1.0.0","title":"项目月报","documentType":"monthly_report",
+      "requiredCategories":["progress","milestone","issue","risk","forecast","coordination","commercial","change"],
+      "fieldHints":["本月事实","环比趋势","累计进度","关键偏差","下月预测","合同/回款概览"],
+      "evidenceRule":"趋势必须声明比较周期和同口径证据；口径变化列入conflicts或change。"
+    },
+    {
+      "templateId":"acceptance_closure","templateVersion":"1.0.0","title":"验收与结项报告","documentType":"acceptance_closure_report",
+      "requiredCategories":["acceptance","issue","action","commercial","decision"],
+      "fieldHints":["验收范围","验收依据","环境","用例/指标","结果","缺陷整改","验收结论","合同/财务","遗留事项","移交","经验","签署"],
+      "evidenceRule":"结论必须逐项绑定验收证据；未签署仅为draft，模板不替代法定或合同审批。"
+    },
+    {
+      "templateId":"opportunity_review","templateVersion":"1.0.0","title":"商机资格与签约预测","documentType":"opportunity_review",
+      "requiredCategories":["commercial","forecast","risk","action","decision"],
+      "fieldHints":["客户需求","预算与采购路径","竞争态势","关系覆盖","阶段","金额","概率","预计签约日","Go/No-Go","售前行动"],
+      "evidenceRule":"金额/阶段为截至asOf的事实；概率/签约日为forecast并含依据、假设、置信度。"
+    },
+    {
+      "templateId":"portfolio_briefing","templateVersion":"1.0.0","title":"跨项目领导汇报","documentType":"portfolio_briefing",
+      "requiredCategories":["progress","issue","risk","forecast","coordination","decision","acceptance","commercial"],
+      "fieldHints":["授权范围快照","交付项目分区","商机分区","共性风险","资源冲突","跨项目决策","逐项来源项目"],
+      "evidenceRule":"仅汇总服务端授权项目集合；每项带sourceProjectId/sourceProjectCode；交付与商机禁止混写。"
+    }
+  ]
+}

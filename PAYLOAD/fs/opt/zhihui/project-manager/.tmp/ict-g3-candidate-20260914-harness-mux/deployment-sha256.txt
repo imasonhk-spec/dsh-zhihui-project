@@ -1,0 +1,20 @@
+deployment_model=candidate only; no production deployment or service restart performed
+candidate_reason=ICT-DEF-RUNTIME-054 HarnessMux WebSocket error-close recursion fix
+a46aae6cef06e27b2b8bb705f2455c5971ef4e25513c8036d97c3c4f8e2a7904  apps/api/src/server.ts
+7c548b02524cd48256fab8d2bddf2fab0163fa7e602d22ae354e18a92ff38d3d  apps/api/src/ai/harness-mux.ts
+d3246803a516bf7e07ecca1b01c5d5c71089718dd5b6012cce20d98592f0cbfd  apps/api/src/ai/harness-mux.test.ts
+9859c6ff4ad259cb3e085d30818d9a196d9c903ad5df4edac9d46139efed00c3  apps/api/src/modules/imports/project-import-change-service.ts
+8fae2d26520477b74c778cc08592bd4811b250b145843a1765f3c369c4013534  apps/api/src/modules/imports/import-service.ts
+e9455c21709c1f824602c0b7c99bddb9a6d11f7fb005ef594d00458a4e4136d1  apps/web/src/api/projects.ts
+5ba6370ca98a95c7f5d9cb4ed67d2e747d9b83a4247359fceaef64782f012212  apps/web/src/pages/projects/ProjectImportsPage.tsx
+a9afb1e1693f5ab21ed6d4cba5b09b918250fa13cc33fb192e24e2e36d49556d  apps/web/src/pages/projects/ProjectTasksPage.tsx
+6746dd934174de9d895f9a340ada061720bfec9e666fedd3eb3359862eedc8ca  apps/web/src/styles/global.css
+02a94ae247381a02f05f487e544c451b03c814bfbe7eebd8507878038adedbda  database/migrations/0021_project_import_change_tracking.sql
+6367bb9f7361dc3a0089d2b4526bca84609c49ecfaa89f58354749150176a644  scripts/ict-g3-release.sh
+de3302b5dfa1ebc89000230fb468474a48536affe2b4f537be0562e7c6667156  scripts/ict-g3-post-verify.sh
+7a16b066865b155fdc9e7368905494420c355960df91dbc70c8444d74a21fab4  docs/ICT-1-G3-Edge145迁移后验收模板.md
+dd5ddec3e606a7fd970400aff50e5e47bb798e7580b3e938fb1f7af8fd84bf7a  /home/lgsj/harness/bussiness-manager/database/0005_opportunity_import_change_tracking.sql
+99d790deb2ad956efc1ba7d48ead0fee96fe85e1320efe08bbaf50b380cf1102  /home/lgsj/harness/bussiness-manager/apps/api/src/opportunity-import-change-service.ts
+9b054f24e2fd88985e4fb5308c1f74d76bb5ba7966e3a2d891b6a39365b7ec6a  /home/lgsj/harness/bussiness-manager/apps/api/src/server.ts
+60d2a2c9a9c33ef71dfd8fd8dd6661ec8a659e8b9f3584754d0cf4b74a5e01f5  /home/lgsj/harness/bussiness-manager/apps/web/src/main.tsx
+4af94736a93b4d54837d099a69724dc3614c76681f3a88a8b569171d8d9ad952  /home/lgsj/harness/bussiness-manager/apps/web/src/styles.css

@@ -1,0 +1,103 @@
+{
+  "name": "dsh-zhihui-project",
+  "unit": "dsh-zhihui-project",
+  "version": "0.3.2",
+  "previousVersion": "0.3.1",
+  "title": "智汇·项目",
+  "kind": "plugin",
+  "services": [
+    "zhihui-project-api",
+    "zhihui-project-web",
+    "redis-zhihui",
+    "zhihui-sso",
+    "dsh-ollama-shim"
+  ],
+  "ports": [
+    3100,
+    3200
+  ],
+  "pluginDir": "@local/zhihui-project",
+  "hasVenv": false,
+  "hasNode": false,
+  "hasHarness": false,
+  "generatedAt": "2026-11-10T12:48:13+08:00",
+  "host": "lgsj",
+  "installScope": [
+    "host-profile",
+    "all-existing-accounts"
+  ],
+  "baseRepo": "imasonhk-spec/dsh",
+  "baseTag": "v0.2.0",
+  "fsEntries": [
+    {
+      "src": "/opt/zhihui/project-manager",
+      "dst": "fs/opt/zhihui/project-manager",
+      "type": "dir"
+    },
+    {
+      "src": "/opt/zhihui/env/project-api.env",
+      "dst": "fs/opt/zhihui/env/project-api.env",
+      "type": "file",
+      "mode": "0o600",
+      "size": 1455,
+      "sha256": "90cfda25cf57e2c9097a53b9b20d86e365ed505cff9704310f147350ee29eba9"
+    },
+    {
+      "src": "/opt/zhihui/runtime",
+      "dst": "fs/opt/zhihui/runtime",
+      "type": "dir"
+    },
+    {
+      "src": "/opt/zhihui/env/project-web.env",
+      "dst": "fs/opt/zhihui/env/project-web.env",
+      "type": "file",
+      "mode": "0o600",
+      "size": 139,
+      "sha256": "4b8593410c27394ed032909360c62f17986ada12d8ab09459b79e8f20d989ce8"
+    },
+    {
+      "src": "/etc/redis/zhihui.conf",
+      "dst": "fs/etc/redis/zhihui.conf",
+      "type": "file",
+      "mode": "0o644",
+      "size": 106607,
+      "sha256": "3814e427e6ed4889b18879f7ad0cc6a359eb31e348f51760ea5eac99fd5f8078"
+    },
+    {
+      "src": "/opt/zhihui/env/sso.env",
+      "dst": "fs/opt/zhihui/env/sso.env",
+      "type": "file",
+      "mode": "0o600",
+      "size": 131,
+      "sha256": "3477876c6d384940179665d8d2780cad2c6fd01a5e94e99debd989e056e3b243"
+    },
+    {
+      "src": "/home/lgsj/dsh-ollama-shim",
+      "dst": "fs/home/lgsj/dsh-ollama-shim",
+      "type": "dir"
+    },
+    {
+      "src": "/usr/local/bin/node",
+      "dst": "fs/usr/local/bin/node",
+      "type": "symlink",
+      "target": "/usr/local/node/bin/node"
+    }
+  ],
+  "aptProvides": [
+    "/usr/bin/redis-server"
+  ],
+  "runtimeFrom": [
+    "/home/lgsj/.nvm",
+    "/usr/local/node"
+  ],
+  "pathRemap": [
+    {
+      "from": "/home/lgsj/.dsh",
+      "to": "@DSH_HOME@"
+    },
+    {
+      "from": "/home/lgsj",
+      "to": "@USER_HOME@"
+    }
+  ]
+}

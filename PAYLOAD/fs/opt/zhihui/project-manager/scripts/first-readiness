@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STACK_TARGET="project-manager-stack.target"
+UNITS=(
+  project-manager-api.service
+  project-manager-web.service
+  opportunity-manager-api.service
+  opportunity-manager-web.service
+  weixin-account-manager.service
+)
+
+usage() {
+  printf 'Usage: %s {start|stop|restart|status}\n' "$0" >&2
+  exit 2
+}
+
+command -v systemctl >/dev/null || { echo 'systemctl is required' >&2; exit 1; }
+[[ $# -eq 1 ]] || usage
+case "$1" in
+  start) systemctl --user start "$STACK_TARGET" ;;
+  stop) systemctl --user stop "$STACK_TARGET" ;;
+  restart) systemctl --user restart "${UNITS[@]}" ;;
+  status) systemctl --user --no-pager --full status "${UNITS[@]}" ;;
+  *) usage ;;
+esac

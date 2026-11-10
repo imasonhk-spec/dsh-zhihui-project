@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DEST="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
+mkdir -p "$DEST"
+cp "$ROOT"/ops/systemd/user/project-manager-api.service "$DEST"/
+cp "$ROOT"/ops/systemd/user/project-manager-dependencies.service "$DEST"/
+cp "$ROOT"/ops/systemd/user/project-manager-stack.target "$DEST"/
+cp "$ROOT"/ops/systemd/user/opportunity-manager-api.service "$DEST"/
+cp "$ROOT"/ops/systemd/user/opportunity-manager-web.service "$DEST"/
+cp "$ROOT"/ops/systemd/user/weixin-account-manager.service "$DEST"/
+
+systemctl --user daemon-reload
+systemctl --user enable --now project-manager-dependencies.service
+systemctl --user enable --now project-manager-stack.target
+systemctl --user enable --now opportunity-manager-api.service opportunity-manager-web.service weixin-account-manager.service
+printf 'Enabled user services and started application stack.\n'

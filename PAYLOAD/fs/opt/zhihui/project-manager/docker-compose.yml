@@ -1,0 +1,46 @@
+services:
+  postgres:
+    restart: unless-stopped
+    image: pgvector/pgvector:pg16
+    container_name: project-manager-postgres
+    environment:
+      POSTGRES_DB: project_manager
+      POSTGRES_USER: pm_user
+      POSTGRES_PASSWORD: pm_password
+    ports:
+      - "55432:5432"
+    volumes:
+      - project-manager-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pm_user -d project_manager"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    restart: unless-stopped
+    image: redis:7-alpine
+    container_name: project-manager-redis
+    ports:
+      - "56379:6379"
+    volumes:
+      - project-manager-redis:/data
+
+  minio:
+    restart: unless-stopped
+    image: minio/minio:latest
+    container_name: project-manager-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "59000:9000"
+      - "59001:9001"
+    volumes:
+      - project-manager-minio:/data
+
+volumes:
+  project-manager-postgres:
+  project-manager-redis:
+  project-manager-minio:

@@ -1,0 +1,855 @@
+;
+; Archive created at 2026-09-14 11:52:17 CST
+;     dbname: project_manager
+;     TOC Entries: 844
+;     Compression: gzip
+;     Dump Version: 1.15-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 16.15 (Debian 16.15-1.pgdg12+2)
+;     Dumped by pg_dump version: 16.13
+;
+;
+; Selected TOC Entries:
+;
+7; 2615 16389 SCHEMA - drizzle pm_user
+10; 2615 62470 SCHEMA - opportunity pm_user
+13; 2615 47571 SCHEMA - wam_b2_phase1 pm_user
+11; 2615 47166 SCHEMA - wam_idempotency pm_user
+12; 2615 47300 SCHEMA - wam_idempotency2 pm_user
+14; 2615 47709 SCHEMA - wam_phase1_final pm_user
+16; 2615 48879 SCHEMA - wam_receipt_events pm_user
+15; 2615 48120 SCHEMA - wam_s3_reconcile pm_user
+9; 2615 44256 SCHEMA - wam_stage4_receipt pm_user
+17; 2615 49849 SCHEMA - wam_v5_receipt_31643 pm_user
+8; 2615 43695 SCHEMA - weixin_account_manager pm_user
+2; 3079 16573 EXTENSION - vector 
+5494; 0 0 COMMENT - EXTENSION vector 
+1285; 1247 25567 TYPE public ai_conversation_status pm_user
+1288; 1247 25572 TYPE public ai_message_role pm_user
+1291; 1247 25582 TYPE public ai_message_status pm_user
+1194; 1247 16902 TYPE public coordination_status pm_user
+1197; 1247 16912 TYPE public document_status pm_user
+1200; 1247 16924 TYPE public milestone_status pm_user
+1302; 1247 43168 TYPE public personal_report_period pm_user
+1305; 1247 43176 TYPE public personal_report_status pm_user
+1203; 1247 16936 TYPE public priority pm_user
+1206; 1247 16946 TYPE public processing_status pm_user
+1209; 1247 16956 TYPE public project_status pm_user
+1212; 1247 16968 TYPE public risk_level pm_user
+1215; 1247 16978 TYPE public risk_status pm_user
+1218; 1247 16990 TYPE public task_status pm_user
+485; 1255 33795 FUNCTION public create_notification_from_audit() pm_user
+228; 1259 16391 TABLE drizzle __drizzle_migrations pm_user
+227; 1259 16390 SEQUENCE drizzle __drizzle_migrations_id_seq pm_user
+5495; 0 0 SEQUENCE OWNED BY drizzle __drizzle_migrations_id_seq pm_user
+402; 1259 68064 TABLE opportunity market_solution_todo_analyses pm_user
+400; 1259 62545 TABLE opportunity market_solution_todo_imports pm_user
+401; 1259 62559 TABLE opportunity market_solution_todos pm_user
+396; 1259 62483 TABLE opportunity opportunities pm_user
+5496; 0 0 COMMENT opportunity COLUMN opportunities.code pm_user
+397; 1259 62502 TABLE opportunity opportunity_activities pm_user
+399; 1259 62530 TABLE opportunity opportunity_projects pm_user
+395; 1259 62471 TABLE opportunity organizations pm_user
+398; 1259 62516 TABLE opportunity stage_history pm_user
+229; 1259 17007 TABLE public ai_citations pm_user
+230; 1259 17017 TABLE public ai_conversations pm_user
+247; 1259 33745 TABLE public ai_message_feedback pm_user
+231; 1259 17027 TABLE public ai_messages pm_user
+232; 1259 17039 TABLE public approval_items pm_user
+233; 1259 17050 TABLE public audit_logs pm_user
+264; 1259 43826 TABLE public auth_sessions pm_user
+265; 1259 43841 TABLE public auth_tickets pm_user
+263; 1259 43814 TABLE public auth_users pm_user
+234; 1259 17062 TABLE public coordination_items pm_user
+403; 1259 68086 TABLE public delivery_meeting_todo_analyses pm_user
+393; 1259 62423 TABLE public delivery_meeting_todo_imports pm_user
+394; 1259 62439 TABLE public delivery_meeting_todos pm_user
+235; 1259 17075 TABLE public document_chunks pm_user
+236; 1259 17086 TABLE public document_versions pm_user
+237; 1259 17097 TABLE public documents pm_user
+238; 1259 17113 TABLE public import_jobs pm_user
+239; 1259 17128 TABLE public knowledge_bases pm_user
+240; 1259 17140 TABLE public knowledge_folders pm_user
+241; 1259 17151 TABLE public milestones pm_user
+248; 1259 33778 TABLE public notifications pm_user
+249; 1259 43183 TABLE public personal_memory_entries pm_user
+250; 1259 43204 TABLE public personal_reports pm_user
+242; 1259 17163 TABLE public project_phases pm_user
+243; 1259 17176 TABLE public projects pm_user
+244; 1259 17192 TABLE public risks pm_user
+245; 1259 17204 TABLE public task_dependencies pm_user
+246; 1259 17215 TABLE public tasks pm_user
+310; 1259 47590 TABLE wam_b2_phase1 accounts pm_user
+5497; 0 0 COMMENT wam_b2_phase1 TABLE accounts pm_user
+312; 1259 47610 TABLE wam_b2_phase1 agents pm_user
+5498; 0 0 COMMENT wam_b2_phase1 TABLE agents pm_user
+315; 1259 47644 TABLE wam_b2_phase1 artifact_scans pm_user
+5499; 0 0 COMMENT wam_b2_phase1 TABLE artifact_scans pm_user
+320; 1259 47690 TABLE wam_b2_phase1 artifacts pm_user
+5500; 0 0 COMMENT wam_b2_phase1 TABLE artifacts pm_user
+319; 1259 47681 TABLE wam_b2_phase1 audit_events pm_user
+5501; 0 0 COMMENT wam_b2_phase1 TABLE audit_events pm_user
+318; 1259 47680 SEQUENCE wam_b2_phase1 audit_events_id_seq pm_user
+321; 1259 47699 TABLE wam_b2_phase1 dsh_external_snapshots pm_user
+5502; 0 0 COMMENT wam_b2_phase1 TABLE dsh_external_snapshots pm_user
+309; 1259 47580 TABLE wam_b2_phase1 migration_receipts pm_user
+313; 1259 47622 TABLE wam_b2_phase1 releases pm_user
+5503; 0 0 COMMENT wam_b2_phase1 TABLE releases pm_user
+316; 1259 47654 TABLE wam_b2_phase1 reminders pm_user
+5504; 0 0 COMMENT wam_b2_phase1 TABLE reminders pm_user
+308; 1259 47572 TABLE wam_b2_phase1 schema_migrations pm_user
+311; 1259 47599 TABLE wam_b2_phase1 skills pm_user
+5505; 0 0 COMMENT wam_b2_phase1 TABLE skills pm_user
+314; 1259 47631 TABLE wam_b2_phase1 subscriptions pm_user
+5506; 0 0 COMMENT wam_b2_phase1 TABLE subscriptions pm_user
+317; 1259 47670 TABLE wam_b2_phase1 versions pm_user
+5507; 0 0 COMMENT wam_b2_phase1 TABLE versions pm_user
+282; 1259 47183 TABLE wam_idempotency accounts pm_user
+5508; 0 0 COMMENT wam_idempotency TABLE accounts pm_user
+284; 1259 47203 TABLE wam_idempotency agents pm_user
+5509; 0 0 COMMENT wam_idempotency TABLE agents pm_user
+287; 1259 47237 TABLE wam_idempotency artifact_scans pm_user
+5510; 0 0 COMMENT wam_idempotency TABLE artifact_scans pm_user
+292; 1259 47283 TABLE wam_idempotency artifacts pm_user
+5511; 0 0 COMMENT wam_idempotency TABLE artifacts pm_user
+291; 1259 47274 TABLE wam_idempotency audit_events pm_user
+5512; 0 0 COMMENT wam_idempotency TABLE audit_events pm_user
+290; 1259 47273 SEQUENCE wam_idempotency audit_events_id_seq pm_user
+293; 1259 47292 TABLE wam_idempotency dsh_external_snapshots pm_user
+5513; 0 0 COMMENT wam_idempotency TABLE dsh_external_snapshots pm_user
+281; 1259 47175 TABLE wam_idempotency migration_receipts pm_user
+285; 1259 47215 TABLE wam_idempotency releases pm_user
+5514; 0 0 COMMENT wam_idempotency TABLE releases pm_user
+288; 1259 47247 TABLE wam_idempotency reminders pm_user
+5515; 0 0 COMMENT wam_idempotency TABLE reminders pm_user
+280; 1259 47167 TABLE wam_idempotency schema_migrations pm_user
+283; 1259 47192 TABLE wam_idempotency skills pm_user
+5516; 0 0 COMMENT wam_idempotency TABLE skills pm_user
+286; 1259 47224 TABLE wam_idempotency subscriptions pm_user
+5517; 0 0 COMMENT wam_idempotency TABLE subscriptions pm_user
+289; 1259 47263 TABLE wam_idempotency versions pm_user
+5518; 0 0 COMMENT wam_idempotency TABLE versions pm_user
+296; 1259 47317 TABLE wam_idempotency2 accounts pm_user
+5519; 0 0 COMMENT wam_idempotency2 TABLE accounts pm_user
+298; 1259 47337 TABLE wam_idempotency2 agents pm_user
+5520; 0 0 COMMENT wam_idempotency2 TABLE agents pm_user
+301; 1259 47371 TABLE wam_idempotency2 artifact_scans pm_user
+5521; 0 0 COMMENT wam_idempotency2 TABLE artifact_scans pm_user
+306; 1259 47417 TABLE wam_idempotency2 artifacts pm_user
+5522; 0 0 COMMENT wam_idempotency2 TABLE artifacts pm_user
+305; 1259 47408 TABLE wam_idempotency2 audit_events pm_user
+5523; 0 0 COMMENT wam_idempotency2 TABLE audit_events pm_user
+304; 1259 47407 SEQUENCE wam_idempotency2 audit_events_id_seq pm_user
+307; 1259 47426 TABLE wam_idempotency2 dsh_external_snapshots pm_user
+5524; 0 0 COMMENT wam_idempotency2 TABLE dsh_external_snapshots pm_user
+295; 1259 47309 TABLE wam_idempotency2 migration_receipts pm_user
+299; 1259 47349 TABLE wam_idempotency2 releases pm_user
+5525; 0 0 COMMENT wam_idempotency2 TABLE releases pm_user
+302; 1259 47381 TABLE wam_idempotency2 reminders pm_user
+5526; 0 0 COMMENT wam_idempotency2 TABLE reminders pm_user
+294; 1259 47301 TABLE wam_idempotency2 schema_migrations pm_user
+297; 1259 47326 TABLE wam_idempotency2 skills pm_user
+5527; 0 0 COMMENT wam_idempotency2 TABLE skills pm_user
+300; 1259 47358 TABLE wam_idempotency2 subscriptions pm_user
+5528; 0 0 COMMENT wam_idempotency2 TABLE subscriptions pm_user
+303; 1259 47397 TABLE wam_idempotency2 versions pm_user
+5529; 0 0 COMMENT wam_idempotency2 TABLE versions pm_user
+324; 1259 47728 TABLE wam_phase1_final accounts pm_user
+5530; 0 0 COMMENT wam_phase1_final TABLE accounts pm_user
+326; 1259 47748 TABLE wam_phase1_final agents pm_user
+5531; 0 0 COMMENT wam_phase1_final TABLE agents pm_user
+329; 1259 47782 TABLE wam_phase1_final artifact_scans pm_user
+5532; 0 0 COMMENT wam_phase1_final TABLE artifact_scans pm_user
+334; 1259 47828 TABLE wam_phase1_final artifacts pm_user
+5533; 0 0 COMMENT wam_phase1_final TABLE artifacts pm_user
+333; 1259 47819 TABLE wam_phase1_final audit_events pm_user
+5534; 0 0 COMMENT wam_phase1_final TABLE audit_events pm_user
+332; 1259 47818 SEQUENCE wam_phase1_final audit_events_id_seq pm_user
+335; 1259 47837 TABLE wam_phase1_final dsh_external_snapshots pm_user
+5535; 0 0 COMMENT wam_phase1_final TABLE dsh_external_snapshots pm_user
+323; 1259 47718 TABLE wam_phase1_final migration_receipts pm_user
+327; 1259 47760 TABLE wam_phase1_final releases pm_user
+5536; 0 0 COMMENT wam_phase1_final TABLE releases pm_user
+330; 1259 47792 TABLE wam_phase1_final reminders pm_user
+5537; 0 0 COMMENT wam_phase1_final TABLE reminders pm_user
+322; 1259 47710 TABLE wam_phase1_final schema_migrations pm_user
+325; 1259 47737 TABLE wam_phase1_final skills pm_user
+5538; 0 0 COMMENT wam_phase1_final TABLE skills pm_user
+328; 1259 47769 TABLE wam_phase1_final subscriptions pm_user
+5539; 0 0 COMMENT wam_phase1_final TABLE subscriptions pm_user
+331; 1259 47808 TABLE wam_phase1_final versions pm_user
+5540; 0 0 COMMENT wam_phase1_final TABLE versions pm_user
+358; 1259 48943 TABLE wam_receipt_events accounts pm_user
+5541; 0 0 COMMENT wam_receipt_events TABLE accounts pm_user
+360; 1259 48963 TABLE wam_receipt_events agents pm_user
+5542; 0 0 COMMENT wam_receipt_events TABLE agents pm_user
+363; 1259 48997 TABLE wam_receipt_events artifact_scans pm_user
+5543; 0 0 COMMENT wam_receipt_events TABLE artifact_scans pm_user
+368; 1259 49043 TABLE wam_receipt_events artifacts pm_user
+5544; 0 0 COMMENT wam_receipt_events TABLE artifacts pm_user
+367; 1259 49034 TABLE wam_receipt_events audit_events pm_user
+5545; 0 0 COMMENT wam_receipt_events TABLE audit_events pm_user
+366; 1259 49033 SEQUENCE wam_receipt_events audit_events_id_seq pm_user
+353; 1259 48909 TABLE wam_receipt_events authority_state pm_user
+369; 1259 49052 TABLE wam_receipt_events dsh_external_snapshots pm_user
+5546; 0 0 COMMENT wam_receipt_events TABLE dsh_external_snapshots pm_user
+357; 1259 48933 TABLE wam_receipt_events migration_receipt_events pm_user
+356; 1259 48932 SEQUENCE wam_receipt_events migration_receipt_events_id_seq pm_user
+351; 1259 48888 TABLE wam_receipt_events migration_receipts pm_user
+361; 1259 48975 TABLE wam_receipt_events releases pm_user
+5547; 0 0 COMMENT wam_receipt_events TABLE releases pm_user
+364; 1259 49007 TABLE wam_receipt_events reminders pm_user
+5548; 0 0 COMMENT wam_receipt_events TABLE reminders pm_user
+350; 1259 48880 TABLE wam_receipt_events schema_migrations pm_user
+359; 1259 48952 TABLE wam_receipt_events skills pm_user
+5549; 0 0 COMMENT wam_receipt_events TABLE skills pm_user
+355; 1259 48923 TABLE wam_receipt_events storage_failures pm_user
+354; 1259 48922 SEQUENCE wam_receipt_events storage_failures_id_seq pm_user
+362; 1259 48984 TABLE wam_receipt_events subscriptions pm_user
+5550; 0 0 COMMENT wam_receipt_events TABLE subscriptions pm_user
+352; 1259 48898 TABLE wam_receipt_events unknown_adjudications pm_user
+365; 1259 49023 TABLE wam_receipt_events versions pm_user
+5551; 0 0 COMMENT wam_receipt_events TABLE versions pm_user
+338; 1259 48139 TABLE wam_s3_reconcile accounts pm_user
+5552; 0 0 COMMENT wam_s3_reconcile TABLE accounts pm_user
+340; 1259 48159 TABLE wam_s3_reconcile agents pm_user
+5553; 0 0 COMMENT wam_s3_reconcile TABLE agents pm_user
+343; 1259 48193 TABLE wam_s3_reconcile artifact_scans pm_user
+5554; 0 0 COMMENT wam_s3_reconcile TABLE artifact_scans pm_user
+348; 1259 48239 TABLE wam_s3_reconcile artifacts pm_user
+5555; 0 0 COMMENT wam_s3_reconcile TABLE artifacts pm_user
+347; 1259 48230 TABLE wam_s3_reconcile audit_events pm_user
+5556; 0 0 COMMENT wam_s3_reconcile TABLE audit_events pm_user
+346; 1259 48229 SEQUENCE wam_s3_reconcile audit_events_id_seq pm_user
+349; 1259 48248 TABLE wam_s3_reconcile dsh_external_snapshots pm_user
+5557; 0 0 COMMENT wam_s3_reconcile TABLE dsh_external_snapshots pm_user
+337; 1259 48129 TABLE wam_s3_reconcile migration_receipts pm_user
+341; 1259 48171 TABLE wam_s3_reconcile releases pm_user
+5558; 0 0 COMMENT wam_s3_reconcile TABLE releases pm_user
+344; 1259 48203 TABLE wam_s3_reconcile reminders pm_user
+5559; 0 0 COMMENT wam_s3_reconcile TABLE reminders pm_user
+336; 1259 48121 TABLE wam_s3_reconcile schema_migrations pm_user
+339; 1259 48148 TABLE wam_s3_reconcile skills pm_user
+5560; 0 0 COMMENT wam_s3_reconcile TABLE skills pm_user
+342; 1259 48180 TABLE wam_s3_reconcile subscriptions pm_user
+5561; 0 0 COMMENT wam_s3_reconcile TABLE subscriptions pm_user
+345; 1259 48219 TABLE wam_s3_reconcile versions pm_user
+5562; 0 0 COMMENT wam_s3_reconcile TABLE versions pm_user
+268; 1259 44273 TABLE wam_stage4_receipt accounts pm_user
+5563; 0 0 COMMENT wam_stage4_receipt TABLE accounts pm_user
+270; 1259 44293 TABLE wam_stage4_receipt agents pm_user
+5564; 0 0 COMMENT wam_stage4_receipt TABLE agents pm_user
+273; 1259 44327 TABLE wam_stage4_receipt artifact_scans pm_user
+5565; 0 0 COMMENT wam_stage4_receipt TABLE artifact_scans pm_user
+278; 1259 44373 TABLE wam_stage4_receipt artifacts pm_user
+5566; 0 0 COMMENT wam_stage4_receipt TABLE artifacts pm_user
+277; 1259 44364 TABLE wam_stage4_receipt audit_events pm_user
+5567; 0 0 COMMENT wam_stage4_receipt TABLE audit_events pm_user
+276; 1259 44363 SEQUENCE wam_stage4_receipt audit_events_id_seq pm_user
+279; 1259 44382 TABLE wam_stage4_receipt dsh_external_snapshots pm_user
+5568; 0 0 COMMENT wam_stage4_receipt TABLE dsh_external_snapshots pm_user
+267; 1259 44265 TABLE wam_stage4_receipt migration_receipts pm_user
+271; 1259 44305 TABLE wam_stage4_receipt releases pm_user
+5569; 0 0 COMMENT wam_stage4_receipt TABLE releases pm_user
+274; 1259 44337 TABLE wam_stage4_receipt reminders pm_user
+5570; 0 0 COMMENT wam_stage4_receipt TABLE reminders pm_user
+266; 1259 44257 TABLE wam_stage4_receipt schema_migrations pm_user
+269; 1259 44282 TABLE wam_stage4_receipt skills pm_user
+5571; 0 0 COMMENT wam_stage4_receipt TABLE skills pm_user
+272; 1259 44314 TABLE wam_stage4_receipt subscriptions pm_user
+5572; 0 0 COMMENT wam_stage4_receipt TABLE subscriptions pm_user
+275; 1259 44353 TABLE wam_stage4_receipt versions pm_user
+5573; 0 0 COMMENT wam_stage4_receipt TABLE versions pm_user
+381; 1259 49959 TABLE wam_v5_receipt_31643 accounts pm_user
+5574; 0 0 COMMENT wam_v5_receipt_31643 TABLE accounts pm_user
+383; 1259 49979 TABLE wam_v5_receipt_31643 agents pm_user
+5575; 0 0 COMMENT wam_v5_receipt_31643 TABLE agents pm_user
+386; 1259 50013 TABLE wam_v5_receipt_31643 artifact_scans pm_user
+5576; 0 0 COMMENT wam_v5_receipt_31643 TABLE artifact_scans pm_user
+391; 1259 50059 TABLE wam_v5_receipt_31643 artifacts pm_user
+5577; 0 0 COMMENT wam_v5_receipt_31643 TABLE artifacts pm_user
+390; 1259 50050 TABLE wam_v5_receipt_31643 audit_events pm_user
+5578; 0 0 COMMENT wam_v5_receipt_31643 TABLE audit_events pm_user
+389; 1259 50049 SEQUENCE wam_v5_receipt_31643 audit_events_id_seq pm_user
+376; 1259 49925 TABLE wam_v5_receipt_31643 authority_state pm_user
+392; 1259 50068 TABLE wam_v5_receipt_31643 dsh_external_snapshots pm_user
+5579; 0 0 COMMENT wam_v5_receipt_31643 TABLE dsh_external_snapshots pm_user
+380; 1259 49949 TABLE wam_v5_receipt_31643 migration_receipt_events pm_user
+379; 1259 49948 SEQUENCE wam_v5_receipt_31643 migration_receipt_events_id_seq pm_user
+371; 1259 49858 TABLE wam_v5_receipt_31643 migration_receipts pm_user
+384; 1259 49991 TABLE wam_v5_receipt_31643 releases pm_user
+5580; 0 0 COMMENT wam_v5_receipt_31643 TABLE releases pm_user
+387; 1259 50023 TABLE wam_v5_receipt_31643 reminders pm_user
+5581; 0 0 COMMENT wam_v5_receipt_31643 TABLE reminders pm_user
+370; 1259 49850 TABLE wam_v5_receipt_31643 schema_migrations pm_user
+382; 1259 49968 TABLE wam_v5_receipt_31643 skills pm_user
+5582; 0 0 COMMENT wam_v5_receipt_31643 TABLE skills pm_user
+378; 1259 49939 TABLE wam_v5_receipt_31643 storage_failures pm_user
+377; 1259 49938 SEQUENCE wam_v5_receipt_31643 storage_failures_id_seq pm_user
+385; 1259 50000 TABLE wam_v5_receipt_31643 subscriptions pm_user
+5583; 0 0 COMMENT wam_v5_receipt_31643 TABLE subscriptions pm_user
+374; 1259 49889 TABLE wam_v5_receipt_31643 unknown_adjudication_events pm_user
+372; 1259 49868 TABLE wam_v5_receipt_31643 unknown_adjudications pm_user
+373; 1259 49879 TABLE wam_v5_receipt_31643 unknown_delivery_snapshots pm_user
+375; 1259 49903 TABLE wam_v5_receipt_31643 unknown_retry_links pm_user
+388; 1259 50039 TABLE wam_v5_receipt_31643 versions pm_user
+5584; 0 0 COMMENT wam_v5_receipt_31643 TABLE versions pm_user
+251; 1259 43696 TABLE weixin_account_manager accounts pm_user
+5585; 0 0 COMMENT weixin_account_manager TABLE accounts pm_user
+252; 1259 43703 TABLE weixin_account_manager agents pm_user
+5586; 0 0 COMMENT weixin_account_manager TABLE agents pm_user
+253; 1259 43713 TABLE weixin_account_manager artifact_scans pm_user
+5587; 0 0 COMMENT weixin_account_manager TABLE artifact_scans pm_user
+254; 1259 43720 TABLE weixin_account_manager artifacts pm_user
+5588; 0 0 COMMENT weixin_account_manager TABLE artifacts pm_user
+255; 1259 43727 TABLE weixin_account_manager audit_events pm_user
+5589; 0 0 COMMENT weixin_account_manager TABLE audit_events pm_user
+256; 1259 43733 SEQUENCE weixin_account_manager audit_events_id_seq pm_user
+257; 1259 43734 TABLE weixin_account_manager dsh_external_snapshots pm_user
+5590; 0 0 COMMENT weixin_account_manager TABLE dsh_external_snapshots pm_user
+258; 1259 43740 TABLE weixin_account_manager releases pm_user
+5591; 0 0 COMMENT weixin_account_manager TABLE releases pm_user
+259; 1259 43747 TABLE weixin_account_manager reminders pm_user
+5592; 0 0 COMMENT weixin_account_manager TABLE reminders pm_user
+260; 1259 43754 TABLE weixin_account_manager skills pm_user
+5593; 0 0 COMMENT weixin_account_manager TABLE skills pm_user
+261; 1259 43763 TABLE weixin_account_manager subscriptions pm_user
+5594; 0 0 COMMENT weixin_account_manager TABLE subscriptions pm_user
+262; 1259 43772 TABLE weixin_account_manager versions pm_user
+5595; 0 0 COMMENT weixin_account_manager TABLE versions pm_user
+4159; 2604 16394 DEFAULT drizzle __drizzle_migrations id pm_user
+5312; 0 16391 TABLE DATA drizzle __drizzle_migrations pm_user
+5486; 0 68064 TABLE DATA opportunity market_solution_todo_analyses pm_user
+5484; 0 62545 TABLE DATA opportunity market_solution_todo_imports pm_user
+5485; 0 62559 TABLE DATA opportunity market_solution_todos pm_user
+5480; 0 62483 TABLE DATA opportunity opportunities pm_user
+5481; 0 62502 TABLE DATA opportunity opportunity_activities pm_user
+5483; 0 62530 TABLE DATA opportunity opportunity_projects pm_user
+5479; 0 62471 TABLE DATA opportunity organizations pm_user
+5482; 0 62516 TABLE DATA opportunity stage_history pm_user
+5313; 0 17007 TABLE DATA public ai_citations pm_user
+5314; 0 17017 TABLE DATA public ai_conversations pm_user
+5331; 0 33745 TABLE DATA public ai_message_feedback pm_user
+5315; 0 17027 TABLE DATA public ai_messages pm_user
+5316; 0 17039 TABLE DATA public approval_items pm_user
+5317; 0 17050 TABLE DATA public audit_logs pm_user
+5348; 0 43826 TABLE DATA public auth_sessions pm_user
+5349; 0 43841 TABLE DATA public auth_tickets pm_user
+5347; 0 43814 TABLE DATA public auth_users pm_user
+5318; 0 17062 TABLE DATA public coordination_items pm_user
+5487; 0 68086 TABLE DATA public delivery_meeting_todo_analyses pm_user
+5477; 0 62423 TABLE DATA public delivery_meeting_todo_imports pm_user
+5478; 0 62439 TABLE DATA public delivery_meeting_todos pm_user
+5319; 0 17075 TABLE DATA public document_chunks pm_user
+5320; 0 17086 TABLE DATA public document_versions pm_user
+5321; 0 17097 TABLE DATA public documents pm_user
+5322; 0 17113 TABLE DATA public import_jobs pm_user
+5323; 0 17128 TABLE DATA public knowledge_bases pm_user
+5324; 0 17140 TABLE DATA public knowledge_folders pm_user
+5325; 0 17151 TABLE DATA public milestones pm_user
+5332; 0 33778 TABLE DATA public notifications pm_user
+5333; 0 43183 TABLE DATA public personal_memory_entries pm_user
+5334; 0 43204 TABLE DATA public personal_reports pm_user
+5326; 0 17163 TABLE DATA public project_phases pm_user
+5327; 0 17176 TABLE DATA public projects pm_user
+5328; 0 17192 TABLE DATA public risks pm_user
+5329; 0 17204 TABLE DATA public task_dependencies pm_user
+5330; 0 17215 TABLE DATA public tasks pm_user
+5394; 0 47590 TABLE DATA wam_b2_phase1 accounts pm_user
+5396; 0 47610 TABLE DATA wam_b2_phase1 agents pm_user
+5399; 0 47644 TABLE DATA wam_b2_phase1 artifact_scans pm_user
+5404; 0 47690 TABLE DATA wam_b2_phase1 artifacts pm_user
+5403; 0 47681 TABLE DATA wam_b2_phase1 audit_events pm_user
+5405; 0 47699 TABLE DATA wam_b2_phase1 dsh_external_snapshots pm_user
+5393; 0 47580 TABLE DATA wam_b2_phase1 migration_receipts pm_user
+5397; 0 47622 TABLE DATA wam_b2_phase1 releases pm_user
+5400; 0 47654 TABLE DATA wam_b2_phase1 reminders pm_user
+5392; 0 47572 TABLE DATA wam_b2_phase1 schema_migrations pm_user
+5395; 0 47599 TABLE DATA wam_b2_phase1 skills pm_user
+5398; 0 47631 TABLE DATA wam_b2_phase1 subscriptions pm_user
+5401; 0 47670 TABLE DATA wam_b2_phase1 versions pm_user
+5366; 0 47183 TABLE DATA wam_idempotency accounts pm_user
+5368; 0 47203 TABLE DATA wam_idempotency agents pm_user
+5371; 0 47237 TABLE DATA wam_idempotency artifact_scans pm_user
+5376; 0 47283 TABLE DATA wam_idempotency artifacts pm_user
+5375; 0 47274 TABLE DATA wam_idempotency audit_events pm_user
+5377; 0 47292 TABLE DATA wam_idempotency dsh_external_snapshots pm_user
+5365; 0 47175 TABLE DATA wam_idempotency migration_receipts pm_user
+5369; 0 47215 TABLE DATA wam_idempotency releases pm_user
+5372; 0 47247 TABLE DATA wam_idempotency reminders pm_user
+5364; 0 47167 TABLE DATA wam_idempotency schema_migrations pm_user
+5367; 0 47192 TABLE DATA wam_idempotency skills pm_user
+5370; 0 47224 TABLE DATA wam_idempotency subscriptions pm_user
+5373; 0 47263 TABLE DATA wam_idempotency versions pm_user
+5380; 0 47317 TABLE DATA wam_idempotency2 accounts pm_user
+5382; 0 47337 TABLE DATA wam_idempotency2 agents pm_user
+5385; 0 47371 TABLE DATA wam_idempotency2 artifact_scans pm_user
+5390; 0 47417 TABLE DATA wam_idempotency2 artifacts pm_user
+5389; 0 47408 TABLE DATA wam_idempotency2 audit_events pm_user
+5391; 0 47426 TABLE DATA wam_idempotency2 dsh_external_snapshots pm_user
+5379; 0 47309 TABLE DATA wam_idempotency2 migration_receipts pm_user
+5383; 0 47349 TABLE DATA wam_idempotency2 releases pm_user
+5386; 0 47381 TABLE DATA wam_idempotency2 reminders pm_user
+5378; 0 47301 TABLE DATA wam_idempotency2 schema_migrations pm_user
+5381; 0 47326 TABLE DATA wam_idempotency2 skills pm_user
+5384; 0 47358 TABLE DATA wam_idempotency2 subscriptions pm_user
+5387; 0 47397 TABLE DATA wam_idempotency2 versions pm_user
+5408; 0 47728 TABLE DATA wam_phase1_final accounts pm_user
+5410; 0 47748 TABLE DATA wam_phase1_final agents pm_user
+5413; 0 47782 TABLE DATA wam_phase1_final artifact_scans pm_user
+5418; 0 47828 TABLE DATA wam_phase1_final artifacts pm_user
+5417; 0 47819 TABLE DATA wam_phase1_final audit_events pm_user
+5419; 0 47837 TABLE DATA wam_phase1_final dsh_external_snapshots pm_user
+5407; 0 47718 TABLE DATA wam_phase1_final migration_receipts pm_user
+5411; 0 47760 TABLE DATA wam_phase1_final releases pm_user
+5414; 0 47792 TABLE DATA wam_phase1_final reminders pm_user
+5406; 0 47710 TABLE DATA wam_phase1_final schema_migrations pm_user
+5409; 0 47737 TABLE DATA wam_phase1_final skills pm_user
+5412; 0 47769 TABLE DATA wam_phase1_final subscriptions pm_user
+5415; 0 47808 TABLE DATA wam_phase1_final versions pm_user
+5442; 0 48943 TABLE DATA wam_receipt_events accounts pm_user
+5444; 0 48963 TABLE DATA wam_receipt_events agents pm_user
+5447; 0 48997 TABLE DATA wam_receipt_events artifact_scans pm_user
+5452; 0 49043 TABLE DATA wam_receipt_events artifacts pm_user
+5451; 0 49034 TABLE DATA wam_receipt_events audit_events pm_user
+5437; 0 48909 TABLE DATA wam_receipt_events authority_state pm_user
+5453; 0 49052 TABLE DATA wam_receipt_events dsh_external_snapshots pm_user
+5441; 0 48933 TABLE DATA wam_receipt_events migration_receipt_events pm_user
+5435; 0 48888 TABLE DATA wam_receipt_events migration_receipts pm_user
+5445; 0 48975 TABLE DATA wam_receipt_events releases pm_user
+5448; 0 49007 TABLE DATA wam_receipt_events reminders pm_user
+5434; 0 48880 TABLE DATA wam_receipt_events schema_migrations pm_user
+5443; 0 48952 TABLE DATA wam_receipt_events skills pm_user
+5439; 0 48923 TABLE DATA wam_receipt_events storage_failures pm_user
+5446; 0 48984 TABLE DATA wam_receipt_events subscriptions pm_user
+5436; 0 48898 TABLE DATA wam_receipt_events unknown_adjudications pm_user
+5449; 0 49023 TABLE DATA wam_receipt_events versions pm_user
+5422; 0 48139 TABLE DATA wam_s3_reconcile accounts pm_user
+5424; 0 48159 TABLE DATA wam_s3_reconcile agents pm_user
+5427; 0 48193 TABLE DATA wam_s3_reconcile artifact_scans pm_user
+5432; 0 48239 TABLE DATA wam_s3_reconcile artifacts pm_user
+5431; 0 48230 TABLE DATA wam_s3_reconcile audit_events pm_user
+5433; 0 48248 TABLE DATA wam_s3_reconcile dsh_external_snapshots pm_user
+5421; 0 48129 TABLE DATA wam_s3_reconcile migration_receipts pm_user
+5425; 0 48171 TABLE DATA wam_s3_reconcile releases pm_user
+5428; 0 48203 TABLE DATA wam_s3_reconcile reminders pm_user
+5420; 0 48121 TABLE DATA wam_s3_reconcile schema_migrations pm_user
+5423; 0 48148 TABLE DATA wam_s3_reconcile skills pm_user
+5426; 0 48180 TABLE DATA wam_s3_reconcile subscriptions pm_user
+5429; 0 48219 TABLE DATA wam_s3_reconcile versions pm_user
+5352; 0 44273 TABLE DATA wam_stage4_receipt accounts pm_user
+5354; 0 44293 TABLE DATA wam_stage4_receipt agents pm_user
+5357; 0 44327 TABLE DATA wam_stage4_receipt artifact_scans pm_user
+5362; 0 44373 TABLE DATA wam_stage4_receipt artifacts pm_user
+5361; 0 44364 TABLE DATA wam_stage4_receipt audit_events pm_user
+5363; 0 44382 TABLE DATA wam_stage4_receipt dsh_external_snapshots pm_user
+5351; 0 44265 TABLE DATA wam_stage4_receipt migration_receipts pm_user
+5355; 0 44305 TABLE DATA wam_stage4_receipt releases pm_user
+5358; 0 44337 TABLE DATA wam_stage4_receipt reminders pm_user
+5350; 0 44257 TABLE DATA wam_stage4_receipt schema_migrations pm_user
+5353; 0 44282 TABLE DATA wam_stage4_receipt skills pm_user
+5356; 0 44314 TABLE DATA wam_stage4_receipt subscriptions pm_user
+5359; 0 44353 TABLE DATA wam_stage4_receipt versions pm_user
+5465; 0 49959 TABLE DATA wam_v5_receipt_31643 accounts pm_user
+5467; 0 49979 TABLE DATA wam_v5_receipt_31643 agents pm_user
+5470; 0 50013 TABLE DATA wam_v5_receipt_31643 artifact_scans pm_user
+5475; 0 50059 TABLE DATA wam_v5_receipt_31643 artifacts pm_user
+5474; 0 50050 TABLE DATA wam_v5_receipt_31643 audit_events pm_user
+5460; 0 49925 TABLE DATA wam_v5_receipt_31643 authority_state pm_user
+5476; 0 50068 TABLE DATA wam_v5_receipt_31643 dsh_external_snapshots pm_user
+5464; 0 49949 TABLE DATA wam_v5_receipt_31643 migration_receipt_events pm_user
+5455; 0 49858 TABLE DATA wam_v5_receipt_31643 migration_receipts pm_user
+5468; 0 49991 TABLE DATA wam_v5_receipt_31643 releases pm_user
+5471; 0 50023 TABLE DATA wam_v5_receipt_31643 reminders pm_user
+5454; 0 49850 TABLE DATA wam_v5_receipt_31643 schema_migrations pm_user
+5466; 0 49968 TABLE DATA wam_v5_receipt_31643 skills pm_user
+5462; 0 49939 TABLE DATA wam_v5_receipt_31643 storage_failures pm_user
+5469; 0 50000 TABLE DATA wam_v5_receipt_31643 subscriptions pm_user
+5458; 0 49889 TABLE DATA wam_v5_receipt_31643 unknown_adjudication_events pm_user
+5456; 0 49868 TABLE DATA wam_v5_receipt_31643 unknown_adjudications pm_user
+5457; 0 49879 TABLE DATA wam_v5_receipt_31643 unknown_delivery_snapshots pm_user
+5459; 0 49903 TABLE DATA wam_v5_receipt_31643 unknown_retry_links pm_user
+5472; 0 50039 TABLE DATA wam_v5_receipt_31643 versions pm_user
+5335; 0 43696 TABLE DATA weixin_account_manager accounts pm_user
+5336; 0 43703 TABLE DATA weixin_account_manager agents pm_user
+5337; 0 43713 TABLE DATA weixin_account_manager artifact_scans pm_user
+5338; 0 43720 TABLE DATA weixin_account_manager artifacts pm_user
+5339; 0 43727 TABLE DATA weixin_account_manager audit_events pm_user
+5341; 0 43734 TABLE DATA weixin_account_manager dsh_external_snapshots pm_user
+5342; 0 43740 TABLE DATA weixin_account_manager releases pm_user
+5343; 0 43747 TABLE DATA weixin_account_manager reminders pm_user
+5344; 0 43754 TABLE DATA weixin_account_manager skills pm_user
+5345; 0 43763 TABLE DATA weixin_account_manager subscriptions pm_user
+5346; 0 43772 TABLE DATA weixin_account_manager versions pm_user
+5596; 0 0 SEQUENCE SET drizzle __drizzle_migrations_id_seq pm_user
+5597; 0 0 SEQUENCE SET wam_b2_phase1 audit_events_id_seq pm_user
+5598; 0 0 SEQUENCE SET wam_idempotency audit_events_id_seq pm_user
+5599; 0 0 SEQUENCE SET wam_idempotency2 audit_events_id_seq pm_user
+5600; 0 0 SEQUENCE SET wam_phase1_final audit_events_id_seq pm_user
+5601; 0 0 SEQUENCE SET wam_receipt_events audit_events_id_seq pm_user
+5602; 0 0 SEQUENCE SET wam_receipt_events migration_receipt_events_id_seq pm_user
+5603; 0 0 SEQUENCE SET wam_receipt_events storage_failures_id_seq pm_user
+5604; 0 0 SEQUENCE SET wam_s3_reconcile audit_events_id_seq pm_user
+5605; 0 0 SEQUENCE SET wam_stage4_receipt audit_events_id_seq pm_user
+5606; 0 0 SEQUENCE SET wam_v5_receipt_31643 audit_events_id_seq pm_user
+5607; 0 0 SEQUENCE SET wam_v5_receipt_31643 migration_receipt_events_id_seq pm_user
+5608; 0 0 SEQUENCE SET wam_v5_receipt_31643 storage_failures_id_seq pm_user
+5609; 0 0 SEQUENCE SET weixin_account_manager audit_events_id_seq pm_user
+4639; 2606 16398 CONSTRAINT drizzle __drizzle_migrations __drizzle_migrations_pkey pm_user
+5103; 2606 68079 CONSTRAINT opportunity market_solution_todo_analyses market_solution_todo_analyses_import_id_key pm_user
+5105; 2606 68077 CONSTRAINT opportunity market_solution_todo_analyses market_solution_todo_analyses_pkey pm_user
+5092; 2606 62558 CONSTRAINT opportunity market_solution_todo_imports market_solution_todo_imports_pkey pm_user
+5095; 2606 62571 CONSTRAINT opportunity market_solution_todos market_solution_todos_import_row_uidx pm_user
+5099; 2606 62569 CONSTRAINT opportunity market_solution_todos market_solution_todos_pkey pm_user
+5080; 2606 62494 CONSTRAINT opportunity opportunities opportunities_pkey pm_user
+5083; 2606 62496 CONSTRAINT opportunity opportunities opportunities_tenant_id_code_key pm_user
+5086; 2606 62510 CONSTRAINT opportunity opportunity_activities opportunity_activities_pkey pm_user
+5090; 2606 62537 CONSTRAINT opportunity opportunity_projects opportunity_projects_pkey pm_user
+5076; 2606 62480 CONSTRAINT opportunity organizations organizations_pkey pm_user
+5078; 2606 62482 CONSTRAINT opportunity organizations organizations_tenant_id_name_key pm_user
+5088; 2606 62524 CONSTRAINT opportunity stage_history stage_history_pkey pm_user
+4642; 2606 17016 CONSTRAINT public ai_citations ai_citations_pkey pm_user
+4645; 2606 17026 CONSTRAINT public ai_conversations ai_conversations_pkey pm_user
+4711; 2606 33755 CONSTRAINT public ai_message_feedback ai_message_feedback_pkey pm_user
+4652; 2606 17038 CONSTRAINT public ai_messages ai_messages_pkey pm_user
+4654; 2606 17049 CONSTRAINT public approval_items approval_items_pkey pm_user
+4657; 2606 17061 CONSTRAINT public audit_logs audit_logs_pkey pm_user
+4758; 2606 43835 CONSTRAINT public auth_sessions auth_sessions_pkey pm_user
+4761; 2606 43849 CONSTRAINT public auth_tickets auth_tickets_pkey pm_user
+4753; 2606 43823 CONSTRAINT public auth_users auth_users_pkey pm_user
+4755; 2606 43825 CONSTRAINT public auth_users auth_users_username_key pm_user
+4659; 2606 17074 CONSTRAINT public coordination_items coordination_items_pkey pm_user
+5107; 2606 68102 CONSTRAINT public delivery_meeting_todo_analyses delivery_meeting_todo_analyses_import_id_key pm_user
+5110; 2606 68100 CONSTRAINT public delivery_meeting_todo_analyses delivery_meeting_todo_analyses_pkey pm_user
+5068; 2606 62436 CONSTRAINT public delivery_meeting_todo_imports delivery_meeting_todo_imports_pkey pm_user
+5071; 2606 62451 CONSTRAINT public delivery_meeting_todos delivery_meeting_todos_import_row_uidx pm_user
+5073; 2606 62449 CONSTRAINT public delivery_meeting_todos delivery_meeting_todos_pkey pm_user
+4664; 2606 17085 CONSTRAINT public document_chunks document_chunks_pkey pm_user
+4671; 2606 17371 CONSTRAINT public document_versions document_versions_id_document_uidx pm_user
+4673; 2606 17096 CONSTRAINT public document_versions document_versions_pkey pm_user
+4675; 2606 17112 CONSTRAINT public documents documents_pkey pm_user
+4678; 2606 17127 CONSTRAINT public import_jobs import_jobs_pkey pm_user
+4681; 2606 17139 CONSTRAINT public knowledge_bases knowledge_bases_pkey pm_user
+4686; 2606 17150 CONSTRAINT public knowledge_folders knowledge_folders_pkey pm_user
+4688; 2606 17162 CONSTRAINT public milestones milestones_pkey pm_user
+4714; 2606 33787 CONSTRAINT public notifications notifications_pkey pm_user
+4719; 2606 43197 CONSTRAINT public personal_memory_entries personal_memory_entries_pkey pm_user
+4723; 2606 43216 CONSTRAINT public personal_reports personal_reports_pkey pm_user
+4691; 2606 17175 CONSTRAINT public project_phases project_phases_pkey pm_user
+4696; 2606 17191 CONSTRAINT public projects projects_code_unique pm_user
+4698; 2606 17189 CONSTRAINT public projects projects_pkey pm_user
+4700; 2606 17203 CONSTRAINT public risks risks_pkey pm_user
+4703; 2606 17214 CONSTRAINT public task_dependencies task_dependencies_pkey pm_user
+4705; 2606 17228 CONSTRAINT public tasks tasks_pkey pm_user
+4868; 2606 47598 CONSTRAINT wam_b2_phase1 accounts accounts_pkey pm_user
+4872; 2606 47621 CONSTRAINT wam_b2_phase1 agents agents_pkey pm_user
+4880; 2606 47652 CONSTRAINT wam_b2_phase1 artifact_scans artifact_scans_pkey pm_user
+4892; 2606 47698 CONSTRAINT wam_b2_phase1 artifacts artifacts_pkey pm_user
+4890; 2606 47688 CONSTRAINT wam_b2_phase1 audit_events audit_events_pkey pm_user
+4894; 2606 47706 CONSTRAINT wam_b2_phase1 dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4865; 2606 47587 CONSTRAINT wam_b2_phase1 migration_receipts migration_receipts_pkey pm_user
+4874; 2606 47630 CONSTRAINT wam_b2_phase1 releases releases_pkey pm_user
+4885; 2606 47662 CONSTRAINT wam_b2_phase1 reminders reminders_pkey pm_user
+4862; 2606 47579 CONSTRAINT wam_b2_phase1 schema_migrations schema_migrations_pkey pm_user
+4870; 2606 47609 CONSTRAINT wam_b2_phase1 skills skills_pkey pm_user
+4877; 2606 47641 CONSTRAINT wam_b2_phase1 subscriptions subscriptions_pkey pm_user
+4887; 2606 47679 CONSTRAINT wam_b2_phase1 versions versions_pkey pm_user
+4801; 2606 47191 CONSTRAINT wam_idempotency accounts accounts_pkey pm_user
+4805; 2606 47214 CONSTRAINT wam_idempotency agents agents_pkey pm_user
+4813; 2606 47245 CONSTRAINT wam_idempotency artifact_scans artifact_scans_pkey pm_user
+4825; 2606 47291 CONSTRAINT wam_idempotency artifacts artifacts_pkey pm_user
+4823; 2606 47281 CONSTRAINT wam_idempotency audit_events audit_events_pkey pm_user
+4827; 2606 47299 CONSTRAINT wam_idempotency dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4798; 2606 47181 CONSTRAINT wam_idempotency migration_receipts migration_receipts_pkey pm_user
+4807; 2606 47223 CONSTRAINT wam_idempotency releases releases_pkey pm_user
+4818; 2606 47255 CONSTRAINT wam_idempotency reminders reminders_pkey pm_user
+4796; 2606 47174 CONSTRAINT wam_idempotency schema_migrations schema_migrations_pkey pm_user
+4803; 2606 47202 CONSTRAINT wam_idempotency skills skills_pkey pm_user
+4810; 2606 47234 CONSTRAINT wam_idempotency subscriptions subscriptions_pkey pm_user
+4820; 2606 47272 CONSTRAINT wam_idempotency versions versions_pkey pm_user
+4834; 2606 47325 CONSTRAINT wam_idempotency2 accounts accounts_pkey pm_user
+4838; 2606 47348 CONSTRAINT wam_idempotency2 agents agents_pkey pm_user
+4846; 2606 47379 CONSTRAINT wam_idempotency2 artifact_scans artifact_scans_pkey pm_user
+4858; 2606 47425 CONSTRAINT wam_idempotency2 artifacts artifacts_pkey pm_user
+4856; 2606 47415 CONSTRAINT wam_idempotency2 audit_events audit_events_pkey pm_user
+4860; 2606 47433 CONSTRAINT wam_idempotency2 dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4831; 2606 47315 CONSTRAINT wam_idempotency2 migration_receipts migration_receipts_pkey pm_user
+4840; 2606 47357 CONSTRAINT wam_idempotency2 releases releases_pkey pm_user
+4851; 2606 47389 CONSTRAINT wam_idempotency2 reminders reminders_pkey pm_user
+4829; 2606 47308 CONSTRAINT wam_idempotency2 schema_migrations schema_migrations_pkey pm_user
+4836; 2606 47336 CONSTRAINT wam_idempotency2 skills skills_pkey pm_user
+4843; 2606 47368 CONSTRAINT wam_idempotency2 subscriptions subscriptions_pkey pm_user
+4853; 2606 47406 CONSTRAINT wam_idempotency2 versions versions_pkey pm_user
+4902; 2606 47736 CONSTRAINT wam_phase1_final accounts accounts_pkey pm_user
+4906; 2606 47759 CONSTRAINT wam_phase1_final agents agents_pkey pm_user
+4914; 2606 47790 CONSTRAINT wam_phase1_final artifact_scans artifact_scans_pkey pm_user
+4926; 2606 47836 CONSTRAINT wam_phase1_final artifacts artifacts_pkey pm_user
+4924; 2606 47826 CONSTRAINT wam_phase1_final audit_events audit_events_pkey pm_user
+4928; 2606 47844 CONSTRAINT wam_phase1_final dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4899; 2606 47725 CONSTRAINT wam_phase1_final migration_receipts migration_receipts_pkey pm_user
+4908; 2606 47768 CONSTRAINT wam_phase1_final releases releases_pkey pm_user
+4919; 2606 47800 CONSTRAINT wam_phase1_final reminders reminders_pkey pm_user
+4896; 2606 47717 CONSTRAINT wam_phase1_final schema_migrations schema_migrations_pkey pm_user
+4904; 2606 47747 CONSTRAINT wam_phase1_final skills skills_pkey pm_user
+4911; 2606 47779 CONSTRAINT wam_phase1_final subscriptions subscriptions_pkey pm_user
+4921; 2606 47817 CONSTRAINT wam_phase1_final versions versions_pkey pm_user
+4981; 2606 48951 CONSTRAINT wam_receipt_events accounts accounts_pkey pm_user
+4985; 2606 48974 CONSTRAINT wam_receipt_events agents agents_pkey pm_user
+4993; 2606 49005 CONSTRAINT wam_receipt_events artifact_scans artifact_scans_pkey pm_user
+5005; 2606 49051 CONSTRAINT wam_receipt_events artifacts artifacts_pkey pm_user
+5003; 2606 49041 CONSTRAINT wam_receipt_events audit_events audit_events_pkey pm_user
+4973; 2606 48921 CONSTRAINT wam_receipt_events authority_state authority_state_pkey pm_user
+5007; 2606 49059 CONSTRAINT wam_receipt_events dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4979; 2606 48941 CONSTRAINT wam_receipt_events migration_receipt_events migration_receipt_events_pkey pm_user
+4967; 2606 48895 CONSTRAINT wam_receipt_events migration_receipts migration_receipts_pkey pm_user
+4987; 2606 48983 CONSTRAINT wam_receipt_events releases releases_pkey pm_user
+4998; 2606 49015 CONSTRAINT wam_receipt_events reminders reminders_pkey pm_user
+4964; 2606 48887 CONSTRAINT wam_receipt_events schema_migrations schema_migrations_pkey pm_user
+4983; 2606 48962 CONSTRAINT wam_receipt_events skills skills_pkey pm_user
+4976; 2606 48930 CONSTRAINT wam_receipt_events storage_failures storage_failures_pkey pm_user
+4990; 2606 48994 CONSTRAINT wam_receipt_events subscriptions subscriptions_pkey pm_user
+4971; 2606 48907 CONSTRAINT wam_receipt_events unknown_adjudications unknown_adjudications_pkey pm_user
+5000; 2606 49032 CONSTRAINT wam_receipt_events versions versions_pkey pm_user
+4936; 2606 48147 CONSTRAINT wam_s3_reconcile accounts accounts_pkey pm_user
+4940; 2606 48170 CONSTRAINT wam_s3_reconcile agents agents_pkey pm_user
+4948; 2606 48201 CONSTRAINT wam_s3_reconcile artifact_scans artifact_scans_pkey pm_user
+4960; 2606 48247 CONSTRAINT wam_s3_reconcile artifacts artifacts_pkey pm_user
+4958; 2606 48237 CONSTRAINT wam_s3_reconcile audit_events audit_events_pkey pm_user
+4962; 2606 48255 CONSTRAINT wam_s3_reconcile dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4933; 2606 48136 CONSTRAINT wam_s3_reconcile migration_receipts migration_receipts_pkey pm_user
+4942; 2606 48179 CONSTRAINT wam_s3_reconcile releases releases_pkey pm_user
+4953; 2606 48211 CONSTRAINT wam_s3_reconcile reminders reminders_pkey pm_user
+4930; 2606 48128 CONSTRAINT wam_s3_reconcile schema_migrations schema_migrations_pkey pm_user
+4938; 2606 48158 CONSTRAINT wam_s3_reconcile skills skills_pkey pm_user
+4945; 2606 48190 CONSTRAINT wam_s3_reconcile subscriptions subscriptions_pkey pm_user
+4955; 2606 48228 CONSTRAINT wam_s3_reconcile versions versions_pkey pm_user
+4768; 2606 44281 CONSTRAINT wam_stage4_receipt accounts accounts_pkey pm_user
+4772; 2606 44304 CONSTRAINT wam_stage4_receipt agents agents_pkey pm_user
+4780; 2606 44335 CONSTRAINT wam_stage4_receipt artifact_scans artifact_scans_pkey pm_user
+4792; 2606 44381 CONSTRAINT wam_stage4_receipt artifacts artifacts_pkey pm_user
+4790; 2606 44371 CONSTRAINT wam_stage4_receipt audit_events audit_events_pkey pm_user
+4794; 2606 44389 CONSTRAINT wam_stage4_receipt dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4765; 2606 44271 CONSTRAINT wam_stage4_receipt migration_receipts migration_receipts_pkey pm_user
+4774; 2606 44313 CONSTRAINT wam_stage4_receipt releases releases_pkey pm_user
+4785; 2606 44345 CONSTRAINT wam_stage4_receipt reminders reminders_pkey pm_user
+4763; 2606 44264 CONSTRAINT wam_stage4_receipt schema_migrations schema_migrations_pkey pm_user
+4770; 2606 44292 CONSTRAINT wam_stage4_receipt skills skills_pkey pm_user
+4777; 2606 44324 CONSTRAINT wam_stage4_receipt subscriptions subscriptions_pkey pm_user
+4787; 2606 44362 CONSTRAINT wam_stage4_receipt versions versions_pkey pm_user
+5038; 2606 49967 CONSTRAINT wam_v5_receipt_31643 accounts accounts_pkey pm_user
+5042; 2606 49990 CONSTRAINT wam_v5_receipt_31643 agents agents_pkey pm_user
+5050; 2606 50021 CONSTRAINT wam_v5_receipt_31643 artifact_scans artifact_scans_pkey pm_user
+5062; 2606 50067 CONSTRAINT wam_v5_receipt_31643 artifacts artifacts_pkey pm_user
+5060; 2606 50057 CONSTRAINT wam_v5_receipt_31643 audit_events audit_events_pkey pm_user
+5030; 2606 49937 CONSTRAINT wam_v5_receipt_31643 authority_state authority_state_pkey pm_user
+5064; 2606 50075 CONSTRAINT wam_v5_receipt_31643 dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+5036; 2606 49957 CONSTRAINT wam_v5_receipt_31643 migration_receipt_events migration_receipt_events_pkey pm_user
+5012; 2606 49865 CONSTRAINT wam_v5_receipt_31643 migration_receipts migration_receipts_pkey pm_user
+5044; 2606 49999 CONSTRAINT wam_v5_receipt_31643 releases releases_pkey pm_user
+5055; 2606 50031 CONSTRAINT wam_v5_receipt_31643 reminders reminders_pkey pm_user
+5009; 2606 49857 CONSTRAINT wam_v5_receipt_31643 schema_migrations schema_migrations_pkey pm_user
+5040; 2606 49978 CONSTRAINT wam_v5_receipt_31643 skills skills_pkey pm_user
+5033; 2606 49946 CONSTRAINT wam_v5_receipt_31643 storage_failures storage_failures_pkey pm_user
+5047; 2606 50010 CONSTRAINT wam_v5_receipt_31643 subscriptions subscriptions_pkey pm_user
+5021; 2606 49896 CONSTRAINT wam_v5_receipt_31643 unknown_adjudication_events unknown_adjudication_events_pkey pm_user
+5016; 2606 49877 CONSTRAINT wam_v5_receipt_31643 unknown_adjudications unknown_adjudications_pkey pm_user
+5018; 2606 49887 CONSTRAINT wam_v5_receipt_31643 unknown_delivery_snapshots unknown_delivery_snapshots_pkey pm_user
+5024; 2606 49914 CONSTRAINT wam_v5_receipt_31643 unknown_retry_links unknown_retry_links_adjudication_id_key pm_user
+5026; 2606 49912 CONSTRAINT wam_v5_receipt_31643 unknown_retry_links unknown_retry_links_child_outbound_id_key pm_user
+5028; 2606 49910 CONSTRAINT wam_v5_receipt_31643 unknown_retry_links unknown_retry_links_pkey pm_user
+5057; 2606 50048 CONSTRAINT wam_v5_receipt_31643 versions versions_pkey pm_user
+4725; 2606 43781 CONSTRAINT weixin_account_manager accounts accounts_pkey pm_user
+4727; 2606 43783 CONSTRAINT weixin_account_manager agents agents_pkey pm_user
+4729; 2606 43785 CONSTRAINT weixin_account_manager artifact_scans artifact_scans_pkey pm_user
+4732; 2606 43787 CONSTRAINT weixin_account_manager artifacts artifacts_pkey pm_user
+4735; 2606 43789 CONSTRAINT weixin_account_manager audit_events audit_events_pkey pm_user
+4737; 2606 43791 CONSTRAINT weixin_account_manager dsh_external_snapshots dsh_external_snapshots_pkey pm_user
+4739; 2606 43793 CONSTRAINT weixin_account_manager releases releases_pkey pm_user
+4743; 2606 43795 CONSTRAINT weixin_account_manager reminders reminders_pkey pm_user
+4745; 2606 43797 CONSTRAINT weixin_account_manager skills skills_pkey pm_user
+4748; 2606 43799 CONSTRAINT weixin_account_manager subscriptions subscriptions_pkey pm_user
+4751; 2606 43801 CONSTRAINT weixin_account_manager versions versions_pkey pm_user
+5101; 1259 68183 INDEX opportunity market_solution_todo_analyses_fingerprint_idx pm_user
+5093; 1259 62584 INDEX opportunity market_solution_todos_import_idx pm_user
+5096; 1259 62583 INDEX opportunity market_solution_todos_key_week_idx pm_user
+5097; 1259 62582 INDEX opportunity market_solution_todos_opportunity_week_idx pm_user
+5100; 1259 62585 INDEX opportunity market_solution_todos_raw_name_week_idx pm_user
+5081; 1259 62544 INDEX opportunity opportunities_sign_date_idx pm_user
+5084; 1259 62543 INDEX opportunity opportunities_tenant_stage_idx pm_user
+4640; 1259 25624 INDEX public ai_citations_message_sort_idx pm_user
+4643; 1259 25621 INDEX public ai_conversations_harness_session_uidx pm_user
+4646; 1259 25620 INDEX public ai_conversations_project_status_updated_idx pm_user
+4709; 1259 33766 INDEX public ai_message_feedback_message_uidx pm_user
+4712; 1259 33767 INDEX public ai_message_feedback_project_updated_idx pm_user
+4647; 1259 25623 INDEX public ai_messages_conversation_created_idx pm_user
+4648; 1259 33744 INDEX public ai_messages_conversation_harness_event_uidx pm_user
+4649; 1259 33743 INDEX public ai_messages_conversation_request_uidx pm_user
+4650; 1259 25622 INDEX public ai_messages_conversation_sequence_uidx pm_user
+4655; 1259 17357 INDEX public approval_project_stage_task_uidx pm_user
+4756; 1259 43850 INDEX public auth_sessions_expires_idx pm_user
+4759; 1259 43851 INDEX public auth_tickets_expires_idx pm_user
+4660; 1259 17349 INDEX public coordination_project_code_uidx pm_user
+5108; 1259 68108 INDEX public delivery_meeting_todo_analyses_import_idx pm_user
+5065; 1259 62464 INDEX public delivery_meeting_todo_imports_checksum_idx pm_user
+5066; 1259 62465 INDEX public delivery_meeting_todo_imports_latest_idx pm_user
+5069; 1259 62463 INDEX public delivery_meeting_todos_import_idx pm_user
+5074; 1259 62462 INDEX public delivery_meeting_todos_project_status_idx pm_user
+4661; 1259 17365 INDEX public document_chunks_document_version_idx pm_user
+4662; 1259 25559 INDEX public document_chunks_embedding_hnsw_idx pm_user
+4665; 1259 17400 INDEX public document_chunks_search_vector_gin_idx pm_user
+4666; 1259 17364 INDEX public document_chunks_version_chunk_uidx pm_user
+4667; 1259 17360 INDEX public document_versions_current_uidx pm_user
+4668; 1259 17361 INDEX public document_versions_document_created_idx pm_user
+4669; 1259 17359 INDEX public document_versions_document_version_uidx pm_user
+4676; 1259 17362 INDEX public documents_project_base_folder_status_idx pm_user
+4679; 1259 43166 INDEX public knowledge_bases_account_uidx pm_user
+4682; 1259 17350 INDEX public knowledge_bases_project_name_uidx pm_user
+4683; 1259 17363 INDEX public knowledge_bases_project_uidx pm_user
+4684; 1259 17351 INDEX public knowledge_folders_base_path_uidx pm_user
+4689; 1259 17352 INDEX public milestones_project_name_date_uidx pm_user
+4715; 1259 33793 INDEX public notifications_project_created_idx pm_user
+4716; 1259 33794 INDEX public notifications_project_read_idx pm_user
+4717; 1259 43203 INDEX public personal_memory_account_occurred_idx pm_user
+4720; 1259 43223 INDEX public personal_reports_account_period_idx pm_user
+4721; 1259 43222 INDEX public personal_reports_account_period_start_uidx pm_user
+4692; 1259 17353 INDEX public project_phases_project_code_uidx pm_user
+4693; 1259 126893 INDEX public project_phases_project_current_idx pm_user
+4694; 1259 126894 INDEX public project_phases_snapshot_idx pm_user
+4701; 1259 17354 INDEX public risks_project_code_uidx pm_user
+4706; 1259 126891 INDEX public tasks_project_current_idx pm_user
+4707; 1259 126890 INDEX public tasks_project_current_wbs_uidx pm_user
+4708; 1259 126892 INDEX public tasks_snapshot_idx pm_user
+4881; 1259 47653 INDEX wam_b2_phase1 artifact_scans_status_idx pm_user
+4888; 1259 47689 INDEX wam_b2_phase1 audit_events_at_idx pm_user
+4863; 1259 47589 INDEX wam_b2_phase1 migration_receipts_completed_source_idx pm_user
+4866; 1259 47588 INDEX wam_b2_phase1 migration_receipts_started_idx pm_user
+4882; 1259 47669 INDEX wam_b2_phase1 reminders_account_idx pm_user
+4883; 1259 47668 INDEX wam_b2_phase1 reminders_due_idx pm_user
+4875; 1259 47643 INDEX wam_b2_phase1 subscriptions_agent_idx pm_user
+4878; 1259 47642 INDEX wam_b2_phase1 subscriptions_scope_idx pm_user
+4814; 1259 47246 INDEX wam_idempotency artifact_scans_status_idx pm_user
+4821; 1259 47282 INDEX wam_idempotency audit_events_at_idx pm_user
+4799; 1259 47182 INDEX wam_idempotency migration_receipts_started_idx pm_user
+4815; 1259 47262 INDEX wam_idempotency reminders_account_idx pm_user
+4816; 1259 47261 INDEX wam_idempotency reminders_due_idx pm_user
+4808; 1259 47236 INDEX wam_idempotency subscriptions_agent_idx pm_user
+4811; 1259 47235 INDEX wam_idempotency subscriptions_scope_idx pm_user
+4847; 1259 47380 INDEX wam_idempotency2 artifact_scans_status_idx pm_user
+4854; 1259 47416 INDEX wam_idempotency2 audit_events_at_idx pm_user
+4832; 1259 47316 INDEX wam_idempotency2 migration_receipts_started_idx pm_user
+4848; 1259 47396 INDEX wam_idempotency2 reminders_account_idx pm_user
+4849; 1259 47395 INDEX wam_idempotency2 reminders_due_idx pm_user
+4841; 1259 47370 INDEX wam_idempotency2 subscriptions_agent_idx pm_user
+4844; 1259 47369 INDEX wam_idempotency2 subscriptions_scope_idx pm_user
+4915; 1259 47791 INDEX wam_phase1_final artifact_scans_status_idx pm_user
+4922; 1259 47827 INDEX wam_phase1_final audit_events_at_idx pm_user
+4897; 1259 47727 INDEX wam_phase1_final migration_receipts_completed_source_idx pm_user
+4900; 1259 47726 INDEX wam_phase1_final migration_receipts_started_idx pm_user
+4916; 1259 47807 INDEX wam_phase1_final reminders_account_idx pm_user
+4917; 1259 47806 INDEX wam_phase1_final reminders_due_idx pm_user
+4909; 1259 47781 INDEX wam_phase1_final subscriptions_agent_idx pm_user
+4912; 1259 47780 INDEX wam_phase1_final subscriptions_scope_idx pm_user
+4994; 1259 49006 INDEX wam_receipt_events artifact_scans_status_idx pm_user
+5001; 1259 49042 INDEX wam_receipt_events audit_events_at_idx pm_user
+4977; 1259 48942 INDEX wam_receipt_events migration_receipt_events_migration_idx pm_user
+4965; 1259 48897 INDEX wam_receipt_events migration_receipts_completed_source_idx pm_user
+4968; 1259 48896 INDEX wam_receipt_events migration_receipts_started_idx pm_user
+4995; 1259 49022 INDEX wam_receipt_events reminders_account_idx pm_user
+4996; 1259 49021 INDEX wam_receipt_events reminders_due_idx pm_user
+4974; 1259 48931 INDEX wam_receipt_events storage_failures_occurred_idx pm_user
+4988; 1259 48996 INDEX wam_receipt_events subscriptions_agent_idx pm_user
+4991; 1259 48995 INDEX wam_receipt_events subscriptions_scope_idx pm_user
+4969; 1259 48908 INDEX wam_receipt_events unknown_adjudications_event_key_idx pm_user
+4949; 1259 48202 INDEX wam_s3_reconcile artifact_scans_status_idx pm_user
+4956; 1259 48238 INDEX wam_s3_reconcile audit_events_at_idx pm_user
+4931; 1259 48138 INDEX wam_s3_reconcile migration_receipts_completed_source_idx pm_user
+4934; 1259 48137 INDEX wam_s3_reconcile migration_receipts_started_idx pm_user
+4950; 1259 48218 INDEX wam_s3_reconcile reminders_account_idx pm_user
+4951; 1259 48217 INDEX wam_s3_reconcile reminders_due_idx pm_user
+4943; 1259 48192 INDEX wam_s3_reconcile subscriptions_agent_idx pm_user
+4946; 1259 48191 INDEX wam_s3_reconcile subscriptions_scope_idx pm_user
+4781; 1259 44336 INDEX wam_stage4_receipt artifact_scans_status_idx pm_user
+4788; 1259 44372 INDEX wam_stage4_receipt audit_events_at_idx pm_user
+4766; 1259 44272 INDEX wam_stage4_receipt migration_receipts_started_idx pm_user
+4782; 1259 44352 INDEX wam_stage4_receipt reminders_account_idx pm_user
+4783; 1259 44351 INDEX wam_stage4_receipt reminders_due_idx pm_user
+4775; 1259 44326 INDEX wam_stage4_receipt subscriptions_agent_idx pm_user
+4778; 1259 44325 INDEX wam_stage4_receipt subscriptions_scope_idx pm_user
+5051; 1259 50022 INDEX wam_v5_receipt_31643 artifact_scans_status_idx pm_user
+5058; 1259 50058 INDEX wam_v5_receipt_31643 audit_events_at_idx pm_user
+5034; 1259 49958 INDEX wam_v5_receipt_31643 migration_receipt_events_migration_idx pm_user
+5010; 1259 49867 INDEX wam_v5_receipt_31643 migration_receipts_completed_source_idx pm_user
+5013; 1259 49866 INDEX wam_v5_receipt_31643 migration_receipts_started_idx pm_user
+5052; 1259 50038 INDEX wam_v5_receipt_31643 reminders_account_idx pm_user
+5053; 1259 50037 INDEX wam_v5_receipt_31643 reminders_due_idx pm_user
+5031; 1259 49947 INDEX wam_v5_receipt_31643 storage_failures_occurred_idx pm_user
+5045; 1259 50012 INDEX wam_v5_receipt_31643 subscriptions_agent_idx pm_user
+5048; 1259 50011 INDEX wam_v5_receipt_31643 subscriptions_scope_idx pm_user
+5022; 1259 49902 INDEX wam_v5_receipt_31643 unknown_adjudication_outbound_idx pm_user
+5014; 1259 49878 INDEX wam_v5_receipt_31643 unknown_adjudications_event_key_idx pm_user
+5019; 1259 49888 INDEX wam_v5_receipt_31643 unknown_delivery_state_idx pm_user
+4730; 1259 43802 INDEX weixin_account_manager artifact_scans_status_idx pm_user
+4733; 1259 43803 INDEX weixin_account_manager audit_events_at_idx pm_user
+4740; 1259 43804 INDEX weixin_account_manager reminders_account_idx pm_user
+4741; 1259 43805 INDEX weixin_account_manager reminders_due_idx pm_user
+4746; 1259 43806 INDEX weixin_account_manager subscriptions_agent_idx pm_user
+4749; 1259 43807 INDEX weixin_account_manager subscriptions_scope_idx pm_user
+5167; 2620 33796 TRIGGER public audit_logs audit_logs_create_notification pm_user
+5165; 2606 68080 FK CONSTRAINT opportunity market_solution_todo_analyses market_solution_todo_analyses_import_id_fkey pm_user
+5163; 2606 62572 FK CONSTRAINT opportunity market_solution_todos market_solution_todos_import_id_fkey pm_user
+5164; 2606 62577 FK CONSTRAINT opportunity market_solution_todos market_solution_todos_opportunity_id_fkey pm_user
+5159; 2606 62497 FK CONSTRAINT opportunity opportunities opportunities_organization_id_fkey pm_user
+5160; 2606 62511 FK CONSTRAINT opportunity opportunity_activities opportunity_activities_opportunity_id_fkey pm_user
+5162; 2606 62538 FK CONSTRAINT opportunity opportunity_projects opportunity_projects_opportunity_id_fkey pm_user
+5161; 2606 62525 FK CONSTRAINT opportunity stage_history stage_history_opportunity_id_fkey pm_user
+5111; 2606 17239 FK CONSTRAINT public ai_citations ai_citations_chunk_id_document_chunks_id_fk pm_user
+5112; 2606 17234 FK CONSTRAINT public ai_citations ai_citations_document_id_documents_id_fk pm_user
+5113; 2606 17229 FK CONSTRAINT public ai_citations ai_citations_message_id_ai_messages_id_fk pm_user
+5114; 2606 25615 FK CONSTRAINT public ai_citations ai_citations_version_id_document_versions_id_fk pm_user
+5115; 2606 25596 FK CONSTRAINT public ai_conversations ai_conversations_project_id_projects_id_fk pm_user
+5139; 2606 33756 FK CONSTRAINT public ai_message_feedback ai_message_feedback_message_id_ai_messages_id_fk pm_user
+5140; 2606 33761 FK CONSTRAINT public ai_message_feedback ai_message_feedback_project_id_projects_id_fk pm_user
+5116; 2606 17249 FK CONSTRAINT public ai_messages ai_messages_conversation_id_ai_conversations_id_fk pm_user
+5117; 2606 17254 FK CONSTRAINT public approval_items approval_items_project_id_projects_id_fk pm_user
+5118; 2606 17259 FK CONSTRAINT public audit_logs audit_logs_project_id_projects_id_fk pm_user
+5145; 2606 43836 FK CONSTRAINT public auth_sessions auth_sessions_user_id_fkey pm_user
+5119; 2606 17264 FK CONSTRAINT public coordination_items coordination_items_project_id_projects_id_fk pm_user
+5166; 2606 68103 FK CONSTRAINT public delivery_meeting_todo_analyses delivery_meeting_todo_analyses_import_id_fkey pm_user
+5157; 2606 62452 FK CONSTRAINT public delivery_meeting_todos delivery_meeting_todos_import_id_fkey pm_user
+5158; 2606 62457 FK CONSTRAINT public delivery_meeting_todos delivery_meeting_todos_project_id_fkey pm_user
+5120; 2606 17269 FK CONSTRAINT public document_chunks document_chunks_document_id_documents_id_fk pm_user
+5121; 2606 17372 FK CONSTRAINT public document_chunks document_chunks_version_document_fk pm_user
+5122; 2606 17274 FK CONSTRAINT public document_chunks document_chunks_version_id_document_versions_id_fk pm_user
+5123; 2606 17279 FK CONSTRAINT public document_versions document_versions_document_id_documents_id_fk pm_user
+5124; 2606 17294 FK CONSTRAINT public documents documents_folder_id_knowledge_folders_id_fk pm_user
+5125; 2606 17289 FK CONSTRAINT public documents documents_knowledge_base_id_knowledge_bases_id_fk pm_user
+5126; 2606 17284 FK CONSTRAINT public documents documents_project_id_projects_id_fk pm_user
+5127; 2606 17299 FK CONSTRAINT public import_jobs import_jobs_project_id_projects_id_fk pm_user
+5128; 2606 17304 FK CONSTRAINT public knowledge_bases knowledge_bases_project_id_projects_id_fk pm_user
+5129; 2606 17309 FK CONSTRAINT public knowledge_folders knowledge_folders_knowledge_base_id_knowledge_bases_id_fk pm_user
+5130; 2606 17314 FK CONSTRAINT public milestones milestones_project_id_projects_id_fk pm_user
+5141; 2606 33788 FK CONSTRAINT public notifications notifications_project_id_projects_id_fk pm_user
+5142; 2606 43198 FK CONSTRAINT public personal_memory_entries personal_memory_entries_knowledge_base_id_fk pm_user
+5143; 2606 43217 FK CONSTRAINT public personal_reports personal_reports_knowledge_base_id_fk pm_user
+5131; 2606 17319 FK CONSTRAINT public project_phases project_phases_project_id_projects_id_fk pm_user
+5132; 2606 126885 FK CONSTRAINT public project_phases project_phases_snapshot_id_fkey pm_user
+5133; 2606 17324 FK CONSTRAINT public risks risks_project_id_projects_id_fk pm_user
+5134; 2606 17329 FK CONSTRAINT public task_dependencies task_dependencies_predecessor_id_tasks_id_fk pm_user
+5135; 2606 17334 FK CONSTRAINT public task_dependencies task_dependencies_successor_id_tasks_id_fk pm_user
+5136; 2606 17344 FK CONSTRAINT public tasks tasks_phase_id_project_phases_id_fk pm_user
+5137; 2606 17339 FK CONSTRAINT public tasks tasks_project_id_projects_id_fk pm_user
+5138; 2606 126879 FK CONSTRAINT public tasks tasks_snapshot_id_fkey pm_user
+5149; 2606 47663 FK CONSTRAINT wam_b2_phase1 reminders reminders_account_id_fkey pm_user
+5147; 2606 47256 FK CONSTRAINT wam_idempotency reminders reminders_account_id_fkey pm_user
+5148; 2606 47390 FK CONSTRAINT wam_idempotency2 reminders reminders_account_id_fkey pm_user
+5150; 2606 47801 FK CONSTRAINT wam_phase1_final reminders reminders_account_id_fkey pm_user
+5152; 2606 49016 FK CONSTRAINT wam_receipt_events reminders reminders_account_id_fkey pm_user
+5151; 2606 48212 FK CONSTRAINT wam_s3_reconcile reminders reminders_account_id_fkey pm_user
+5146; 2606 44346 FK CONSTRAINT wam_stage4_receipt reminders reminders_account_id_fkey pm_user
+5156; 2606 50032 FK CONSTRAINT wam_v5_receipt_31643 reminders reminders_account_id_fkey pm_user
+5153; 2606 49897 FK CONSTRAINT wam_v5_receipt_31643 unknown_adjudication_events unknown_adjudication_events_outbound_id_fkey pm_user
+5154; 2606 49920 FK CONSTRAINT wam_v5_receipt_31643 unknown_retry_links unknown_retry_links_adjudication_id_fkey pm_user
+5155; 2606 49915 FK CONSTRAINT wam_v5_receipt_31643 unknown_retry_links unknown_retry_links_parent_outbound_id_fkey pm_user
+5144; 2606 43808 FK CONSTRAINT weixin_account_manager reminders reminders_account_id_fkey pm_user

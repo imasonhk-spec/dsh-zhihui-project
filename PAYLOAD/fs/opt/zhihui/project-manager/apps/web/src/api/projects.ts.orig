@@ -1,0 +1,497 @@
+import { apiClient } from '../lib/api-client.ts'
+
+export type ProjectStatus = 'planning' | 'in_progress' | 'on_hold' | 'completed' | 'archived'
+export type ProjectHealth = 'healthy' | 'attention' | 'risk'
+export type ProjectHealthSummary = { summary:string; source:'model'|'rules'; generatedAt:string }
+export function getProjectHealthSummary(projectId:string,fresh=false){return apiClient.get<ProjectHealthSummary>(`/api/projects/${projectId}/health-summary`,fresh?{headers:{'x-dsh-fresh':'1'}}:undefined)}
+export function peekPortfolioSummary(){return apiClient.peek<PortfolioSummary>('/api/projects/summary')}
+export function peekMeetingTodoDashboard(batchId?:string){return apiClient.peek<MeetingTodoDashboard>(`/api/delivery-meeting-todos/dashboard${batchId?`?batchId=${encodeURIComponent(batchId)}`:''}`)}
+export type ProjectSummary = {
+  id: string
+  code: string
+  name: string
+  status: ProjectStatus
+  health: string
+  progress: number
+}
+export type Project = ProjectSummary & {
+  shortName: string | null
+  category: string | null
+  description: string | null
+  clientName: string | null
+  startDate: string | null
+  plannedEndDate: string | null
+  actualEndDate: string | null
+  metadata: Record<string, unknown>
+  createdAt: string
+  updatedAt: string
+}
+export type ProjectInput = {
+  code: string
+  name: string
+  shortName?: string | null
+  category?: string | null
+  status?: ProjectStatus
+  health?: ProjectHealth
+  description?: string | null
+  clientName?: string | null
+  startDate?: string | null
+  plannedEndDate?: string | null
+  actualEndDate?: string | null
+  progress?: number
+  metadata?: Record<string, unknown>
+}
+export type ProjectUpdateInput = Partial<ProjectInput>
+
+export type HealthReason = {
+  code: string
+  level: 'attention' | 'risk'
+  label: string
+  count: number
+}
+
+export type PortfolioProject = {
+  id: string
+  code: string
+  name: string
+  category: string | null
+  clientName: string | null
+  status: ProjectSummary['status']
+  progress: number
+  health: ProjectHealth
+  manualHealth: string
+  computedHealth: ProjectHealth
+  effectiveHealth: ProjectHealth
+  healthReasons: HealthReason[]
+  activeRiskCount: number
+  pendingCoordinationCount: number
+  upcomingMilestoneCount: number
+  plannedEndDate: string | null
+  progressPrevious: number | null
+}
+
+export type PortfolioSummary = {
+  generatedAt: string
+  upcomingMilestoneDays: 7
+  counts: {
+    managedProjects: number
+    inProgressProjects: number
+    planningProjects: number
+    healthyProjects: number
+    attentionProjects: number
+    riskProjects: number
+    keyRisks: number
+    pendingCoordinationItems: number
+    upcomingMilestones: number
+  }
+  projects: PortfolioProject[]
+}
+
+export function listProjects(includeArchived = false) {
+  return apiClient.get<PortfolioProject[]>(includeArchived ? '/api/projects?includeArchived=true' : '/api/projects')
+}
+
+export function getProject(projectId: string) {
+  return apiClient.get<Project>(`/api/projects/${projectId}`)
+}
+
+export function createProject(input: ProjectInput) {
+  return apiClient.post<Project>('/api/projects', input)
+}
+
+export function updateProject(projectId: string, input: ProjectUpdateInput) {
+  return apiClient.patch<Project>(`/api/projects/${projectId}`, input)
+}
+
+export function archiveProject(projectId: string) {
+  return updateProject(projectId, { status: 'archived' })
+}
+
+export function restoreProject(projectId: string, status: Exclude<ProjectStatus, 'archived'> = 'planning') {
+  return updateProject(projectId, { status })
+}
+
+export type ProjectOverviewDetail = {
+  project: {
+    id: string
+    code: string
+    name: string
+    category: string | null
+    clientName: string | null
+    description: string | null
+    status: ProjectSummary['status']
+    manualHealth: string
+    computedHealth: ProjectHealth
+    effectiveHealth: ProjectHealth
+    healthReasons: HealthReason[]
+    progress: number
+    startDate: string | null
+    plannedEndDate: string | null
+    actualEndDate: string | null
+  }
+  phases: Array<{ id: string; code: string; name: string; status: string; progress: number; plannedStartDate: string | null; plannedEndDate: string | null }>
+  risks: Array<{ id: string; code: string; name: string; level: string; status: string; ownerName: string | null; source: string | null; expectedResolutionDate: string | null }>
+  milestones: Array<{ id: string; name: string; type: string; status: string; ownerName: string | null; plannedDate: string; actualDate: string | null; deliverable: string | null }>
+  coordinationItems: Array<{ id: string; code: string; title: string; category: string; priority: string; status: string; ownerName: string | null; dueDate: string | null; progress: number }>
+  approvalSummary: { total: number; completed: number; overdue: number; progress: number; currentStage: { stageCode: string; stageName: string } | null; nextDeadline: { id: string; taskName: string; plannedEndDate: string } | null; expectedContractDate: string | null }
+  knowledgeSummary: { folders: number; documents: number; activeDocuments: number; archivedDocuments: number; storageBytes: number; recentDocuments: Array<{ id:string;name:string;fileType:string;version:string;status:string;folderId:string|null;folderPath:string|null;fileSize:number|null;updatedAt:string }> }
+  counts: { activeTasks: number; delayedTasks: number; activeRisks: number; pendingCoordinationItems: number; upcomingMilestones: number; overdueApprovals: number; knowledgeDocuments: number }
+}
+
+export function getPortfolioSummary(fresh=false) {
+  return apiClient.get<PortfolioSummary>('/api/projects/summary',fresh?{headers:{'x-dsh-fresh':'1'}}:undefined)
+}
+export type WeeklyProgressSummary = { summary: string; source: 'model' | 'rules'; generatedAt: string; facts: string[] }
+export function getWeeklyProgressSummary(projectId: string) { return apiClient.get<WeeklyProgressSummary>(`/api/projects/${projectId}/weekly-progress-summary`) }
+export type WeeklyCompletionSummary = { items: Array<{ title: string; detail: string }>; source: 'model' | 'rules'; sourceName?: string; importedAt?: string }
+export function getLatestWeeklyCompletion(projectId: string) { return apiClient.get<WeeklyCompletionSummary>(`/api/projects/${projectId}/weekly-completion`) }
+export type ProjectChangeInsight = { title:string; detail:string; level:'critical'|'warning'|'info'|'progress'; category:string; evidence:string[] }
+export type ProjectChangeAnalysis = { items:ProjectChangeInsight[]; source:'model'|'rules'; generatedAt:string; latestBatch?:{id:string;sourceName:string;importedAt:string}; previousBatch?:{id:string;sourceName:string;importedAt:string}; facts:string[] }
+export function getProjectChangeAnalysis(projectId:string){return apiClient.get<ProjectChangeAnalysis>(`/api/projects/${projectId}/change-analysis`)}
+
+export type ProjectActivity = {
+  id: string
+  occurredAt: string
+  entityType: string
+  entityId: string | null
+  action: string
+  title: string
+  summary: string | null
+  actorName: string
+}
+export type ProjectActivityPage = { items: ProjectActivity[]; total: number; limit: number; offset: number }
+export type ProjectActivitySummary = { total: number; byEntityType: Record<string, number>; byAction: Record<string, number> }
+
+export function getProjectOverview(projectId: string) {
+  return apiClient.get<ProjectOverviewDetail>(`/api/projects/${projectId}/overview`)
+}
+
+export type WeeklyReportItem = {
+  id: string
+  title: string
+  description: string | null
+  ownerName: string | null
+  status: string
+  progress: number | null
+  plannedDate: string | null
+  actualDate: string | null
+}
+export type WeeklyReportRisk = WeeklyReportItem & { level: string; mitigation: string | null }
+export type WeeklyReport = {
+  project: Pick<Project, 'id' | 'code' | 'name'>
+  from: string
+  to: string
+  generatedAt: string
+  summary: string | null
+  highlights: string[]
+  completedItems: WeeklyReportItem[]
+  plannedItems: WeeklyReportItem[]
+  risks: WeeklyReportRisk[]
+  coordinationItems: WeeklyReportItem[]
+}
+
+export function getWeeklyReport(projectId: string, from?: string, to?: string) {
+  const params = new URLSearchParams()
+  if (from) params.set('from', from)
+  if (to) params.set('to', to)
+  const query = params.toString()
+  return apiClient.get<WeeklyReport>(`/api/projects/${projectId}/reports/weekly${query ? `?${query}` : ''}`)
+}
+
+export type Task = {
+  id: string
+  projectId: string
+  phaseId: string | null
+  parentId: string | null
+  wbsCode: string
+  name: string
+  description: string | null
+  vendor: string | null
+  ownerName: string | null
+  status: string
+  priority: string
+  progress: number
+  plannedStartDate: string | null
+  plannedEndDate: string | null
+  actualStartDate: string | null
+  actualEndDate: string | null
+  deliverable: string | null
+}
+
+export function listTasks(projectId: string, filters: Record<string, string> = {}) {
+  const query = new URLSearchParams(filters).toString()
+  return apiClient.get<Task[]>(`/api/projects/${projectId}/tasks${query ? `?${query}` : ''}`)
+}
+
+export function getTask(projectId: string, taskId: string) {
+  return apiClient.get<Task>(`/api/projects/${projectId}/tasks/${taskId}`)
+}
+
+export function createTask(projectId: string, input: Partial<Task>) {
+  return apiClient.post<Task>(`/api/projects/${projectId}/tasks`, input)
+}
+
+export function updateTask(projectId: string, taskId: string, input: Partial<Task>) {
+  return apiClient.patch<Task>(`/api/projects/${projectId}/tasks/${taskId}`, input)
+}
+
+export type TaskDependency = {
+  id: string
+  predecessorId: string
+  successorId: string
+  type: string
+  createdAt: string
+  updatedAt: string
+}
+
+export function listTaskDependencies(projectId: string, taskId: string) {
+  return apiClient.get<TaskDependency[]>(`/api/projects/${projectId}/tasks/${taskId}/dependencies`)
+}
+
+export function createTaskDependency(projectId: string, taskId: string, dependsOnTaskId: string) {
+  return apiClient.post<TaskDependency>(`/api/projects/${projectId}/tasks/${taskId}/dependencies`, { dependsOnTaskId })
+}
+
+export function deleteTaskDependency(projectId: string, taskId: string, dependencyId: string) {
+  return apiClient.delete(`/api/projects/${projectId}/tasks/${taskId}/dependencies/${dependencyId}`)
+}
+
+export type MilestoneWarning = {
+  level: 'normal' | 'upcoming' | 'overdue'
+  daysRemaining: number | null
+  label: string
+}
+
+export type Milestone = {
+  id: string
+  projectId: string
+  name: string
+  description: string | null
+  type: 'key' | 'important' | 'normal'
+  status: 'not_started' | 'in_progress' | 'delayed' | 'completed' | 'cancelled'
+  ownerName: string | null
+  plannedDate: string
+  actualDate: string | null
+  deliverable: string | null
+  warning: MilestoneWarning
+  createdAt: string
+  updatedAt: string
+}
+
+export function listMilestones(projectId: string, filters: Record<string, string> = {}) {
+  const query = new URLSearchParams(filters).toString()
+  return apiClient.get<Milestone[]>(`/api/projects/${projectId}/milestones${query ? `?${query}` : ''}`)
+}
+
+export function getMilestone(projectId: string, milestoneId: string) {
+  return apiClient.get<Milestone>(`/api/projects/${projectId}/milestones/${milestoneId}`)
+}
+
+export type MilestoneInput = {
+  name: string
+  description?: string | null
+  type?: Milestone['type']
+  status?: Milestone['status']
+  ownerName?: string | null
+  plannedDate: string
+  actualDate?: string | null
+  deliverable?: string | null
+}
+
+export function createMilestone(projectId: string, input: MilestoneInput) {
+  return apiClient.post<Milestone>(`/api/projects/${projectId}/milestones`, input)
+}
+
+export function updateMilestone(projectId: string, milestoneId: string, input: Partial<MilestoneInput>) {
+  return apiClient.patch<Milestone>(`/api/projects/${projectId}/milestones/${milestoneId}`, input)
+}
+
+export type Risk = {
+  id: string
+  projectId: string
+  code: string
+  name: string
+  description: string | null
+  impact: string | null
+  mitigation: string | null
+  level: 'low' | 'medium' | 'high' | 'critical'
+  status: 'identified' | 'following' | 'mitigated' | 'closed' | 'accepted'
+  ownerName: string | null
+  source: string | null
+  expectedResolutionDate: string | null
+  closedAt: string | null
+  warning: { level: 'normal' | 'overdue'; daysRemaining: number | null; label: string }
+  createdAt: string
+  updatedAt: string
+}
+export type RiskInput = { code: string; name: string; description?: string | null; impact?: string | null; mitigation?: string | null; level?: Risk['level']; status?: Risk['status']; ownerName?: string | null; source?: string | null; expectedResolutionDate?: string | null; closedAt?: string | null }
+export function listRisks(projectId: string, filters: Record<string, string> = {}) { const query = new URLSearchParams(filters).toString(); return apiClient.get<Risk[]>(`/api/projects/${projectId}/risks${query ? `?${query}` : ''}`) }
+export function getRisk(projectId: string, riskId: string) { return apiClient.get<Risk>(`/api/projects/${projectId}/risks/${riskId}`) }
+export function createRisk(projectId: string, input: RiskInput) { return apiClient.post<Risk>(`/api/projects/${projectId}/risks`, input) }
+export function updateRisk(projectId: string, riskId: string, input: Partial<RiskInput>) { return apiClient.patch<Risk>(`/api/projects/${projectId}/risks/${riskId}`, input) }
+
+export type CoordinationItem = { id: string; projectId: string; code: string; category: string; title: string; description: string | null; counterparty: string | null; ownerName: string | null; priority: 'low' | 'medium' | 'high' | 'critical'; status: 'to_start' | 'communicating' | 'resolved' | 'closed'; progress: number; dueDate: string | null; resolvedAt: string | null; warning: { level: 'normal' | 'overdue'; daysRemaining: number | null; label: string }; createdAt: string; updatedAt: string }
+export type CoordinationInput = { code: string; category: string; title: string; description?: string | null; counterparty?: string | null; ownerName?: string | null; priority?: CoordinationItem['priority']; status?: CoordinationItem['status']; progress?: number; dueDate?: string | null; resolvedAt?: string | null }
+export function listCoordination(projectId: string, filters: Record<string, string> = {}) { const query = new URLSearchParams(filters).toString(); return apiClient.get<CoordinationItem[]>(`/api/projects/${projectId}/coordination${query ? `?${query}` : ''}`) }
+export function getCoordination(projectId: string, itemId: string) { return apiClient.get<CoordinationItem>(`/api/projects/${projectId}/coordination/${itemId}`) }
+export function createCoordination(projectId: string, input: CoordinationInput) { return apiClient.post<CoordinationItem>(`/api/projects/${projectId}/coordination`, input) }
+export function updateCoordination(projectId: string, itemId: string, input: Partial<CoordinationInput>) { return apiClient.patch<CoordinationItem>(`/api/projects/${projectId}/coordination/${itemId}`, input) }
+
+export type ApprovalItem = { id:string;projectId:string;stageCode:string;stageName:string;taskName:string;deliverable:string|null;responsibleParty:string|null;status:'not_started'|'in_progress'|'completed'|'closed'|'cancelled';plannedStartDate:string|null;plannedEndDate:string|null;actualStartDate:string|null;actualEndDate:string|null;result:string|null;remark:string|null;sortOrder:number;warning:{level:'normal'|'upcoming'|'overdue';daysRemaining:number|null;label:string};createdAt:string;updatedAt:string }
+export type ApprovalStageSummary = {stageCode:string;stageName:string;total:number;completed:number;inProgress:number;overdue:number;progress:number;plannedStartDate:string|null;plannedEndDate:string|null}
+export type ApprovalSummary = {total:number;completed:number;overdue:number;progress:number;currentStage:ApprovalStageSummary|null;nextDeadline:{id:string;taskName:string;plannedEndDate:string|null;warning:ApprovalItem['warning']}|null;expectedContractDate:string|null;stages:ApprovalStageSummary[]}
+export type ApprovalInput = {stageCode:string;stageName:string;taskName:string;deliverable?:string|null;responsibleParty?:string|null;status?:ApprovalItem['status'];plannedStartDate?:string|null;plannedEndDate?:string|null;actualStartDate?:string|null;actualEndDate?:string|null;result?:string|null;remark?:string|null;sortOrder?:number}
+export function listApprovals(projectId:string,filters:Record<string,string>={}){const query=new URLSearchParams(filters).toString();return apiClient.get<{items:ApprovalItem[];summary:ApprovalSummary}>(`/api/projects/${projectId}/approvals${query?`?${query}`:''}`)}
+export function getApproval(projectId:string,id:string){return apiClient.get<ApprovalItem>(`/api/projects/${projectId}/approvals/${id}`)}
+export function createApproval(projectId:string,input:ApprovalInput){return apiClient.post<ApprovalItem>(`/api/projects/${projectId}/approvals`,input)}
+export function updateApproval(projectId:string,id:string,input:Partial<ApprovalInput>){return apiClient.patch<ApprovalItem>(`/api/projects/${projectId}/approvals/${id}`,input)}
+
+export type KnowledgeBase = { id:string;projectId:string|null;name:string;description:string|null;scope:string;status:string;createdAt:string;updatedAt:string }
+export type KnowledgeFolderSourceBreakdown = { code:string;name:string;count:number }
+export type KnowledgeFolder = { id:string;knowledgeBaseId:string;parentId:string|null;name:string;path:string;sortOrder:number;documentCount?:number;sourceBreakdown?:KnowledgeFolderSourceBreakdown[];createdAt:string;updatedAt:string;children:KnowledgeFolder[] }
+export type KnowledgeSummary = { folders:number;documents:number;activeDocuments:number;archivedDocuments:number;storageBytes:number }
+export type KnowledgeRecentDocument = { id:string;projectId?:string;name:string;fileType:string;version:string;status:KnowledgeDocumentStatus;folderId:string|null;folderPath:string|null;fileSize:number|null;updatedAt:string }
+export type KnowledgeWorkspace = { knowledgeBase:KnowledgeBase;folders:KnowledgeFolder[];summary:KnowledgeSummary;recentDocuments:KnowledgeRecentDocument[] }
+export type KnowledgeFolderInput = { name:string;parentId?:string|null;sortOrder?:number }
+export type KnowledgeDocumentStatus = 'draft'|'reviewing'|'confirmed'|'archived'|'obsolete'
+export type KnowledgeProcessingStatus = 'pending'|'processing'|'completed'|'failed'
+export type KnowledgeDocument = { id:string;projectId:string|null;knowledgeBaseId:string;folderId:string|null;name:string;originalName:string;fileType:string;mimeType:string|null;fileSize:number|null;checksum:string|null;version:string;status:KnowledgeDocumentStatus;parseStatus:KnowledgeProcessingStatus;indexStatus:KnowledgeProcessingStatus;metadata:Record<string,unknown>;createdAt:string;updatedAt:string }
+export type KnowledgeDocumentVersion = { id:string;documentId:string;versionNumber:string;checksum:string|null;fileSize:number|null;mimeType:string|null;originalName:string|null;changeSummary:string|null;isCurrent:boolean;createdAt:string;updatedAt:string }
+export type KnowledgeUploadInput = { file:File;name?:string;folderId?:string;status?:KnowledgeDocumentStatus;changeSummary?:string }
+export function getKnowledgeWorkspace(projectId:string,scope?:'all-projects'){return apiClient.get<KnowledgeWorkspace>(`/api/projects/${projectId}/knowledge${scope?`?scope=${scope}`:''}`)}
+export function listKnowledgeFolders(projectId:string){return apiClient.get<KnowledgeFolder[]>(`/api/projects/${projectId}/knowledge/folders`)}
+export function createKnowledgeFolder(projectId:string,input:KnowledgeFolderInput){return apiClient.post<Omit<KnowledgeFolder,'children'>>(`/api/projects/${projectId}/knowledge/folders`,input)}
+export function updateKnowledgeFolder(projectId:string,folderId:string,input:Partial<KnowledgeFolderInput>){return apiClient.patch<Omit<KnowledgeFolder,'children'>>(`/api/projects/${projectId}/knowledge/folders/${folderId}`,input)}
+export function deleteKnowledgeFolder(projectId:string,folderId:string){return apiClient.delete(`/api/projects/${projectId}/knowledge/folders/${folderId}`)}
+export function listKnowledgeDocuments(projectId:string,filters:Record<string,string>={}){const query=new URLSearchParams(filters).toString();return apiClient.get<KnowledgeDocument[]>(`/api/projects/${projectId}/knowledge/documents${query?`?${query}`:''}`)}
+export type KnowledgeContentSearchItem = { chunkId:string;documentId:string;documentName:string;originalName:string;fileType:string;status:KnowledgeDocumentStatus;folderId:string|null;folderPath:string|null;versionId:string;versionNumber:string;chunkIndex:number;pageNumber:number|null;sectionPath:string|null;snippet:string;highlights:string[];rank:number;metadata:Record<string,unknown>;updatedAt:string }
+export type KnowledgeContentSearchResult = { query:string;terms:string[];total:number;limit:number;offset:number;items:KnowledgeContentSearchItem[] }
+export function searchKnowledgeContent(projectId:string,filters:Record<string,string>){const query=new URLSearchParams(filters).toString();return apiClient.get<KnowledgeContentSearchResult>(`/api/projects/${projectId}/knowledge/content-search?${query}`)}
+export type KnowledgeSearchMode = 'keyword'|'semantic'|'hybrid'
+export type KnowledgeHybridSearchItem = Omit<KnowledgeContentSearchItem,'rank'> & { semanticScore:number;keywordRank:number;score:number;matchedBy:string[] }
+export type KnowledgeHybridSearchResult = { query:string;requestedMode?:KnowledgeSearchMode;mode:KnowledgeSearchMode;degraded?:boolean;warning?:string;total:number;limit:number;offset:number;minScore?:number;items:Array<KnowledgeHybridSearchItem|KnowledgeContentSearchItem> }
+export function searchKnowledgeHybrid(projectId:string,input:Record<string,unknown>){return apiClient.post<KnowledgeHybridSearchResult>(`/api/projects/${projectId}/knowledge/hybrid-search`,input)}
+export type KnowledgeEmbeddingResult = { documentId:string;versionId:string;versionNumber:string;provider:string;model:string;dimensions:number;chunkCount:number;generated:number;reused:number }
+export function embedKnowledgeVersion(projectId:string,documentId:string,versionId:string){return apiClient.post<KnowledgeEmbeddingResult>(`/api/projects/${projectId}/knowledge/documents/${documentId}/versions/${versionId}/embed`,{})}
+export function parseKnowledgeVersion(projectId:string,documentId:string,versionId:string){return apiClient.post<{documentId:string;versionId:string;versionNumber:string;parser:string;chunkCount:number;warningCount:number}>(`/api/projects/${projectId}/knowledge/documents/${documentId}/versions/${versionId}/parse`,{})}
+export function getKnowledgeDocument(projectId:string,documentId:string){return apiClient.get<KnowledgeDocument>(`/api/projects/${projectId}/knowledge/documents/${documentId}`)}
+export function uploadKnowledgeDocument(projectId:string,input:KnowledgeUploadInput){return apiClient.postForm<KnowledgeDocument>(`/api/projects/${projectId}/knowledge/documents`,toKnowledgeForm(input))}
+export type ProjectProcessDocumentKind='implementation-plan'|'meeting-minutes'|'weekly-report'|'market-solution-meeting-todos'|'delivery-meeting-todos'
+export function uploadProjectProcessDocument(projectId:string,kind:ProjectProcessDocumentKind,input:KnowledgeUploadInput){return apiClient.postForm<KnowledgeDocument>(`/api/projects/${projectId}/process-documents/${kind}`,toKnowledgeForm(input))}
+export function updateKnowledgeDocument(projectId:string,documentId:string,input:Partial<Pick<KnowledgeDocument,'name'|'folderId'|'status'>>){return apiClient.patch<KnowledgeDocument>(`/api/projects/${projectId}/knowledge/documents/${documentId}`,input)}
+export function listKnowledgeDocumentVersions(projectId:string,documentId:string){return apiClient.get<KnowledgeDocumentVersion[]>(`/api/projects/${projectId}/knowledge/documents/${documentId}/versions`)}
+export function uploadKnowledgeDocumentVersion(projectId:string,documentId:string,input:Pick<KnowledgeUploadInput,'file'|'changeSummary'>){return apiClient.postForm<KnowledgeDocumentVersion>(`/api/projects/${projectId}/knowledge/documents/${documentId}/versions`,toKnowledgeForm(input))}
+export async function downloadKnowledgeDocument(projectId:string,documentId:string,versionId?:string){const result=await apiClient.download(`/api/projects/${projectId}/knowledge/documents/${documentId}${versionId?`/versions/${versionId}`:''}/download`);const url=URL.createObjectURL(result.blob);const anchor=document.createElement('a');anchor.href=url;anchor.download=result.fileName;anchor.click();URL.revokeObjectURL(url)}
+function toKnowledgeForm(input:Partial<KnowledgeUploadInput> & {file:File}){const form=new FormData();form.append('file',input.file);if(input.name)form.append('name',input.name);if(input.folderId)form.append('folderId',input.folderId);if(input.status)form.append('status',input.status);if(input.changeSummary)form.append('changeSummary',input.changeSummary);return form}
+
+export type AiScopeMode='current'|'portfolio'
+export type AiScopeProject={projectId:string;code:string;name:string}
+export type ProjectAiScopes={current:AiScopeProject;portfolio:(AiScopeProject&{authorizedProjectCount:number})|null;portfolioProjectId:string|null;defaultScope:AiScopeMode}
+export function getProjectAiScopes(projectId:string){return apiClient.get<ProjectAiScopes>(`/api/projects/${projectId}/ai/scopes`)}
+export type AiConversation = { id:string;projectId:string;title:string;status:'active'|'archived';harnessSessionId:string|null;provider:string|null;model:string|null;lastEventSeq:number;createdAt:string;updatedAt:string }
+export type AiCitation = { id:string;messageId:string;documentId:string|null;versionId:string|null;chunkId:string|null;sourceProjectId?:string|null;sourceProjectCode?:string|null;sortOrder:number;snippet:string|null;pageNumber:number|null;sectionPath:string|null;score:number|null;documentName:string|null;versionNumber:string|null }
+export type AiFeedback={id:string;messageId:string;projectId:string;value:'helpful'|'unhelpful';note:string|null;createdAt:string;updatedAt:string}
+export type AiMessage = { id:string;conversationId:string;role:'system'|'user'|'assistant'|'tool';content:string;status:'pending'|'processing'|'completed'|'failed'|'cancelled';sequence:number;requestId:string|null;harnessEventSeq:number|null;errorCode:string|null;metadata:Record<string,unknown>;createdAt:string;updatedAt:string;citations?:AiCitation[];feedback?:AiFeedback|null }
+export type AiConversationList = {items:AiConversation[];hasMore:boolean;nextCursor:string|null}
+export type AiMessageList = {conversation:AiConversation;items:AiMessage[];hasMore:boolean;nextBefore:string|null}
+export function listAiConversations(projectId:string,status:AiConversation['status']='active'){const query=status==='active'?'':'?status=archived';return apiClient.get<AiConversationList>(`/api/projects/${projectId}/ai/conversations${query}`)}
+export function createAiConversation(projectId:string,title='新对话'){return apiClient.post<AiConversation>(`/api/projects/${projectId}/ai/conversations`,{title})}
+export function updateAiConversation(projectId:string,conversationId:string,input:Partial<Pick<AiConversation,'title'|'status'>>){return apiClient.patch<AiConversation>(`/api/projects/${projectId}/ai/conversations/${conversationId}`,input)}
+export function getAiMessages(projectId:string,conversationId:string){return apiClient.get<AiMessageList>(`/api/projects/${projectId}/ai/conversations/${conversationId}/messages`)}
+export function sendAiMessage(projectId:string,conversationId:string,content:string,requestId=createAiRequestId()){return apiClient.post<{userMessage?:AiMessage;message?:AiMessage;assistantMessage?:AiMessage;duplicate?:boolean}>(`/api/projects/${projectId}/ai/conversations/${conversationId}/messages`,{content,requestId,stream:true})}
+export function aiEventsUrl(projectId:string,conversationId:string,after=0){return `/api/projects/${projectId}/ai/conversations/${conversationId}/events?after=${after}`}
+export function cancelAiConversation(projectId:string,conversationId:string){return apiClient.post<{cancelled:boolean}>(`/api/projects/${projectId}/ai/conversations/${conversationId}/cancel`)}
+export function retryAiMessage(projectId:string,conversationId:string,messageId:string){return apiClient.post(`/api/projects/${projectId}/ai/conversations/${conversationId}/messages/${messageId}/retry`,{requestId:createAiRequestId()})}
+function createAiRequestId(){return globalThis.crypto?.randomUUID?.()??`web-${Date.now()}-${Math.random().toString(36).slice(2)}`}
+export function setAiFeedback(projectId:string,conversationId:string,messageId:string,value:'helpful'|'unhelpful',note?:string){return apiClient.request<AiFeedback>(`/api/projects/${projectId}/ai/conversations/${conversationId}/messages/${messageId}/feedback`,{method:'PUT',body:JSON.stringify({value,note})})}
+export function deleteAiConversation(projectId:string,conversationId:string){return apiClient.delete(`/api/projects/${projectId}/ai/conversations/${conversationId}`)}
+export type AiDocumentType='project_weekly_report'|'risk_coordination_summary'|'milestone_warning'|'stage_progress'
+export async function generateAiDocument(projectId:string,docType:AiDocumentType){const result=await apiClient.postDownload(`/api/projects/${projectId}/ai/documents/generate`,{docType});const url=URL.createObjectURL(result.blob);const anchor=document.createElement('a');anchor.href=url;anchor.download=result.fileName;anchor.click();URL.revokeObjectURL(url)}
+
+export type PhaseStatus = 'not_started' | 'ready' | 'in_progress' | 'delayed' | 'completed' | 'closed' | 'cancelled' | 'blocked'
+export type ProjectPhase = { id:string;projectId:string;name:string;code:string;sortOrder:number;status:PhaseStatus;progress:number;plannedStartDate:string|null;plannedEndDate:string|null;createdAt:string;updatedAt:string }
+export type ProjectPhaseInput = { name:string;code:string;status?:PhaseStatus;progress?:number;plannedStartDate?:string|null;plannedEndDate?:string|null }
+export function listProjectPhases(projectId:string){return apiClient.get<ProjectPhase[]>(`/api/projects/${projectId}/phases`)}
+export function createProjectPhase(projectId:string,input:ProjectPhaseInput){return apiClient.post<ProjectPhase>(`/api/projects/${projectId}/phases`,input)}
+export function updateProjectPhase(projectId:string,phaseId:string,input:Partial<ProjectPhaseInput>){return apiClient.patch<ProjectPhase>(`/api/projects/${projectId}/phases/${phaseId}`,input)}
+export function reorderProjectPhases(projectId:string,phaseIds:string[]){return apiClient.post<ProjectPhase[]>(`/api/projects/${projectId}/phases/reorder`,{phaseIds})}
+export function deleteProjectPhase(projectId:string,phaseId:string){return apiClient.delete(`/api/projects/${projectId}/phases/${phaseId}`)}
+
+export function listProjectActivities(projectId: string, entityType = 'all', range = 'all', limit = 20, offset = 0) {
+  const params = new URLSearchParams()
+  if (entityType !== 'all') params.set('entityType', entityType)
+  if (range !== 'all') params.set('range', range)
+  params.set('limit', String(limit))
+  params.set('offset', String(offset))
+  return apiClient.get<ProjectActivityPage>(`/api/projects/${projectId}/activities?${params}`)
+}
+export function getProjectActivitySummary(projectId: string, entityType = 'all', range = 'all') {
+  const params = new URLSearchParams()
+  if (range !== 'all') params.set('range', range)
+  if (entityType !== 'all') params.set('entityType', entityType)
+  const query = params.toString()
+  return apiClient.get<ProjectActivitySummary>(`/api/projects/${projectId}/activities/summary${query ? `?${query}` : ''}`)
+}
+
+export type ProjectNotification = { id: string; title: string; summary: string | null; body: string | null; sourceType: string; sourceId: string | null; recipientName: string | null; recipientId: string | null; occurredAt: string; readAt: string | null; read: boolean }
+export function listProjectNotifications(projectId: string) { return apiClient.get<ProjectNotification[]>(`/api/projects/${projectId}/notifications`) }
+export function markProjectNotificationRead(projectId: string, notificationId: string) { return apiClient.post<{ success: boolean }>(`/api/projects/${projectId}/notifications/${notificationId}/read`) }
+
+export type ImportJobStatus = 'pending' | 'processing' | 'completed' | 'failed'
+export type ImportJob = {
+  id: string
+  projectId: string | null
+  kind: string
+  sourceName: string
+  status: ImportJobStatus
+  totalRows: number | null
+  successRows: number | null
+  failedRows: number | null
+  errors: Array<{ row?: number; message: string }>
+  createdAt: string
+  updatedAt: string
+}
+export type ImportJobInput = { kind: string; sourceName: string }
+export type ImportRowError = { row?: number; message: string }
+export type ImportPreview = { headers: string[]; rows: Array<Record<string, string>>; errors: ImportRowError[]; totalRows: number }
+export type ImportFileFormat = 'csv' | 'xlsx' | 'xlsm'
+export const taskImportFileAccept = '.csv,.xlsx,.xlsm'
+export type ImportKnowledgeResult = { documentId:string; versionId:string; parsed?:{chunkCount:number|null;skipped?:boolean}; embedded?:{provider:string;model:string;dimensions:number;chunkCount:number;generated:number;reused:number}; wiki?:{provider:string;wikiProjectId:string;pageCount:number;chunkCount:number;vectorsWritten:number}; warnings?:Array<{stage:'llm-wiki'|'pgvector';message:string}> }
+export type BatchImportJobResult = { id?:string; kind:string; status:string; totalRows?:number|null; successRows?:number|null; failedRows?:number|null; errors?:ImportRowError[]; knowledge?:ImportKnowledgeResult }
+export type WeeklyBatchImportResult = { weekStart:string; weekEnd:string; totalFiles:number; successFiles:number; failedFiles:number; results:Array<{fileName:string;projectId?:string;projectName?:string;proposedProjectName?:string;status?:string;errors?:ImportRowError[];jobs?:BatchImportJobResult[];knowledge?:ImportKnowledgeResult}> }
+export type WeeklyBatchPreview = Array<{fileName:string;projectKey:string;matchedProject:{id:string;name:string;code:string}|null;projects:Array<{id:string;name:string;code:string}>;error?:string}>
+export function previewWeeklyBatchImport(files:File[]){const form=new FormData();files.forEach(file=>form.append('files',file));return apiClient.postForm<WeeklyBatchPreview>('/api/imports/weekly-batch/preview',form)}
+export function executeWeeklyBatchImport(input:{weekStart:string;weekEnd:string;files:File[];bindings?:Record<string,string>;autoCreate?:boolean;confirmNameChanges?:boolean}){const form=new FormData();form.append('weekStart',input.weekStart);form.append('weekEnd',input.weekEnd);if(input.bindings)form.append('bindings',JSON.stringify(input.bindings));form.append('autoCreate',String(input.autoCreate??true));form.append('confirmNameChanges',String(input.confirmNameChanges??false));input.files.forEach(file=>form.append('files',file));return apiClient.postForm<WeeklyBatchImportResult>('/api/imports/weekly-batch',form)}
+export type MeetingTodoDashboard = { batches:Array<{id:string;sourceName:string;importedAt:string;totalRows:number;matchedRows:number;unmatchedRows:number}>; batch:null|{id:string;sourceName:string;importedAt:string;totalRows:number;matchedRows:number;unmatchedRows:number}; previousBatch:null|{id:string;sourceName:string;importedAt:string;totalRows:number;matchedRows:number;unmatchedRows:number}; statistics:{total:number;completed:number;incomplete:number;overdue:number;completionRate:number}; changes:null|{total:number;completed:number;incomplete:number;overdue:number;completionRate:number}; owners:Array<{rank:number;previousRank?:number;rankChange?:number;trend:'up'|'down'|'same'|'new';ownerName:string;total:number;completed:number;incomplete:number;overdue:number;completionRate:number}>; items:Array<{id:string;sourceRow:number;sequence?:number;establishedDate?:string;title:string;ownerName?:string;deadlineText?:string;dueDate?:string;projectId?:string;projectNameRaw?:string;projectName:string;status:string;resultRemark?:string;overdueDays:number;fieldChanges?:Array<{field:'establishedDate'|'deadline';label:string;oldDisplay:string|null;newDisplay:string|null}>}>; projects:Array<{id:string;name:string}>; analysis:null|{source:'rules'|'model';score:number;level:'good'|'warn'|'bad';levelLabel:string;metrics:Array<{key:string;weight:number;value:number;points:number}>;judgments:string[];actions:string[];generatedAt:string} }
+export function getMeetingTodoDashboard(batchId?:string,fresh=false){return apiClient.get<MeetingTodoDashboard>(`/api/delivery-meeting-todos/dashboard${batchId?`?batchId=${encodeURIComponent(batchId)}`:''}`,fresh?{headers:{'x-dsh-fresh':'1'}}:undefined)}
+export function refreshMeetingTodoAnalysis(batchId?:string){return apiClient.post<MeetingTodoDashboard>(`/api/delivery-meeting-todos/analyze${batchId?`?batchId=${encodeURIComponent(batchId)}`:''}`,{})}
+export type DeliveryMeetingTodoPreview = { headers:string[]; rows:Array<{sourceRow:number;sequence?:number;establishedDate?:string;title:string;ownerName?:string;deadlineText?:string;projectNameRaw?:string;matchedProjectName?:string;status:string;resultRemark?:string}>; errors:ImportRowError[]; totalRows:number; matchedRows:number; unmatchedRows:number }
+export type DeliveryMeetingTodoImportResult = { id:string; sourceName:string; totalRows:number; matchedRows:number; unmatchedRows:number; archivedProjects?:number; archiveErrors?:Array<{projectId:string;message:string}>; indexWarnings?:Array<{projectId:string;stage:string;message:string}>; preview:DeliveryMeetingTodoPreview }
+export function previewDeliveryMeetingTodoImport(file:File){const form=new FormData();form.append('kind','delivery-meeting-todos');form.append('file',file);return apiClient.postForm<DeliveryMeetingTodoPreview>('/api/imports/delivery-meeting-todos/preview',form)}
+export function executeDeliveryMeetingTodoImport(file:File){const form=new FormData();form.append('kind','delivery-meeting-todos');form.append('file',file);return apiClient.postForm<DeliveryMeetingTodoImportResult>('/api/imports/delivery-meeting-todos',form)}
+export type ImportKind = 'tasks' | 'risks' | 'milestones' | 'phases'
+export type ImportUploadInput = { kind: ImportKind; file: File }
+export type ImportChangeType = 'initial' | 'unchanged' | 'created' | 'modified' | 'cleared' | 'archived'
+export type ImportChangeDirection = 'increase' | 'decrease' | 'postponed' | 'advanced' | 'from_empty' | 'to_empty' | 'state_forward' | 'state_backward' | 'changed' | 'none'
+export type ImportChangeSeverity = 'info' | 'low' | 'medium' | 'high' | 'critical'
+export type ImportChangeSummary = { total:number; created:number; modified:number; unchanged:number; cleared:number; archived:number; invalid:number; hasChanges:boolean; maxSeverity:ImportChangeSeverity; bySeverity:Record<ImportChangeSeverity,number> }
+export type ImportChangeBatch = { id:string; app:string; scopeId:string; kind:string; mode:string; baseBatchId:string|null; previewFingerprint:string; mappingVersion:string; normalizationVersion:string; status:string; sourceName:string; sourceChecksum:string; createdAt:string; appliedAt:string|null; baseline?:boolean }
+export type ImportFieldChange = { fieldKey:string; changeType:Exclude<ImportChangeType,'unchanged'>; direction:ImportChangeDirection; severity:ImportChangeSeverity; oldValue:unknown; newValue:unknown; oldDisplay:string|null; newDisplay:string|null; derived?:boolean; batch?:ImportChangeBatch }
+export type ImportChangeItem = { id?:string; businessKey:string; entityId?:string|null; targetEntityId?:string|null; sourceSheet:string|null; sourceRow:number|null; changeType:ImportChangeType; maxSeverity:ImportChangeSeverity; changedFieldCount?:number; changes:ImportFieldChange[]; errors?:string[] }
+export type ImplementationPlanChangePreview = { batch:ImportChangeBatch; summary:ImportChangeSummary; items:ImportChangeItem[]; errors:ImportRowError[]; confirmable:boolean }
+export type ImplementationPlanChangeResult = { batch:ImportChangeBatch; summary:ImportChangeSummary; idempotent:boolean }
+export type ImplementationPlanChangePage = { batch:ImportChangeBatch; items:ImportChangeItem[]; page:number; pageSize:number; total:number }
+export type LatestImportChange = { batchId:string; changedAt:string; changeType:ImportChangeType; changedFieldCount:number; maxSeverity:ImportChangeSeverity; fields:string[] }
+export type ImplementationPlanChangeMarker = { entityId:string; latestImportChange:LatestImportChange }
+export function listImportJobs(projectId: string) { return apiClient.get<ImportJob[]>(`/api/projects/${projectId}/imports`) }
+export function prefetchGlobalModules(projectIds:string[]){void Promise.allSettled([getPortfolioSummary(),getMeetingTodoDashboard()]).then(()=>Promise.allSettled(projectIds.map(projectId=>getProjectHealthSummary(projectId))))}
+export function prefetchProjectModules(projectId:string){void Promise.allSettled([getProjectOverview(projectId),listApprovals(projectId),listImportJobs(projectId),listTasks(projectId),listMilestones(projectId),listRisks(projectId,{includeClosed:'false'}),listCoordination(projectId,{priority:'',status:'',q:'',includeClosed:'false'}),getKnowledgeWorkspace(projectId),listAiConversations(projectId)])}
+export function createImportJob(projectId: string, input: ImportJobInput) { return apiClient.post<ImportJob>(`/api/projects/${projectId}/imports`, input) }
+export function previewProjectImport(projectId: string, input: ImportUploadInput) { return apiClient.postForm<ImportPreview>(`/api/projects/${projectId}/imports/preview`, toImportForm(input)) }
+export function executeProjectImport(projectId: string, input: ImportUploadInput) { return apiClient.postForm<ImportJob>(`/api/projects/${projectId}/imports/execute`, toImportForm(input)) }
+export function previewImplementationPlanChanges(projectId:string,file:File){return apiClient.postForm<ImplementationPlanChangePreview>(`/api/projects/${projectId}/imports/implementation-plan/preview`,toImportForm({kind:'tasks',file}))}
+export function confirmImplementationPlanChanges(projectId:string,preview:ImplementationPlanChangePreview,confirmCriticalChanges=false){return apiClient.post<ImplementationPlanChangeResult>(`/api/projects/${projectId}/imports/implementation-plan/${preview.batch.id}/confirm`,{previewFingerprint:preview.batch.previewFingerprint,baseBatchId:preview.batch.baseBatchId,confirmCriticalChanges})}
+export function listImplementationPlanBatchChanges(projectId:string,batchId:string,filters:Record<string,string>={}){const query=new URLSearchParams(filters).toString();return apiClient.get<ImplementationPlanChangePage>(`/api/projects/${projectId}/imports/implementation-plan/${batchId}/changes${query?`?${query}`:''}`)}
+export function listImplementationPlanEntityChanges(projectId:string,entityId:string,limit=20){return apiClient.get<ImportFieldChange[]>(`/api/projects/${projectId}/imports/implementation-plan/entities/${entityId}/changes?limit=${limit}`)}
+export function getLatestImplementationPlanChangeMarkers(projectId:string){return apiClient.get<ImplementationPlanChangeMarker[]>(`/api/projects/${projectId}/imports/implementation-plan/latest-markers`)}
+function toImportForm(input: ImportUploadInput) { const form = new FormData(); form.append('kind', input.kind); form.append('file', input.file); return form }

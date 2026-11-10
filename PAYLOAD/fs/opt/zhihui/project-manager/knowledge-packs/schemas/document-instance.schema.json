@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:zhihui:knowledge-pack:document-instance:1.0.0",
+  "title": "智汇政企项目文书实例（紧凑契约）",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["template", "documentControl", "scope", "executiveSummary", "items", "evidence", "missingInformation", "conflicts", "approval"],
+  "properties": {
+    "template": {
+      "type": "object", "additionalProperties": false,
+      "required": ["packId", "packVersion", "templateId", "templateVersion"],
+      "properties": {
+        "packId": {"const": "zhihui-cn-government-project-management"},
+        "packVersion": {"type": "string"}, "templateId": {"type": "string"}, "templateVersion": {"type": "string"}
+      }
+    },
+    "documentControl": {
+      "type": "object", "additionalProperties": false,
+      "required": ["documentNo", "version", "status", "securityLevel", "subjectType", "subjectId", "period", "asOf", "preparedBy", "reviewedBy", "approvedBy"],
+      "properties": {
+        "documentNo": {"type": "string"}, "version": {"type": "string"},
+        "status": {"enum": ["draft", "under_review", "approved", "rejected"]},
+        "securityLevel": {"enum": ["public", "internal", "sensitive", "restricted"]},
+        "subjectType": {"enum": ["project", "opportunity", "portfolio"]},
+        "subjectId": {"type": "string"}, "period": {"type": "string"}, "asOf": {"type": "string"},
+        "preparedBy": {"type": ["string", "null"]}, "reviewedBy": {"type": ["string", "null"]}, "approvedBy": {"type": ["string", "null"]}
+      }
+    },
+    "scope": {"type": "object", "required": ["included", "excluded", "basis"], "properties": {"included":{"type":"array","items":{"type":"string"}},"excluded":{"type":"array","items":{"type":"string"}},"basis":{"type":"string"}}},
+    "executiveSummary": {"type": "string"},
+    "items": {
+      "type": "array", "items": {"$ref": "#/$defs/item"}
+    },
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "missingInformation": {"type": "array", "items": {"type":"object","required":["field","reason","owner","dueDate"],"properties":{"field":{"type":"string"},"reason":{"type":"string"},"owner":{"type":["string","null"]},"dueDate":{"type":["string","null"]}}}},
+    "conflicts": {"type": "array", "items": {"type":"object","required":["topic","alternatives","pendingDecision"],"properties":{"topic":{"type":"string"},"alternatives":{"type":"array","minItems":2,"items":{"type":"object","required":["value","asOf","evidenceRefs"],"properties":{"value":{},"asOf":{"type":"string"},"evidenceRefs":{"type":"array","items":{"type":"string"}}}},"pendingDecision":{"type":"string"}}}},
+    "approval": {"type": "object", "required": ["isDraft", "reviewNotes", "signatures"], "properties":{"isDraft":{"type":"boolean"},"reviewNotes":{"type":"array","items":{"type":"string"}},"signatures":{"type":"array","items":{"type":"object","required":["role","name","signedAt"],"properties":{"role":{"type":"string"},"name":{"type":["string","null"]},"signedAt":{"type":["string","null"]}}}}}}
+  },
+  "$defs": {
+    "item": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id","category","factType","statement","status","owner","dueDate","asOf","confidence","evidenceRefs","nextStep","decisionNeeded"],
+      "properties": {
+        "id":{"type":"string"},
+        "category":{"enum":["progress","issue","risk","forecast","coordination","decision","acceptance","commercial","change","milestone","action"]},
+        "factType":{"enum":["observed","plan","forecast","assumption","opinion"]},
+        "statement":{"type":"string"}, "status":{"type":"string"}, "owner":{"type":["string","null"]},
+        "dueDate":{"type":["string","null"]}, "asOf":{"type":"string"}, "confidence":{"type":["number","null"],"minimum":0,"maximum":1},
+        "basis":{"type":["string","null"]}, "assumptions":{"type":"array","items":{"type":"string"}},
+        "evidenceRefs":{"type":"array","items":{"type":"string"}}, "nextStep":{"type":["string","null"]}, "decisionNeeded":{"type":["string","null"]},
+        "projectId":{"type":["string","null"]}, "projectCode":{"type":["string","null"]}, "opportunityId":{"type":["string","null"]}
+      },
+      "allOf": [
+        {"if":{"properties":{"factType":{"const":"observed"}}},"then":{"properties":{"evidenceRefs":{"minItems":1}}}},
+        {"if":{"properties":{"factType":{"const":"forecast"}}},"then":{"required":["basis","assumptions","confidence"]}},
+        {"if":{"properties":{"factType":{"const":"plan"}}},"then":{"properties":{"owner":{"type":"string"},"dueDate":{"type":"string"}}}}
+      ]
+    },
+    "evidence": {
+      "type":"object", "additionalProperties": false,
+      "required":["id","evidenceType","factType","sourceProjectId","sourceProjectCode","documentId","versionId","chunkId","sectionPath","checksum","sourceDate","citationLabel","securityLevel"],
+      "properties": {
+        "id":{"type":"string"}, "evidenceType":{"enum":["project_fact","project_document","template"]},
+        "factType":{"enum":["observed","plan","forecast","assumption","opinion"]},
+        "sourceProjectId":{"type":["string","null"]}, "sourceProjectCode":{"type":["string","null"]},
+        "documentId":{"type":["string","null"]}, "versionId":{"type":["string","null"]}, "chunkId":{"type":"string"},
+        "sectionPath":{"type":"string"}, "checksum":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+        "sourceDate":{"type":"string"}, "citationLabel":{"type":"string"}, "securityLevel":{"enum":["public","internal","sensitive","restricted"]}
+      }
+    }
+  }
+}
+}
